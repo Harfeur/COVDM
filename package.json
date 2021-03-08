@@ -1,0 +1,25 @@
+{
+  "name": "covdm",
+  "version": "1.0.0",
+  "description": "Application pour s'informer sur les centres de dépistage et de vaccination dans sa ville.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Harfeur/COVDM.git"
+  },
+  "keywords": [
+    "covid"
+  ],
+  "author": "Le trio infornal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Harfeur/COVDM/issues"
+  },
+  "homepage": "https://github.com/Harfeur/COVDM#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
