@@ -9,6 +9,11 @@ const {Db} = require('mongodb');
 
 module.exports = function (app, db, dirname) {
 
-
+    app.get('/sitesPrelevements', (req, res) => {
+        db.collection('sites_prelevements').find({}).toArray((error, documents) => {
+            if (error) res.status(500).send(error);
+            res.send(documents);
+        })
+    })
 
 }
