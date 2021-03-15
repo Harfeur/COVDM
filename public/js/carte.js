@@ -35,6 +35,15 @@ $.get("/sitesPrelevements").done(data => {
         // markersCluster.addLayer(marker);
 
     });
-    
+    mymap.on('moveend', function(e) {
+        console.log(mymap.getBounds().getSouthEast());
+        console.log("");
+        console.log(mymap.getBounds().getNorthWest());
+        console.log(mymap.getZoom());
+        
+
+    });
+    //supprimer tout les points
+    //envoyer les points NW et SE et afficher les points correspond.
     //map.addLayer(markersCluster);
 })
