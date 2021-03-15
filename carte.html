@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
+    <!-- icon  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
 </head>
 <body>
     <div id="mapid"></div>
@@ -24,6 +28,10 @@
 
         //Création de la map
         var mymap = L.map('mapid').setView([46.3630104, 2.9846608], 6);
+
+        const myIcon = L.icon({
+            iconUrl: 'localisationV.png',
+        });
 
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', {
             attribution: 'Trio Infornal',
@@ -70,5 +78,9 @@
     <i class="bi bi-calendar-event"></i>
     <!-- commentaire  -->
     <i class="bi bi-chat-dots"></i>
+    <!-- gens plein  -->
+    <i class="fas fa-user"></i>
+    <!-- gens vide  -->
+    <i class="far fa-user"></i>
 </body>
 </html>
