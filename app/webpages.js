@@ -9,6 +9,8 @@ const {Db} = require('mongodb');
 
 module.exports = function (app, db, dirname) {
 
-
+    app.get('/', (req, res) => {
+        res.sendFile(dirname + '/html/carte.html');
+    });
 
 }
