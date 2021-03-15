@@ -8,6 +8,12 @@
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <title>COVDM</title>
+    
+    <!-- markercluster  -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
 </head>
 <body>
     <div id="mapid"></div>
@@ -27,6 +33,26 @@
             zoomOffset: -1,
             accessToken: 'your.mapbox.access.token'
         }).addTo(mymap);
+
+        //Création groupe maker
+        var markersCluster = new L.MarkerClusterGroup();
+
+        //Ajouter l'appel à la BDD
+        {
+            var popup = obj.rs+
+                    '<br>'+obj.adresse+
+                    '<br>'+obj.horaire+
+                    '<br>+obj.do_prel'+' '+obj.antigenic+' '+obj.chek_rdv+
+                    '<a href="#"> + </a>';
+        
+            //Création du marker et de son groupe
+            var marker = L.marker([obj.lat, obj.lng], {icon: myIcon});
+            marker.bindPopup(popup)
+            markersCluster.addLayer(marker);
+        }
+
+        map.addLayer(markersCluster);
+
     </script>
 </body>
 </html>
