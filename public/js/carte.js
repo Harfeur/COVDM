@@ -54,4 +54,5 @@ $.get("/sitesPrelevements").done(data => {
     //supprimer tout les points
     //envoyer les points NW et SE et afficher les points correspond.
     mymap.addLayer(markersCluster);
+    $('body').addClass('loaded');
 })
