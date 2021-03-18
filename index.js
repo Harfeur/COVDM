@@ -15,7 +15,7 @@ app.set('views', 'views/')
 
 // LAUNCH ========================================
 async function init() {
-    const db = (await mongo.MongoClient.connect(process.env.MONGO_URI)).db('covdm');
+    const db = (await mongo.MongoClient.connect(process.env.MONGO_URI, { useUnifiedTopology: true })).db('covdm');
     require('./app/webpages.js')(app, db, __dirname);
     require('./app/getAPI.js')(app, db, __dirname);
     require('./app/postAPI.js')(app, db, __dirname);
