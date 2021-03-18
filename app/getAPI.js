@@ -14,6 +14,13 @@ module.exports = function (app, db, dirname) {
             if (error) res.status(500).send(error);
             res.send(documents);
         })
-    })
+    });
+
+    app.get('/regions', (req, res) => {
+        db.collection('region').find({}).toArray((error, documents) => {
+            if (error) res.status(500).send(error);
+            res.send(documents);
+        })
+    });
 
 }
