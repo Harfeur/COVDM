@@ -1,11 +1,13 @@
 // Ajustation taille carte en fonction de l'écran
 $("#mapid").height(((window.innerHeight) - 20));
 
+//---------------------------------------------------------------Map--------------------------------------------------------------
+
 //Création de la map
 var mymap = L.map('mapid').setView([46.3630104, 2.9846608], 6);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', {
-    attribution: 'Trio Infornal',
+    attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
     id: 'mapbox/streets-v11',
     tileSize: 512,
@@ -13,9 +15,16 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     accessToken: 'your.mapbox.access.token'
 }).addTo(mymap);
 
-//Création groupe maker
-var markersCluster = new L.MarkerClusterGroup();
+//Chargement
+$('body').addClass('loaded');
 
+//Création groupe maker
+var markersCluster = new L.MarkerClusterGroup(
+	{showCoverageOnHover: false});
+
+//-------------------------------------------------------- Site Prélevement-----------------------------------------------------------
+
+//Icon 
 var iconPrev = L.icon({
     iconUrl: '/images/localisationD.png',
     iconSize: [38, 40],
@@ -28,6 +37,7 @@ var rdv = "";
 
 var allMarker = [];
 
+//Données
 $.get("/sitesPrelevements").done(data => {
     data.forEach(obj => {
 
@@ -39,9 +49,8 @@ $.get("/sitesPrelevements").done(data => {
             ag = "AG";
         }
 
-        //ne marche pas
-        if (obj.check_rdv = "") {
-            rdv = "RDV";
+        if (obj.check_rdv != null) {
+            rdv = obj.check_rdv;
         }
 
         var popup = obj.rs +
@@ -64,10 +73,9 @@ $.get("/sitesPrelevements").done(data => {
 });
 
 
+//-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 
-
-
-//Region
+//style
 function style(feature) {
     return {
         fillColor: feature.properties.color,
@@ -79,21 +87,26 @@ function style(feature) {
     };
 };
 
-$('body').addClass('loaded');
-
+var layerControl = L.control.layers().addTo(mymap);
+//Données
 $.get("/regions").done(data => {
-    L.geoJson(data, {
+    var region = L.geoJson(data, {
         style: style
-    }).addTo(mymap);
-    
+    });  
+    layerControl.addOverlay(region, "Région");
 });
 
-//Controleur filtre
-var siteP = L.layerGroup(allMarker);
-siteP.addTo(mymap);
-var overlayMaps = {
-    "Site de prélèvement" : siteP,
-};
 
-//Controleur les marqueurs ne s'enlève pas quand on décoche
-L.control.layers(null,overlayMaps).addTo(mymap);
+//---------------------------------------------------------------Map--------------------------------------------------------------
+var satellite = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', 
+                        {id: 'mapbox/satellite-streets-v11', tileSize: 512, zoomOffset: -1, attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'}),
+    streets   = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', 
+                        {id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'}),
+    light   = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', 
+                        {id: 'mapbox/light-v10', tileSize: 512, zoomOffset: -1, attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'});
+
+
+layerControl.addBaseLayer(satellite, "Satellite");
+layerControl.addBaseLayer(streets, "Streets");
+layerControl.addBaseLayer(light, "Light");
+layerControl.addOverlay(markersCluster, "Site de prélèvement");
