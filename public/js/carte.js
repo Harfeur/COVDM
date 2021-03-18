@@ -16,42 +16,72 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 //Création groupe maker
 var markersCluster = new L.MarkerClusterGroup();
 
-var allMarker = new Array;
-
 var iconPrev = L.icon({
     iconUrl: '/images/localisationD.png',
     iconSize: [38, 40],
-    popupAnchor: [-3, -96],
-    }); 
+    popupAnchor: [0, -5],
+});
+
+var pcr = "";
+var ag = "";
+var rdv = "";
+
+var allMarker = [];
 
 $.get("/sitesPrelevements").done(data => {
     data.forEach(obj => {
 
-        allMarker.push([obj._id,obj.latitude,obj.longitude]);
+        allMarker.push(obj.rs);
+
+        if (obj.do_prel) {
+            pcr = "PCR";
+        }
+        if (obj.do_antigenic) {
+            ag = "AG";
+        }
+
+        //ne marche pas
+        if (obj.check_rdv = "") {
+            rdv = "RDV";
+        }
 
         var popup = obj.rs +
             '<br>' + obj.adresse +
             '<br>' + obj.horaire +
-            '<br>' + obj.do_prel + ' ' + obj.do_antigenic + ' ' + obj.check_rdv +
-            '<a href="'+obj._id+'"> + </a>';
-
-        
+            '<br><strong>' + pcr + ' ' + ag + ' ' + rdv +
+            '</strong><a href="' + obj._id + '"> + </a>';
 
         //Création du marker et de son groupe
-        var marker = L.marker([obj.latitude, obj.longitude], {icon: iconPrev});
+        var marker = L.marker([obj.latitude, obj.longitude], {
+            icon: iconPrev
+        });
         marker.bindPopup(popup);
+
         markersCluster.addLayer(marker);
-
     });
-    // mymap.on('moveend', function(e) {
-    //     console.log(mymap.getBounds().getSouthEast());
-    //     console.log("");
-    //     console.log(mymap.getBounds().getNorthWest());
-    //     console.log(mymap.getZoom());
-        
-
-    // });
-    //supprimer tout les points
-    //envoyer les points NW et SE et afficher les points correspond.
     mymap.addLayer(markersCluster);
+});
+
+console.log(allMarker);
+
+
+
+
+//Region
+function style(feature) {
+    return {
+        fillColor: feature.properties.color,
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+$.get("/regions").done(data => {
+    L.geoJson(data, {
+        style: style
+    }).addTo(mymap);
+
 })
