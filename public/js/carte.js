@@ -14,25 +14,34 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(mymap);
 
 //Création groupe maker
-// var markersCluster = new L.MarkerClusterGroup();
+var markersCluster = new L.MarkerClusterGroup();
 
-//Ajouter l'appel à la BDD
+var allMarker = new Array;
+
+var iconPrev = L.icon({
+    iconUrl: '/images/localisationD.png',
+    iconSize: [38, 40],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -96],
+    }); 
 
 $.get("/sitesPrelevements").done(data => {
     data.forEach(obj => {
+
+        allMarker.push([obj._id,obj.latitude,obj.longitude]);
 
         var popup = obj.rs +
             '<br>' + obj.adresse +
             '<br>' + obj.horaire +
             '<br>' + obj.do_prel + ' ' + obj.do_antigenic + ' ' + obj.check_rdv +
-            //_id pour identification page formul
-            '<a href="#"> + </a>';
+            '<a href="'+obj._id+'"> + </a>';
+
+        
 
         //Création du marker et de son groupe
-        var marker = L.marker([obj.latitude, obj.longitude]);
-        marker.bindPopup(popup)
-        marker.addTo(mymap)
-        // markersCluster.addLayer(marker);
+        var marker = L.marker([obj.latitude, obj.longitude], {icon: iconPrev});
+        marker.bindPopup(popup);
+        markersCluster.addLayer(marker);
 
     });
     mymap.on('moveend', function(e) {
@@ -45,5 +54,5 @@ $.get("/sitesPrelevements").done(data => {
     });
     //supprimer tout les points
     //envoyer les points NW et SE et afficher les points correspond.
-    //map.addLayer(markersCluster);
+    mymap.addLayer(markersCluster);
 })
