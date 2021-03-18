@@ -31,7 +31,6 @@ var allMarker = [];
 $.get("/sitesPrelevements").done(data => {
     data.forEach(obj => {
 
-        allMarker.push(obj.rs);
 
         if (obj.do_prel) {
             pcr = "PCR";
@@ -57,6 +56,8 @@ $.get("/sitesPrelevements").done(data => {
         });
         marker.bindPopup(popup);
 
+        allMarker.push(marker);
+
         markersCluster.addLayer(marker);
     });
     mymap.addLayer(markersCluster);
@@ -78,10 +79,21 @@ function style(feature) {
     };
 };
 
+$('body').addClass('loaded');
+
 $.get("/regions").done(data => {
     L.geoJson(data, {
         style: style
     }).addTo(mymap);
-
+    
 });
-$('body').addClass('loaded');
+
+//Controleur filtre
+var siteP = L.layerGroup(allMarker);
+siteP.addTo(mymap);
+var overlayMaps = {
+    "Site de prélèvement" : siteP,
+};
+
+//Controleur les marqueurs ne s'enlève pas quand on décoche
+L.control.layers(null,overlayMaps).addTo(mymap);
