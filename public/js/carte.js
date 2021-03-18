@@ -21,7 +21,6 @@ var allMarker = new Array;
 var iconPrev = L.icon({
     iconUrl: '/images/localisationD.png',
     iconSize: [38, 40],
-    iconAnchor: [22, 94],
     popupAnchor: [-3, -96],
     }); 
 
@@ -44,14 +43,14 @@ $.get("/sitesPrelevements").done(data => {
         markersCluster.addLayer(marker);
 
     });
-    mymap.on('moveend', function(e) {
-        console.log(mymap.getBounds().getSouthEast());
-        console.log("");
-        console.log(mymap.getBounds().getNorthWest());
-        console.log(mymap.getZoom());
+    // mymap.on('moveend', function(e) {
+    //     console.log(mymap.getBounds().getSouthEast());
+    //     console.log("");
+    //     console.log(mymap.getBounds().getNorthWest());
+    //     console.log(mymap.getZoom());
         
 
-    });
+    // });
     //supprimer tout les points
     //envoyer les points NW et SE et afficher les points correspond.
     mymap.addLayer(markersCluster);
