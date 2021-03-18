@@ -62,7 +62,6 @@ $.get("/sitesPrelevements").done(data => {
     mymap.addLayer(markersCluster);
 });
 
-console.log(allMarker);
 
 
 
@@ -77,11 +76,12 @@ function style(feature) {
         dashArray: '3',
         fillOpacity: 0.7
     };
-}
+};
 
 $.get("/regions").done(data => {
     L.geoJson(data, {
         style: style
     }).addTo(mymap);
 
-})
+});
+$('body').addClass('loaded');
