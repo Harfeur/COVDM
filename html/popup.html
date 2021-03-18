@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+  <div id="app">
+    <v-app id="inspire">
+      <v-card class="mx-auto" max-width="700">
+
+
+        <v-card-title>
+          Titre
+        </v-card-title>
+
+        <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" height="200px"></v-img>
+
+        <v-card-subtitle>
+
+
+          <v-row justify="space-around">
+            lundi :
+            <v-time-picker v-model="timeOuverture" class="mt-4" format="24hr" scrollable min="9:30" max="22:15">
+            </v-time-picker>
+          </v-row>
+          <v-row justify="space-around">
+            <v-time-picker v-model="timeFermeture" class="mt-4" format="24hr" scrollable min="9:30" max="22:15">
+            </v-time-picker>
+          </v-row>
+        </v-card-subtitle>
+
+        <v-row>
+          <v-icon large color="dark">
+            mdi-emoticon-happy-outline
+          </v-icon>
+          <v-icon large color="dark">
+            mdi-emoticon-neutral-outline
+          </v-icon>
+          <v-icon large color="dark">
+            mdi-emoticon-sad-outline
+          </v-icon>
+        </v-row>
+
+        <v-card-actions>
+          <v-btn color="orange lighten-2" text @click="show = !show">
+            Partager mon expérience
+          </v-btn>
+
+          <v-spacer></v-spacer>
+
+          <v-btn icon @click="show = !show">
+            <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+          </v-btn>
+        </v-card-actions>
+
+        <v-expand-transition>
+          <div v-show="show">
+            <v-divider></v-divider>
+
+            <v-card-text>
+              <v-stepper v-model="e1">
+                <v-stepper-header>
+                  <v-stepper-step :complete="e1 > 1" step="1">
+                    Satisfaction
+                  </v-stepper-step>
+
+                  <v-divider></v-divider>
+
+                  <v-stepper-step :complete="e1 > 2" step="2">
+                    Temps d'attente
+                  </v-stepper-step>
+
+                  <v-divider></v-divider>
+
+                  <v-stepper-step step="3">
+                    Nombre de personne
+                  </v-stepper-step>
+                </v-stepper-header>
+
+                <v-stepper-items>
+                  <v-stepper-content step="1">
+                    <v-card color="grey lighten-1" height="100px">
+                      <v-card-title>Est-ce que le test s'est bien déroulé ?</v-card-title>
+
+                      <v-row>
+                        <v-btn class="mx-2" fab dark small color="green" @click="e1 = 2">
+                          Oui
+                        </v-btn>
+                        <v-btn class="mx-2" fab dark small color="red" @click="e1 = 2">
+                          Non
+                        </v-btn>
+                      </v-row>
+                    </v-card>
+
+                    <v-btn @click="e1 = 2">
+                      Ne pas réponde
+                    </v-btn>
+                  </v-stepper-content>
+
+                  <v-stepper-content step="2">
+                    <v-card>
+                      <v-card-title>
+                        Combien de minutes avez vous attendu ?
+                      </v-card-title>
+                      <v-card-subtitle>
+                        <v-col cols="12">
+                          <v-slider v-model="value" thumb-label ticks></v-slider>
+                        </v-col>
+                      </v-card-subtitle>
+                      <v-btn color="blue" @click="e1 = 3">
+                        Continue
+                      </v-btn>
+
+                      <v-btn @click="e1 = 3">
+                        Ne pas répondre
+                      </v-btn>
+
+                    </v-card color="grey lighten-1" height="200px">
+
+
+                  </v-stepper-content>
+
+                  <v-stepper-content step="3">
+                    <v-card class="mb-12" color="grey lighten-1" height="200px">
+                      <v-card-title>
+                        Combien de personne patientez avec vous ?
+                      </v-card-title>
+                      <v-rating v-model="rating">
+                        <template v-slot:item="props">
+                          <v-icon
+                            :color="red"
+                            large
+                            @click="props.click"
+                          >
+                            {{ props.isFilled ? 'mdi-account' : 'mdi-account-outline' }}
+                          </v-icon>
+                        </template>
+                      </v-rating>
+                    </v-card>
+
+                    <v-btn @click="e1 = 1">
+                      Ne pas répondre
+                    </v-btn>
+                  </v-stepper-content>
+                </v-stepper-items>
+              </v-stepper>
+
+
+
+            </v-card-text>
+          </div>
+        </v-expand-transition>
+      </v-card>
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data: () => ({
+        timeOuverture: '10:15',
+        timeFermeture: '10:15',
+        show: false,
+        e1: 1,
+        rating: 3,
+      }),
+    })
+  </script>
+</body>
+
+</html>
