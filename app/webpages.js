@@ -16,7 +16,7 @@ module.exports = function (app, db, dirname) {
     app.get('/batiment',(req,res) => {
         db.collection('sites_prelevements').find({"_id": req.query.id}).toArray((error, documents) => {
             if (error) res.status(500).send(error);
-            res.send(documents);
+            res.render('popup',documents[0]);
         })
     });
 }
