@@ -4,7 +4,8 @@
   "description": "Application pour s'informer sur les centres de dépistage et de vaccination dans sa ville.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,8 @@
   "homepage": "https://github.com/Harfeur/COVDM#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongodb": "^3.6.3"
+    "mongodb": "^3.6.3",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "dotenv": "^8.2.0"
