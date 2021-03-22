@@ -55,7 +55,7 @@ $.get("/sitesPrelevements").done(data => {
             '<br>' + obj.adresse +
             '<br>' + obj.horaire +
             '<br><strong>' + pcr + ' ' + ag + ' ' + rdv +
-            '</strong><a href="' + obj._id + '"> + </a>';
+            '<a href="/batiment?id='+obj._id+'">GO</a>';
 
         //Création du marker et de son groupe
         var marker = L.marker([obj.latitude, obj.longitude], {
@@ -65,7 +65,7 @@ $.get("/sitesPrelevements").done(data => {
 
         markersCluster.addLayer(marker);
     });
-    map.addLayer(markersCluster);
+    //map.addLayer(markersCluster);
 
     //Chargement
     $('body').addClass('loaded');
@@ -77,8 +77,6 @@ $.get("/sitesPrelevements").done(data => {
 
 //Données
 $.get("/regions").done(data => {
-
-
     //style
     function style(feature) {
         return {
@@ -133,6 +131,26 @@ $.get("/regions").done(data => {
 
 
 //---------------------------------------------------------------Map--------------------------------------------------------------
+
+map.on('zoomend', function(e) {
+    console.log(map.getZoom());
+    if(map.getZoom()>6){
+        map.addLayer(markersCluster);
+    }else{
+        markersCluster.remove();
+
+    }
+});
+
+
+
+
+
+
+
+
+
+
 var satellite = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', 
                         {id: 'mapbox/satellite-streets-v11', tileSize: 512, zoomOffset: -1, attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'}),
     streets   = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', 
