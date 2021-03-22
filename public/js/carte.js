@@ -15,9 +15,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     accessToken: 'your.mapbox.access.token'
 }).addTo(map);
 
-//Chargement
-$('body').addClass('loaded');
-
 //Création groupe maker
 var markersCluster = new L.MarkerClusterGroup({
     showCoverageOnHover: false
@@ -69,6 +66,9 @@ $.get("/sitesPrelevements").done(data => {
         markersCluster.addLayer(marker);
     });
     map.addLayer(markersCluster);
+
+    //Chargement
+    $('body').addClass('loaded');
 });
 
 
