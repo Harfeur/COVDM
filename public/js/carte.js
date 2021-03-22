@@ -4,7 +4,7 @@ $("#mapid").height(((window.innerHeight) - 20));
 //---------------------------------------------------------------Map--------------------------------------------------------------
 
 //Création de la map
-var mymap = L.map('mapid').setView([46.3630104, 2.9846608], 6);
+var map = L.map('mapid').setView([46.3630104, 2.9846608], 6);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', {
     attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -13,15 +13,18 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     tileSize: 512,
     zoomOffset: -1,
     accessToken: 'your.mapbox.access.token'
-}).addTo(mymap);
+}).addTo(map);
 
 //Chargement
 $('body').addClass('loaded');
 
 //Création groupe maker
-var markersCluster = new L.MarkerClusterGroup(
-	{showCoverageOnHover: false});
+var markersCluster = new L.MarkerClusterGroup({
+    showCoverageOnHover: false
+});
 
+
+var layerControl = L.control.layers().addTo(map);
 //-------------------------------------------------------- Site Prélevement-----------------------------------------------------------
 
 //Icon 
@@ -34,8 +37,6 @@ var iconPrev = L.icon({
 var pcr = "";
 var ag = "";
 var rdv = "";
-
-var allMarker = [];
 
 //Données
 $.get("/sitesPrelevements").done(data => {
@@ -65,35 +66,69 @@ $.get("/sitesPrelevements").done(data => {
         });
         marker.bindPopup(popup);
 
-        allMarker.push(marker);
-
         markersCluster.addLayer(marker);
     });
-    mymap.addLayer(markersCluster);
+    map.addLayer(markersCluster);
 });
 
 
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 
-//style
-function style(feature) {
-    return {
-        fillColor: feature.properties.color,
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.7
-    };
-};
 
-var layerControl = L.control.layers().addTo(mymap);
 //Données
 $.get("/regions").done(data => {
-    var region = L.geoJson(data, {
-        style: style
-    });  
-    layerControl.addOverlay(region, "Région");
+
+
+    //style
+    function style(feature) {
+        return {
+            fillColor: feature.properties.color,
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.7
+        };
+    }
+    function highlightFeature(e) {
+		var layer = e.target;
+
+		layer.setStyle({
+			weight: 5,
+			color: '#666',
+			dashArray: '',
+			fillOpacity: 0.7
+		});
+
+		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+			layer.bringToFront();
+		}
+	}
+
+	var geojson;
+
+	function resetHighlight(e) {
+		geojson.resetStyle(e.target);
+	}
+
+	function zoomToFeature(e) {
+		map.fitBounds(e.target.getBounds());
+	}
+
+	function onEachFeature(feature, layer) {
+		layer.on({
+			mouseover: highlightFeature,
+			mouseout: resetHighlight,
+			click: zoomToFeature
+		});
+	}
+
+    geojson = L.geoJson(data, {
+        style: style,
+        onEachFeature : onEachFeature
+    }).addTo(map);
+
+    layerControl.addOverlay(geojson, "Région");
 });
 
 
