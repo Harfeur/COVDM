@@ -9,21 +9,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 </head>
 
+
 <body>
+
   <div id="app">
     <v-app id="inspire">
       <!-- Création popup -->
       <v-card class="mx-auto" max-width="700">
 
         <!-- Titre -->
-        <v-img
-              src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-              class="white--text align-end"
-              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-              height="200px"
-            >
-              <v-card-title>titre</v-card-title>
+        <v-img src="https://cdn.vuetifyjs.com/images/cards/cooking.png" class="white--text align-end"
+          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
+          <v-card-title>titre</v-card-title>
         </v-img>
+
+        <div>
+          <p>
+            Adresse
+          </p>
+        </div>
 
         <!-- Début formulaire  -->
         <!-- Horaire -->
@@ -35,42 +39,41 @@
               </div>
             </v-col>
             <v-col>
-              <v-time-picker v-model="timeOuverture" class="mt-4" format="24hr" scrollable min="9:30" max="22:15">
-              </v-time-picker>
+              <v-card-text color="lighten-2">
+                10:15
+              </v-card-text>
             </v-col>
             <v-col>
-              <v-time-picker v-model="timeFermeture" class="mt-4" format="24hr" scrollable min="9:30" max="22:15">
-              </v-time-picker>
+              <v-card-text color="lighten-2">
+                10:15
+              </v-card-text>
             </v-col>
           </v-row>
-          <v-rows>
-            <v-col>
-              <v-card-subtitle class="grey--text text--darken-4">
-                Tests proposées :
-              </v-card-subtitle>
-            </v-col>
-            <v-col>
-              <div>test</div>
-            </v-col>
-          </v-rows>
-
+          <v-row>
+            <v-spacer></v-spacer>
+            <v-alert dense text type="success">
+              PCR
+            </v-alert>
+            <v-spacer></v-spacer>
+            <v-alert dense outlined type="error">
+              <div class="text-decoration-line-through">
+                Antigénique
+              </div>
+            </v-alert>
+            <v-spacer></v-spacer>
+          </v-row>
         </v-card-subtitle>
+        <v-expansion-panels flat>
+          <v-expansion-panel >
+            <v-expansion-panel-header>
+              Plus d'informations
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              Y'a rien
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
         <!-- Fin Horaire -->
-
-
-        <!-- Avis rapide -->
-        <!-- <v-row>
-          <v-icon large color="dark">
-            mdi-emoticon-happy-outline
-          </v-icon>
-          <v-icon large color="dark">
-            mdi-emoticon-neutral-outline
-          </v-icon>
-          <v-icon large color="dark">
-            mdi-emoticon-sad-outline
-          </v-icon>
-        </v-row> -->
-        <!-- Fin Avis Rapide  -->
 
         <!-- Button Formulaire Avis + Commentaire  -->
         <v-card-actions>
@@ -80,13 +83,13 @@
 
           <v-spacer></v-spacer>
 
-          <v-btn color="green lighten-2" text @click="commentaire = !show">
+          <v-btn color="green lighten-2" text @click="commentaire = !commentaire">
             Commentaires
           </v-btn>
         </v-card-actions>
         <!-- Fin Button Formulaire Avis + Commentaire  -->
 
-        <!-- Expansion Avis -->
+        <!-- Extension Avis -->
         <v-expand-transition>
           <div v-show="show">
             <v-divider></v-divider>
@@ -106,29 +109,40 @@
 
                   <v-divider></v-divider>
 
-                  <v-stepper-step step="3">
+                  <v-stepper-step :complete="e1 > 3" step="3">
                     Evaluation
                   </v-stepper-step>
                 </v-stepper-header>
 
                 <v-stepper-items>
                   <v-stepper-content step="1">
-                    <v-card color="grey lighten-1" height="100px">
-                      <v-card-title>Est-ce que le test s'est bien déroulé ?</v-card-title>
-
+                    <v-card>
                       <v-row>
-                        <v-btn class="mx-2" fab dark small color="green" @click="e1 = 2">
-                          Oui
-                        </v-btn>
-                        <v-btn class="mx-2" fab dark small color="red" @click="e1 = 2">
-                          Non
-                        </v-btn>
+                        <v-card-title>Est-ce que le test s'est bien déroulé ?</v-card-title>
                       </v-row>
-                    </v-card>
 
-                    <v-btn @click="e1 = 2">
-                      Ne pas réponde
-                    </v-btn>
+                      <v-card-subtitle>
+                        <v-card-actions>
+                          <v-row>
+                            <v-spacer></v-spacer>
+
+                            <v-btn class="mx-2" fab dark small color="green" @click="e1 = 2">
+                              Oui
+                            </v-btn>
+
+                            <v-spacer></v-spacer>
+
+                            <v-btn class="mx-2" fab dark small color="red" @click="e1 = 2">
+                              Non
+                            </v-btn>
+                            <v-spacer></v-spacer>
+                          </v-row>
+                        </v-card-actions>
+                      </v-card-subtitle>
+                      <v-btn @click="e1 = 2">
+                        Ne pas répondre
+                      </v-btn>
+                    </v-card>
                   </v-stepper-content>
 
                   <v-stepper-content step="2">
@@ -142,62 +156,98 @@
                         </v-col>
                       </v-card-subtitle>
                       <v-btn color="blue" @click="e1 = 3">
-                        Continue
+                        Continuer
                       </v-btn>
 
                       <v-btn @click="e1 = 3">
                         Ne pas répondre
                       </v-btn>
-
-                    </v-card color="grey lighten-1" height="200px">
-
-
+                    </v-card>
                   </v-stepper-content>
 
                   <v-stepper-content step="3">
-                    <v-card class="mb-12" color="grey lighten-1" height="200px">
-                      <v-card-title>
-                        Evaluez votre expérience
-                      </v-card-title>
-                      <v-rating v-model="rating">
-                        <template v-slot:item="props">
-                          <v-icon :color="red" large @click="props.click">
-                            {{ props.isFilled ? 'mdi-account' : 'mdi-account-outline' }}
-                          </v-icon>
-
-                        </template>
-                      </v-rating>
+                    <v-card>
                       <v-row>
-                        <v-col>
+                        <v-card-title>
+                          Evaluez votre expérience
+                        </v-card-title>
+                        <v-rating v-model="rating" color="yellow darken-3" background-color="grey darken-1"
+                          empty-icon="$ratingFull" hover large>
+                        </v-rating>
+                      </v-row>
+                      <v-card-subtitle>
+                        <v-textarea label="Commentaire" auto-grow outlined rows="3" row-height="15" shaped>
+                        </v-textarea>
+                      </v-card-subtitle>
 
-                        </v-col>
-                        <v-col>
-                          <v-textarea label="Commentaire" auto-grow outlined rows="3" row-height="25" shaped>
-                          </v-textarea </v-col> </v-row> </v-card> <v-btn @click="e1 = 1">
-                          < Ne pas répondre </v-btn> </v-stepper-content> </v-stepper-items> </v-stepper> </v-card-text>
-                            </div> </v-expand-transition> <!-- Fin Expansion Avis -->
-
-                            <!-- Extension Commentaire  -->
-                            <v-expand-transition>
-                              <div v-show="commentaire">
-                                <v-divider></v-divider>
-                                <v-card class="mb-12" color="grey lighten-1" height="200px">
-                                  <v-card-title>
-                                    Evaluez votre expérience
-                                  </v-card-title>
-                                  <v-rating v-model="rating">
-                                    <template v-slot:item="props">
-                                      <v-icon :color="red" large @click="props.click">
-                                        {{ props.isFilled ? 'mdi-account' : 'mdi-account-outline' }}
-                                      </v-icon>
-
-                                    </template>
-                                  </v-rating>
-                                </v-card>
-                              </div>
-                            </v-expand-transition>
-                            <!-- Fin Extension Commentaire  -->
+                      <v-btn color="blue" @click="e1 = 4">
+                        Continuer
+                      </v-btn>
+                      <v-btn @click="e1 = 4">
+                        Ne pas répondre
+                      </v-btn>
                     </v-card>
+                  </v-stepper-content>
+                  <v-stepper-content step="4">
+                    <v-card>
+                      <v-card-title>
+                        Merci pour vos réponses
+
+                        <v-icon x-large color="orange darken-2">
+                          mdi-emoticon-excited
+                        </v-icon>
+                      </v-card-title>
+                      <v-btn @click="show = !show">
+                        Fermer
+                      </v-btn>
+                    </v-card>
+                  </v-stepper-content>
+                </v-stepper-items>
+              </v-stepper>
+            </v-card-text>
+          </div>
+        </v-expand-transition>
+        <!-- Fin Extension Avis -->
+
+        <!-- Extension Commentaire  -->
+        <v-expand-transition>
+          <div v-show="commentaire">
+            <v-divider></v-divider>
+            <template>
+              <v-responsive class="overflow-y-auto" max-height="400">
+                <div class="pa-6 text-center">
+                  Scroll down
+                </div>
+
+                <v-responsive height="200vh" class="text-center pa-2">
+                  <v-responsive min-height="50vh"></v-responsive>
+                  <div class="text-center body-2 mb-12">
+                    The card will appear below:
+                  </div>
+
+                  <v-lazy v-model="isActive" :options="{
+                    threshold: .5
+                  }" min-height="200" transition="fade-transition">
+                    <v-card class="mx-auto" max-width="336">
+                      <v-card-title>Card title</v-card-title>
+
+                      <v-card-text>
+                        Phasellus magna. Quisque rutrum. Nunc egestas, augue at pellentesque laoreet, felis eros
+                        vehicula leo, at malesuada velit leo quis pede. Aliquam lobortis. Quisque libero metus,
+                        condimentum nec, tempor a, commodo mollis, magna.
+
+                        In turpis. In dui magna, posuere eget, vestibulum et, tempor auctor, justo. In turpis.
+                        Pellentesque dapibus hendrerit tortor. Ut varius tincidunt libero.
+                      </v-card-text>
+                    </v-card>
+                  </v-lazy>
+                </v-responsive>
+              </v-responsive>
+            </template>
+          </div>
+        </v-expand-transition>
+        <!-- Fin Extension Commentaire  -->
+      </v-card>
     </v-app>
   </div>
 
@@ -214,6 +264,7 @@
         commentaire: false,
         e1: 1,
         rating: 3,
+        isActive: false,
       }),
     })
   </script>
