@@ -28,12 +28,14 @@ var iconPrev = L.icon({
 
 var pcr = "";
 var ag = "";
-var rdv = "";
+var ho = "";
 
+var cluster = {};
+
+ 
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 
 
-var cluster = {};
 
 //Données
 $.get("/regions").done(dataR => {
@@ -140,15 +142,31 @@ $.get("/regions").done(dataR => {
                 ag = "AG";
             }
 
-            if (obj.check_rdv != null) {
-                rdv = obj.check_rdv;
+            if (obj.horaires[jour].length == 0){
+                ho = "Fermé";
+            }else{ 
+                ho = "Ouvert aujourd'hui :<br>";
+                var hH = obj.horaires[jour];
+                for(var i=0;i<hH.length;i++){
+                    if (i==0) {
+                        ho = ho.concat("De ");
+                        ho = ho.concat(getHoraireToString(hH[i][0]));
+                        ho = ho.concat(" à ");
+                        ho = ho.concat(getHoraireToString(hH[i][1]))
+                    } else {
+                        ho = ho.concat("<br>Et de ")
+                        ho = ho.concat(getHoraireToString(hH[i][0]))
+                        ho = ho.concat(" à ");
+                        ho = ho.concat(getHoraireToString(hH[i][1]))
+                    }
+                }
             }
 
             var popup = obj.rs +
                 '<br>' + obj.adresse.adresse +
-                '<br>' + obj.horaire +
-                '<br><strong>' + pcr + ' ' + ag + ' ' + rdv +
-                '<a href="/batiment?id=' + obj._id + '">GO</a>';
+                '<br>' + ho +
+                '<br><strong>' + pcr + ' ' + ag + ' ' +
+                '<a href="/batiment?id=' + obj._id + '"><i class="fas fa-search-plus"></i></a>';
 
             //Création du marker et de son groupe
             var mSP = L.marker([obj.latitude, obj.longitude], {
@@ -158,13 +176,14 @@ $.get("/regions").done(dataR => {
 
 
             (cluster[obj.adresse.codeRegion].markerCG).addLayer(mSP)
+            
+        //Chargement
+        $('body').addClass('loaded');
 
         });
 
 
         
-        //Chargement
-        $('body').addClass('loaded');
     });
 
 });
