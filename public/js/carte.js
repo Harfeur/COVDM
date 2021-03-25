@@ -202,6 +202,50 @@ map.on('zoomend', function (e) {
 });
 
 
+//Geolocalisation
+function geoFindMe() {
+
+    function success(position) {
+      const latitude  = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      var b = L.latLng(latitude,longitude)
+      var b2 = L.latLng((latitude+0.050),((longitude+0.100)));
+      var bounds = L.latLngBounds(b, b2);
+
+      map.fitBounds(bounds);
+
+    }
+  
+    function error() {
+      console.log('Unable to retrieve your location');
+    }
+  
+    if(!navigator.geolocation) {
+      console.log('Geolocation is not supported by your browser');
+    } else {
+      console.log('Locating…');
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+  
+  }
+ 
+  
+//Bouton geolocation
+var localisation = L.Control.extend({
+    onAdd: function() {
+        var button = L.DomUtil.create('button');
+        button.innerHTML = '<h1><i class="fas fa-map-marked-alt"></i></h1>';
+        L.DomEvent.on(button, 'click', function () {  
+
+            geoFindMe();
+
+        });
+        return button;
+    }
+});
+
+var localisation = (new localisation()).addTo(map);
 
 
 
@@ -227,4 +271,4 @@ var satellite = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}
 
 layerControl.addBaseLayer(satellite, "Satellite");
 layerControl.addBaseLayer(streets, "Streets");
-layerControl.addBaseLayer(light, "Light");
+layerControl.addBaseLayer(light, "Light");  
