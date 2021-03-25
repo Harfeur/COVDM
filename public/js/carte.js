@@ -193,11 +193,9 @@ $.get("/regions").done(dataR => {
 
 map.on('zoomend', function (e) {
     if (map.getZoom() < 7) {
-
         for (const [key, value] of Object.entries(cluster)) {
             value.markerCG.remove();
         }
-
     }
 });
 
@@ -209,12 +207,13 @@ function geoFindMe() {
       const latitude  = position.coords.latitude;
       const longitude = position.coords.longitude;
 
-      var b = L.latLng(latitude,longitude)
-      var b2 = L.latLng((latitude+0.050),((longitude+0.100)));
-      var bounds = L.latLngBounds(b, b2);
+      var b = L.latLng(latitude,longitude);
 
-      map.fitBounds(bounds);
-
+      map.flyTo(b,15);
+      map.once('moveend', function() {
+        alert("Cliquer sur la carte pour afficher les différents centres disponibles")
+    });
+      
     }
   
     function error() {
