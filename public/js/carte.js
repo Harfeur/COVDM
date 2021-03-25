@@ -116,6 +116,20 @@ $.get("/regions").done(dataR => {
 
     //Données
     $.get("/sitesPrelevements").done(dataP => {
+        
+        var date = new Date();
+        var jour;
+        switch (date.getDay()) {
+            case 1: jour = "lundi";break;
+            case 2: jour = "mardi";break;
+            case 3: jour = "mercredi";break;
+            case 4: jour = "jeudi";break;
+            case 5: jour = "vendredi";break;
+            case 6: jour = "samedi";break;
+            case 7: jour = "dimanche";break;        
+            default: jour = "";break;
+        }
+
         dataP.forEach(obj => {
 
 
