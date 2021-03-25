@@ -15,13 +15,8 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     accessToken: 'your.mapbox.access.token'
 }).addTo(map);
 
-//Création groupe maker
-var markersCluster = new L.MarkerClusterGroup({
-    showCoverageOnHover: false
-});
-
-
 var layerControl = L.control.layers().addTo(map);
+
 //-------------------------------------------------------- Site Prélevement-----------------------------------------------------------
 
 //Icon 
@@ -35,48 +30,14 @@ var pcr = "";
 var ag = "";
 var rdv = "";
 
-//Données
-$.get("/sitesPrelevements").done(data => {
-    data.forEach(obj => {
-
-
-        if (obj.do_prel) {
-            pcr = "PCR";
-        }
-        if (obj.do_antigenic) {
-            ag = "AG";
-        }
-
-        if (obj.check_rdv != null) {
-            rdv = obj.check_rdv;
-        }
-
-        var popup = obj.rs +
-            '<br>' + obj.adresse +
-            '<br>' + obj.horaire +
-            '<br><strong>' + pcr + ' ' + ag + ' ' + rdv +
-            '<a href="/batiment?id='+obj._id+'">GO</a>';
-
-        //Création du marker et de son groupe
-        var marker = L.marker([obj.latitude, obj.longitude], {
-            icon: iconPrev
-        });
-        marker.bindPopup(popup);
-
-        markersCluster.addLayer(marker);
-    });
-    //map.addLayer(markersCluster);
-
-    //Chargement
-    $('body').addClass('loaded');
-});
-
-
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 
 
+var cluster = {};
+
 //Données
-$.get("/regions").done(data => {
+$.get("/regions").done(dataR => {
+
     //style
     function style(feature) {
         return {
@@ -88,56 +49,121 @@ $.get("/regions").done(data => {
             fillOpacity: 0.7
         };
     }
+    //contour gris quand la souris passe par dessus
     function highlightFeature(e) {
-		var layer = e.target;
+        var layer = e.target;
 
-		layer.setStyle({
-			weight: 5,
-			color: '#666',
-			dashArray: '',
-			fillOpacity: 0.7
-		});
+        layer.setStyle({
+            weight: 5,
+            color: '#666',
+            dashArray: '',
+            fillOpacity: 0.7
+        });
 
-		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-			layer.bringToFront();
-		}
-	}
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+        }
+    }
 
-	var geojson;
+    var geojson;
 
-	function resetHighlight(e) {
-		geojson.resetStyle(e.target);
-	}
+    function resetHighlight(e) {
+        geojson.resetStyle(e.target);
+    }
 
-	function zoomToFeature(e) {
-		map.fitBounds(e.target.getBounds());
-	}
+    //zoom
+    function zoomToFeature(e) {
+        var marker = cluster[e.sourceTarget.feature.properties.code].markerCG;
 
-	function onEachFeature(feature, layer) {
-		layer.on({
-			mouseover: highlightFeature,
-			mouseout: resetHighlight,
-			click: zoomToFeature
-		});
-	}
+        for (const [key, value] of Object.entries(cluster)) {
+            value.markerCG.remove();
+        }
 
-    geojson = L.geoJson(data, {
+        map.addLayer(marker)
+
+        if (map.getZoom() < 10) {
+            map.fitBounds(e.target.getBounds());
+
+        }
+    }
+
+    //ajout des events
+    function onEachFeature(feature, layer) {
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
+            click: zoomToFeature
+        });
+    }
+
+    geojson = L.geoJson(dataR, {
         style: style,
-        onEachFeature : onEachFeature
+        onEachFeature: onEachFeature
     }).addTo(map);
 
-    layerControl.addOverlay(geojson, "Région");
+    //création des markerclustergroup pour chaque région
+    dataR.forEach(elt => {
+        cluster[elt.properties.code] = {
+            "nom": elt.properties.nom,
+            "markerCG": new L.MarkerClusterGroup({
+                showCoverageOnHover: false,
+                maxClusterRadius: 35
+            })
+        }
+    });
+
+    //-------------------------------------------------------- Site Prélevement-----------------------------------------------------------
+
+    //Données
+    $.get("/sitesPrelevements").done(dataP => {
+        dataP.forEach(obj => {
+
+
+            if (obj.do_prel) {
+                pcr = "PCR";
+            }
+            if (obj.do_antigenic) {
+                ag = "AG";
+            }
+
+            if (obj.check_rdv != null) {
+                rdv = obj.check_rdv;
+            }
+
+            var popup = obj.rs +
+                '<br>' + obj.adresse.adresse +
+                '<br>' + obj.horaire +
+                '<br><strong>' + pcr + ' ' + ag + ' ' + rdv +
+                '<a href="/batiment?id=' + obj._id + '">GO</a>';
+
+            //Création du marker et de son groupe
+            var mSP = L.marker([obj.latitude, obj.longitude], {
+                icon: iconPrev
+            });
+            mSP.bindPopup(popup);
+
+
+            (cluster[obj.adresse.codeRegion].markerCG).addLayer(mSP)
+
+        });
+
+
+        
+        //Chargement
+        $('body').addClass('loaded');
+    });
+
 });
 
 
 //---------------------------------------------------------------Map--------------------------------------------------------------
 
-map.on('zoomend', function(e) {
-    console.log(map.getZoom());
-    if(map.getZoom()>6){
-        map.addLayer(markersCluster);
-    }else{
-        markersCluster.remove();
+map.on('zoomend', function (e) {
+    if (map.getZoom() < 7) {
+
+        for (const [key, value] of Object.entries(cluster)) {
+            value.markerCG.remove();
+        }
 
     }
 });
@@ -146,20 +172,26 @@ map.on('zoomend', function(e) {
 
 
 
-
-
-
-
-
-var satellite = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', 
-                        {id: 'mapbox/satellite-streets-v11', tileSize: 512, zoomOffset: -1, attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'}),
-    streets   = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', 
-                        {id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'}),
-    light   = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', 
-                        {id: 'mapbox/light-v10', tileSize: 512, zoomOffset: -1, attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'});
+var satellite = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', {
+        id: 'mapbox/satellite-streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
+    }),
+    streets = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', {
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
+    }),
+    light = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2RhaWxoYXUiLCJhIjoiY2trd2t6czNjMWlvYTJ2cGlsYXp3eml0ZCJ9.EFIujCAZEOZrlLhgOdfT0g', {
+        id: 'mapbox/light-v10',
+        tileSize: 512,
+        zoomOffset: -1,
+        attribution: 'Trio Infornal | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
+    });
 
 
 layerControl.addBaseLayer(satellite, "Satellite");
 layerControl.addBaseLayer(streets, "Streets");
 layerControl.addBaseLayer(light, "Light");
-layerControl.addOverlay(markersCluster, "Site de prélèvement");
