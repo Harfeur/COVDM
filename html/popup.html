@@ -61,10 +61,10 @@
               </div>
             </v-alert>
             <v-spacer></v-spacer>
-          </v-row>
-        </v-card-subtitle>
-        <v-expansion-panels flat>
-          <v-expansion-panel >
+          </v-row> 
+          <div id="exp">
+          <v-expansion-panels flat>
+          <v-expansion-panel>
             <v-expansion-panel-header>
               Plus d'informations
             </v-expansion-panel-header>
@@ -73,6 +73,9 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
+      </div>
+        </v-card-subtitle>
+       
         <!-- Fin Horaire -->
 
         <!-- Button Formulaire Avis + Commentaire  -->
@@ -83,7 +86,7 @@
 
           <v-spacer></v-spacer>
 
-          <v-btn color="green lighten-2" text @click="commentaire = !commentaire">
+          <v-btn color="green lighten-2" text @click="ouvreCom">
             Commentaires
           </v-btn>
         </v-card-actions>
@@ -152,7 +155,7 @@
                       </v-card-title>
                       <v-card-subtitle>
                         <v-col cols="12">
-                          <v-slider v-model="value" thumb-label ticks></v-slider>
+                          <v-slider thumb-label ticks></v-slider>
                         </v-col>
                       </v-card-subtitle>
                       <v-btn color="blue" @click="e1 = 3">
@@ -211,40 +214,66 @@
 
         <!-- Extension Commentaire  -->
         <v-expand-transition>
-          <div v-show="commentaire">
+          <v-card
+            v-if="reveal"
+            class="transition-fast-in-fast-out v-card--reveal"
+            style="height: 80%;"
+          >
+          <div v-show="reveal">
             <v-divider></v-divider>
             <template>
-              <v-responsive class="overflow-y-auto" max-height="400">
+              <v-responsive class="overflow-y-auto" max-height="300">
                 <div class="pa-6 text-center">
-                  Scroll down
+                  <template>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        offset-sm="3"
+                      >
+                        <v-card flat> 
+                          <v-list three-line>
+                            <template v-for="(item, index) in items">
+                              <v-subheader
+                                v-if="item.header"
+                                :key="item.header"
+                              >
+                               Commentaires :
+                              </v-subheader>
+                              <v-divider
+                                v-else-if="item.divider"
+                                :key="index"
+                                :inset="item.inset"
+                              ></v-divider>
+                              <v-list-item
+                                v-else
+                              >
+                                <v-list-item-content>
+                                  <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+                                </v-list-item-content>
+                              </v-list-item>
+                            </template>
+                          </v-list>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </template>
                 </div>
 
-                <v-responsive height="200vh" class="text-center pa-2">
-                  <v-responsive min-height="50vh"></v-responsive>
-                  <div class="text-center body-2 mb-12">
-                    The card will appear below:
-                  </div>
-
-                  <v-lazy v-model="isActive" :options="{
-                    threshold: .5
-                  }" min-height="200" transition="fade-transition">
-                    <v-card class="mx-auto" max-width="336">
-                      <v-card-title>Card title</v-card-title>
-
-                      <v-card-text>
-                        Phasellus magna. Quisque rutrum. Nunc egestas, augue at pellentesque laoreet, felis eros
-                        vehicula leo, at malesuada velit leo quis pede. Aliquam lobortis. Quisque libero metus,
-                        condimentum nec, tempor a, commodo mollis, magna.
-
-                        In turpis. In dui magna, posuere eget, vestibulum et, tempor auctor, justo. In turpis.
-                        Pellentesque dapibus hendrerit tortor. Ut varius tincidunt libero.
-                      </v-card-text>
-                    </v-card>
-                  </v-lazy>
-                </v-responsive>
+                
               </v-responsive>
             </template>
           </div>
+            <v-card-actions class="pt-0">
+              <v-btn
+                text
+                color="teal accent-4"
+                @click="fermeCom"
+              >
+                Close
+              </v-btn>
+            </v-card-actions>
+          </v-card>
         </v-expand-transition>
         <!-- Fin Extension Commentaire  -->
       </v-card>
@@ -261,13 +290,41 @@
         timeOuverture: '10:15',
         timeFermeture: '10:15',
         show: false,
-        commentaire: false,
+        reveal: false,
         e1: 1,
         rating: 3,
         isActive: false,
+        items: [
+        { header: 'Commentaires :' },
+        { subtitle: `I'll be in your neighborhood doing errands this weekend. Do you want to hang out?` },
+        { divider: true, inset: true },
+        { subtitle: `Wish I could come, but I'm out of town this weekend.` },
+        { divider: true, inset: true },
+        { subtitle: 'Do you have Paris recommendations? Have you ever been?' },
+      ],
       }),
+    methods :{
+      ouvreCom () {
+        var expansion=document.getElementById('exp');
+        this.reveal=true;
+        expansion.style.display="none";
+      },
+      fermeCom () {
+        var expansion=document.getElementById('exp');
+        this.reveal=false;
+        expansion.style.display="block";
+      }
+    }
     })
   </script>
+  <style>
+    .v-card--reveal {
+      bottom: 0;
+      opacity: 1 !important;
+      position: absolute;
+      width: 100%;
+    }
+    </style>
 </body>
 
 </html>
