@@ -26,4 +26,8 @@ module.exports = function (app, db, dirname) {
             res.render('mini-popup',documents[0]);
         })
     });
+
+    app.get('/stats', (req, res) => {
+        res.sendFile(dirname + '/html/stats.html');
+    });
 }
