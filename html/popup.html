@@ -35,7 +35,31 @@
           <v-row>
             <v-col>
               <div class="my-4 subtitle-1">
-                Lundi :
+                <template>
+                  <div class="text-center">
+                    <v-menu>
+                      <template v-slot:activator="{ on: menu, attrs }">
+                        <v-tooltip bottom>
+                          <template v-slot:activator="{ on: tooltip }">
+                            <v-btn rounded v-bind="attrs" v-on="{ ...tooltip, ...menu }">
+                              <li>
+                                {{jour[placement].title}}
+                              </li>
+                            </v-btn>
+                          </template>
+                          <span>Cliquez pour changer le jour</span>
+                        </v-tooltip>
+                      </template>
+                      <v-list>
+                        <v-list-item-group v-model="model" color="indigo">
+                          <v-list-item v-for="(item, index) in jour" :key="index" @click="liste(index)">
+                            <v-list-item-title>{{ item.title }}</v-list-item-title>
+                          </v-list-item>
+                      </v-list>
+                      </v-list-item-group>
+                    </v-menu>
+                  </div>
+                </template>
               </div>
             </v-col>
             <v-col>
@@ -61,21 +85,21 @@
               </div>
             </v-alert>
             <v-spacer></v-spacer>
-          </v-row> 
+          </v-row>
           <div id="exp">
-          <v-expansion-panels flat>
-          <v-expansion-panel>
-            <v-expansion-panel-header>
-              Plus d'informations
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              Y'a rien
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </div>
+            <v-expansion-panels flat>
+              <v-expansion-panel>
+                <v-expansion-panel-header>
+                  Plus d'informations
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  Y'a rien
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </div>
         </v-card-subtitle>
-       
+
         <!-- Fin Horaire -->
 
         <!-- Button Formulaire Avis + Commentaire  -->
@@ -101,24 +125,77 @@
               <v-stepper v-model="e1">
                 <v-stepper-header>
                   <v-stepper-step :complete="e1 > 1" step="1">
-                    Satisfaction
+                    Présentation
                   </v-stepper-step>
 
                   <v-divider></v-divider>
 
                   <v-stepper-step :complete="e1 > 2" step="2">
-                    Temps d'attente
+                    Satisfaction
                   </v-stepper-step>
 
                   <v-divider></v-divider>
 
                   <v-stepper-step :complete="e1 > 3" step="3">
+                    Temps d'attente
+                  </v-stepper-step>
+
+                  <v-divider></v-divider>
+
+                  <v-stepper-step :complete="e1 > 4" step="4">
                     Evaluation
                   </v-stepper-step>
                 </v-stepper-header>
 
                 <v-stepper-items>
                   <v-stepper-content step="1">
+                    <v-card>
+                      <template>
+                        <v-row justify="center">
+                          <v-dialog v-model="dialog" persistent max-width="600px">
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn color="primary" dark v-bind="attrs" v-on="on" x-large>
+                                Présentez-vous
+                              </v-btn>
+                            </template>
+                            <v-card>
+                              <v-card-title>
+                                <span class="headline">Profil</span>
+                              </v-card-title>
+                              <v-card-text>
+                                <v-alert v-show="alerte" color="red" type="error">Tout les champs * sont obligatoires</v-alert>
+                                <v-alert v-show="alerte2" color="red" type="error">L'email n'est pas valide</v-alert>
+                                <v-container>
+                                  <v-row>
+                                    <v-col cols="12" sm="6" md="4">
+                                      <v-text-field label="Prénom*" v-model="prenom" required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="4">
+                                      <v-text-field label="Nom*" v-model="nom" required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                      <v-text-field label="Email*" v-model="email" required></v-text-field>
+                                    </v-col>
+                                  </v-row>
+                                </v-container>
+                                <small>*obligatoire</small>
+                              </v-card-text>
+                              <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="blue darken-1" text @click="dialog = false">
+                                  Fermer
+                                </v-btn>
+                                <v-btn color="blue darken-1" text @click="presenter">
+                                  Ok
+                                </v-btn>
+                              </v-card-actions>
+                            </v-card>
+                          </v-dialog>
+                        </v-row>
+                      </template>
+                    </v-card>
+                  </v-stepper-content>
+                  <v-stepper-content step="2">
                     <v-card>
                       <v-row>
                         <v-card-title>Est-ce que le test s'est bien déroulé ?</v-card-title>
@@ -129,39 +206,19 @@
                           <v-row>
                             <v-spacer></v-spacer>
 
-                            <v-btn class="mx-2" fab dark small color="green" @click="e1 = 2">
+                            <v-btn class="mx-2" fab dark small color="green" @click="deroulement(1)">
                               Oui
                             </v-btn>
 
                             <v-spacer></v-spacer>
 
-                            <v-btn class="mx-2" fab dark small color="red" @click="e1 = 2">
+                            <v-btn class="mx-2" fab dark small color="red" @click="deroulement(2)">
                               Non
                             </v-btn>
                             <v-spacer></v-spacer>
                           </v-row>
                         </v-card-actions>
                       </v-card-subtitle>
-                      <v-btn @click="e1 = 2">
-                        Ne pas répondre
-                      </v-btn>
-                    </v-card>
-                  </v-stepper-content>
-
-                  <v-stepper-content step="2">
-                    <v-card>
-                      <v-card-title>
-                        Combien de minutes avez vous attendu ?
-                      </v-card-title>
-                      <v-card-subtitle>
-                        <v-col cols="12">
-                          <v-slider thumb-label ticks></v-slider>
-                        </v-col>
-                      </v-card-subtitle>
-                      <v-btn color="blue" @click="e1 = 3">
-                        Continuer
-                      </v-btn>
-
                       <v-btn @click="e1 = 3">
                         Ne pas répondre
                       </v-btn>
@@ -169,6 +226,26 @@
                   </v-stepper-content>
 
                   <v-stepper-content step="3">
+                    <v-card>
+                      <v-card-title>
+                        Combien de minutes avez vous attendu ?
+                      </v-card-title>
+                      <v-card-subtitle>
+                        <v-col cols="12">
+                          <v-slider v-model="duree" thumb-label ticks></v-slider>
+                        </v-col>
+                      </v-card-subtitle>
+                      <v-btn color="blue" @click="attente">
+                        Continuer
+                      </v-btn>
+
+                      <v-btn @click="e1 = 4">
+                        Ne pas répondre
+                      </v-btn>
+                    </v-card>
+                  </v-stepper-content>
+
+                  <v-stepper-content step="4">
                     <v-card>
                       <v-row>
                         <v-card-title>
@@ -179,19 +256,20 @@
                         </v-rating>
                       </v-row>
                       <v-card-subtitle>
-                        <v-textarea label="Commentaire" auto-grow outlined rows="3" row-height="15" shaped>
+                        <v-textarea v-model="com" label="Commentaire" auto-grow outlined rows="3" row-height="15"
+                          shaped>
                         </v-textarea>
                       </v-card-subtitle>
 
-                      <v-btn color="blue" @click="e1 = 4">
+                      <v-btn color="blue" @click="eval">
                         Continuer
                       </v-btn>
-                      <v-btn @click="e1 = 4">
+                      <v-btn @click="e1 = 5">
                         Ne pas répondre
                       </v-btn>
                     </v-card>
                   </v-stepper-content>
-                  <v-stepper-content step="4">
+                  <v-stepper-content step="5">
                     <v-card>
                       <v-card-title>
                         Merci pour vos réponses
@@ -214,63 +292,42 @@
 
         <!-- Extension Commentaire  -->
         <v-expand-transition>
-          <v-card
-            v-if="reveal"
-            class="transition-fast-in-fast-out v-card--reveal"
-            style="height: 80%;"
-          >
-          <div v-show="reveal">
-            <v-divider></v-divider>
-            <template>
-              <v-responsive class="overflow-y-auto" max-height="300">
-                <div class="pa-6 text-center">
-                  <template>
-                    <v-row>
-                      <v-col
-                        cols="12"
-                        sm="6"
-                        offset-sm="3"
-                      >
-                        <v-card flat> 
-                          <v-list three-line>
-                            <template v-for="(item, index) in items">
-                              <v-subheader
-                                v-if="item.header"
-                                :key="item.header"
-                              >
-                               Commentaires :
-                              </v-subheader>
-                              <v-divider
-                                v-else-if="item.divider"
-                                :key="index"
-                                :inset="item.inset"
-                              ></v-divider>
-                              <v-list-item
-                                v-else
-                              >
-                                <v-list-item-content>
-                                  <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
-                                </v-list-item-content>
-                              </v-list-item>
-                            </template>
-                          </v-list>
-                        </v-card>
-                      </v-col>
-                    </v-row>
-                  </template>
-                </div>
+          <v-card v-if="reveal" class="transition-fast-in-fast-out v-card--reveal" style="height: 80%;">
+            <div v-show="reveal">
+              <v-divider></v-divider>
+              <template>
+                <v-responsive class="overflow-y-auto" max-height="300">
+                  <div class="pa-6 text-center">
+                    <template>
+                      <v-row>
+                        <v-col cols="12" sm="6" offset-sm="3">
+                          <v-card flat>
+                            <v-list three-line>
+                              <template v-for="(item, index) in items">
+                                <v-subheader v-if="item.header" :key="item.header">
+                                  Commentaires :
+                                </v-subheader>
+                                <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
+                                <v-list-item v-else>
+                                  <v-list-item-content>
+                                    <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+                                  </v-list-item-content>
+                                </v-list-item>
+                              </template>
+                            </v-list>
+                          </v-card>
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </div>
 
-                
-              </v-responsive>
-            </template>
-          </div>
+
+                </v-responsive>
+              </template>
+            </div>
             <v-card-actions class="pt-0">
-              <v-btn
-                text
-                color="teal accent-4"
-                @click="fermeCom"
-              >
-                Close
+              <v-btn text color="teal accent-4" @click="fermeCom">
+                Fermer
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -293,29 +350,116 @@
         reveal: false,
         e1: 1,
         rating: 3,
+        duree: 0,
         isActive: false,
-        items: [
-        { header: 'Commentaires :' },
-        { subtitle: `I'll be in your neighborhood doing errands this weekend. Do you want to hang out?` },
-        { divider: true, inset: true },
-        { subtitle: `Wish I could come, but I'm out of town this weekend.` },
-        { divider: true, inset: true },
-        { subtitle: 'Do you have Paris recommendations? Have you ever been?' },
-      ],
+        items: [{
+            header: 'Commentaires :'
+          },
+          {
+            subtitle: `I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`
+          },
+          {
+            divider: true,
+            inset: true
+          },
+          {
+            subtitle: `Wish I could come, but I'm out of town this weekend.`
+          },
+          {
+            divider: true,
+            inset: true
+          },
+          {
+            subtitle: 'Do you have Paris recommendations? Have you ever been?'
+          },
+        ],
+        jour: [{
+            title: 'Lundi'
+          },
+          {
+            title: 'Mardi'
+          },
+          {
+            title: 'Mercredi'
+          },
+          {
+            title: 'Jeudi'
+          },
+          {
+            title: 'Vendredi'
+          },
+          {
+            title: 'Samedi'
+          },
+          {
+            title: 'Dimanche'
+          },
+        ],
+        model: 1,
+        dialog: false,
+        placement: 0,
+        com: "",
+        prenom: "",
+        nom: "",
+        email: "",
+        alerte:false,
+        alerte2:false,
       }),
-    methods :{
-      ouvreCom () {
-        var expansion=document.getElementById('exp');
-        this.reveal=true;
-        expansion.style.display="none";
-      },
-      fermeCom () {
-        var expansion=document.getElementById('exp');
-        this.reveal=false;
-        expansion.style.display="block";
+      methods: {
+        ouvreCom() {
+          var expansion = document.getElementById('exp');
+          this.reveal = true;
+          expansion.style.display = "none";
+        },
+        fermeCom() {
+          var expansion = document.getElementById('exp');
+          this.reveal = false;
+          expansion.style.display = "block";
+        },
+        liste(index) {
+          this.placement = index;
+        },
+        presenter() {
+          if (this.prenom == "" || this.nom == "" || this.email == "") {
+            this.alerte=true;
+          }
+          else{
+            if(checkEmail(this.email)){
+               console.log(this.prenom);
+              console.log(this.nom);
+              console.log(this.email);
+              this.dialog=false;
+              this.e1 = 2;
+            }
+            else{
+              this.alerte2=true;
+            }
+         
+          }
+        },
+        deroulement(choix) {
+          if (choix == 1) {
+            console.log("Oui");
+          } else {
+            console.log("Non");
+          }
+          this.e1 = 3;
+        },
+        attente() {
+          console.log(this.duree);
+          this.e1 = 4;
+        },
+        eval() {
+          console.log(this.rating);
+          console.log(this.com);
+          this.e1 = 5;
+        }
       }
-    }
     })
+    function checkEmail(email) {
+             var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+             return re.test(email);
+         }
   </script>
   <style>
     .v-card--reveal {
@@ -324,7 +468,7 @@
       position: absolute;
       width: 100%;
     }
-    </style>
+  </style>
 </body>
 
 </html>
