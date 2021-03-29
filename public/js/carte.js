@@ -217,7 +217,15 @@ function geoFindMe() {
 
       map.flyTo(b,15);
       map.once('moveend', function() {
-        alert("Cliquer sur la carte pour afficher les différents centres disponibles")
+        $.get('https://geo.api.gouv.fr/communes?lat='+latitude+'&lon='+longitude+'&fields=codeRegion').done(data => {
+            var marker = cluster[data[0].codeRegion].markerCG;
+
+            for (const [key, value] of Object.entries(cluster)) {
+                value.markerCG.remove();
+            }
+    
+            map.addLayer(marker)
+        })        
     });
       
     }
