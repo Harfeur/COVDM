@@ -19,4 +19,11 @@ module.exports = function (app, db, dirname) {
             res.render('popup',documents[0]);
         })
     });
+
+    app.get('/mini_popup',(req,res) => {
+        db.collection('sites_prelevements').find({"_id": req.query.id}).toArray((error, documents) => {
+            if (error) res.status(500).send(error);
+            res.render('mini-popup',documents[0]);
+        })
+    });
 }
