@@ -2,7 +2,8 @@
 $("#mapid").height(((window.innerHeight) - 20));
 
 $( "#popup" ).dialog({
-    autoOpen: false})
+    autoOpen: false,
+    modal:true})
 
 //---------------------------------------------------------------Map--------------------------------------------------------------
 
@@ -169,14 +170,7 @@ $.get("/regions").done(dataR => {
                  '<br>' + obj.adresse.adresse +
                  '<br>' + ho +
                  '<br><strong>' + pcr + ' ' + ag + ' ' +
-                 '<button id="' + obj._id + '" onclick=maFonction(this.id)>APPUIE</button>';
-
-
-            //Solution : copier/coller du html directement
-            //var popup = '<head>            <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">            <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">            <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">          </head>     <body><div id="app"><v-app>              <v-card                 elevation="10"                shaped                class="mx-auto"                max-width="344">                <v-list-item three-line>                    <v-list-item-content>                      <div class="overline mb-4">                        Adresse                      </div>                      <v-list-item-title class="headline mb-1">                        Titre                      </v-list-item-title>                      <v-list-item-subtitle>Actuellement ouvert</v-list-item-subtitle>                    </v-list-item-content>               <v-card-actions>                  <v-btn color="blue lighten-2" text @click="envoie">                    En savoir +                  </v-btn>               </v-card-actions>              </v-card>            </v-app>          </div><script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script> <script>    new Vue({      el: "#app",      vuetify: new Vuetify(),      data: () => ({      }),      methods: {        envoie () {        }      }    })  </script></body>'
-
-            //Solution : importation du fichier à travers un get
-            //var popup = '<iframe src="./mini_popup?id='+obj._id+'"></iframe>'
+                 '<button id="' + obj._id + '" onclick=maFonction(this.id)><i class="fas fa-search-plus"></i></button>';
 
             //Création du marker et de son groupe
             var mSP = L.marker([obj.latitude, obj.longitude], {
@@ -199,10 +193,11 @@ $.get("/regions").done(dataR => {
 });
 
 function maFonction(e){
-    var i = "<iframe src='./batiment?id="+e+"'></iframe>";
+    var i = "<iframe width='400' height='500' src='./batiment?id="+e+"'></iframe>";
     //$( "#popup" ).dialog({with:800,maxHeight:1000});
     $( "#popup" ).html(i).dialog({
-        closeOnEscape: false
+        width:450
+
       });
     $( "#popup" ).html(i).dialog("open");
 }
