@@ -232,7 +232,7 @@
                       </v-card-title>
                       <v-card-subtitle>
                         <v-col cols="12">
-                          <v-slider v-model="duree" thumb-label ticks></v-slider>
+                          <v-slider max="60" min="0" step="5" v-model="duree" thumb-label ticks></v-slider>
                         </v-col>
                       </v-card-subtitle>
                       <v-btn color="blue" @click="attente">

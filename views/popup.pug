@@ -13,7 +13,7 @@ head
         v-card-title #{rs}
       div
         p
-          | #{adresse}
+          | #{adresse.adresse}
       // Début formulaire
       // Horaire
       v-card-subtitle
@@ -23,7 +23,7 @@ head
               | Lundi :
           v-col
             v-card-text(color='lighten-2')
-              | 10:15
+              | #{horaires.lundi[0][0]}
           v-col
             v-card-text(color='lighten-2')
               | 10:15
