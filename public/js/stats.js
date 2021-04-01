@@ -2,18 +2,20 @@ var cluster = {};
 var siteP = [];
 var couleur = [];
 var total = 0;
+var nbAvis = [];
+var avis = [];
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 
 //Données
 $.get("/regions").done(dataR => {
 
 
-    //création des markerclustergroup pour chaque région
+    //création object pour chaque région
     dataR.forEach(elt => {
         cluster[elt.properties.code] = {
             "name": elt.properties.nom,
             "y": 0,
-            "exploded" : true
+            "exploded": true
         }
         couleur.push(elt.properties.color)
     });
@@ -24,32 +26,45 @@ $.get("/regions").done(dataR => {
     //Données
     $.get("/sitesPrelevements").done(dataP => {
 
+        //maj cluster
         dataP.forEach(obj => {
             cluster[obj.adresse.codeRegion].y += 1
             total += 1
+            
+                 var avis  = {
+                    "y": (obj.avis).length,
+                    "label": obj.rs,
+                    "ville":obj.adresse.ville}
+                    
+            nbAvis.push(avis)
+            
+            
         });
 
-
+        console.log(nbAvis);
+        //mis en pourcentage + ajout dans liste pour les datas chart pie
         for (const [key, value] of Object.entries(cluster)) {
             cluster[key].y = ((value.y * 100) / total).toFixed(1)
             siteP.push(value)
         }
+        //console.log(siteP);
 
         //Chargement
         $('body').addClass('loaded');
 
+        //couleur
         CanvasJS.addColorSet("couleurRegion", couleur);
 
-        var chart = new CanvasJS.Chart("chartContainer", {
-            colorSet:  "couleurRegion",
+        //création chart pie nb site par region 
+        var chart = new CanvasJS.Chart("chartContainerNB", {
+            colorSet: "couleurRegion",
             exportEnabled: true,
             animationEnabled: true,
-            title:{
+            title: {
                 text: "Nombre de sites de prélèvements par Région"
             },
-            legend:{
+            legend: {
                 cursor: "pointer",
-                itemclick: explodePie
             },
             data: [{
                 type: "pie",
@@ -59,24 +74,30 @@ $.get("/regions").done(dataR => {
                 dataPoints: siteP
             }]
         });
+
+        var chartAvis = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            exportEnabled: true,
+            theme: "light1", // "light1", "light2", "dark1", "dark2"
+            title:{
+                text: "Nombre avis par site dans toute la France"
+            },
+            data: [{
+                type: "column", //change type to bar, line, area, pie, etc
+                //indexLabel: "{y}", //Shows y value on all Data Points
+                indexLabelFontColor: "#5A5757",
+                  indexLabelFontSize: 16,
+                indexLabelPlacement: "outside",
+                toolTipContent: "<b>{label}</b><br>Ville: {ville}",
+                dataPoints: nbAvis
+            }]
+        });
+        //affichage chart pie
         chart.render();
+        chartAvis.render();
 
     });
 
 
 });
 
-
-
-
-    
-    
-    function explodePie (e) {
-        if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
-        } else {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
-        }
-        e.chart.render();
-    
-    }
