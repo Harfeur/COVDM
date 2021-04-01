@@ -33,7 +33,7 @@ var iconPrev = L.icon({
 var pcr = "";
 var ag = "";
 var ho = "";
-
+var cHo = false;
 var cluster = {};
 
  
@@ -147,9 +147,11 @@ $.get("/regions").done(dataR => {
             }
 
             if (obj.horaires[jour].length == 0){
-                ho = "Fermé";
+                ho = " fermé";
+                cHo = false;
             }else{ 
-                ho = "Ouvert aujourd'hui :<br>";
+                ho = " ouvert :<br>";
+                cHo = true;
                 var hH = obj.horaires[jour];
                 for(var i=0;i<hH.length;i++){
                     if (i==0) {
@@ -166,11 +168,20 @@ $.get("/regions").done(dataR => {
                 }
             }
             // Solution : base
-              var popup = obj.rs +
-                 '<br>' + obj.adresse.adresse +
-                 '<br>' + ho +
-                 '<br><strong>' + pcr + ' ' + ag + ' ' +
-                 '<button id="' + obj._id + '" onclick=maFonction(this.id)><i class="fas fa-search-plus"></i></button>';
+            var popup = ""
+            if (cHo){
+                popup = obj.adresse.adresse +
+                '<br><br><h6>' + obj.rs +
+                '</h6><br> Actuellement' + ho +
+                '<br><br><strong>' + pcr + ' ' + ag + ' ' +
+                '</strong><button id="' + obj._id + '" onclick=maFonction(this.id)>En savoir plus</i></button>';
+            }else{                
+                popup = obj.adresse.adresse +
+                '<br><br><h6>' + obj.rs +
+                '</h6><br>Actuellement' + ho +
+                '<br><br><strong>' + pcr + ' ' + ag + ' ' +
+                '</strong><button id="' + obj._id + '" onclick=maFonction(this.id)>En savoir plus</i></button>';
+            }
 
             //Création du marker et de son groupe
             var mSP = L.marker([obj.latitude, obj.longitude], {
