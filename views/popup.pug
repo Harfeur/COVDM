@@ -3,6 +3,7 @@ head
   link(href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900' rel='stylesheet')
   link(href='https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css' rel='stylesheet')
   link(href='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css' rel='stylesheet')
+  link(href='/css/popup.css' rel='stylesheet')
   meta(name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui')
 #app
   v-app#inspire
@@ -10,54 +11,59 @@ head
     v-card.mx-auto(max-width='700')
       // Titre
       v-img.white--text.align-end(src='https://cdn.vuetifyjs.com/images/cards/cooking.png' gradient='to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)' height='200px')
-        v-card-title #{rs}
+        v-card-title titre
       div
         p
-          | #{adresse.adresse}
+          | Adresse
       // Début formulaire
       // Horaire
       v-card-subtitle
         v-row
           v-col
             .my-4.subtitle-1
-              | Lundi :
+              template
+                .text-center
+                  v-menu
+                    template(v-slot:activator='{ on: menu, attrs }')
+                      v-tooltip(bottom='')
+                        template(v-slot:activator='{ on: tooltip }')
+                          v-btn(rounded='' v-bind='attrs' v-on='{ ...tooltip, ...menu }')
+                            li
+                              | {{jour[placement].title}}
+                        span Cliquez pour changer le jour
+                    v-list
+                      v-list-item-group(v-model='model' color='indigo')
+                        v-list-item(v-for='(item, index) in jour' :key='index' @click='liste(index)')
+                          v-list-item-title {{ item.title }}
           v-col
             v-card-text(color='lighten-2')
-              | #{horaires.lundi[0][0]}
+              | 10:15
           v-col
             v-card-text(color='lighten-2')
               | 10:15
         v-row
           v-spacer
-          if do_prel
-            v-alert(dense='' text='' type='success')
-              | PCR
-          else
-            v-alert(dense='' text='' type='error')
-              .text-decoration-line-through
-                | PCR
+          v-alert(dense='' text='' type='success')
+            | PCR
           v-spacer
-          if do_antigenic
-            v-alert(dense='' outlined='' type='success')
+          v-alert(dense='' outlined='' type='error')
+            .text-decoration-line-through
               | Antig&eacute;nique
-          else
-            v-alert(dense='' outlined='' type='error')
-              .text-decoration-line-through
-                | Antig&eacute;nique
           v-spacer
-      v-expansion-panels(flat='')
-        v-expansion-panel
-          v-expansion-panel-header
-            | Plus d&apos;informations
-          v-expansion-panel-content
-            | Y&apos;a rien
+        #exp
+          v-expansion-panels(flat='')
+            v-expansion-panel
+              v-expansion-panel-header
+                | Plus d&apos;informations
+              v-expansion-panel-content
+                | Y&apos;a rien
       // Fin Horaire
       // Button Formulaire Avis + Commentaire
       v-card-actions
         v-btn(color='orange lighten-2' text='' @click='show = !show')
           | Partager mon exp&eacute;rience
         v-spacer
-        v-btn(color='green lighten-2' text='' @click='commentaire = !commentaire')
+        v-btn(color='green lighten-2' text='' @click='ouvreCom')
           | Commentaires
       // Fin Button Formulaire Avis + Commentaire
       // Extension Avis
@@ -68,15 +74,47 @@ head
             v-stepper(v-model='e1')
               v-stepper-header
                 v-stepper-step(:complete='e1 > 1' step='1')
-                  | Satisfaction
+                  | Pr&eacute;sentation
                 v-divider
                 v-stepper-step(:complete='e1 > 2' step='2')
-                  | Temps d&apos;attente
+                  | Satisfaction
                 v-divider
                 v-stepper-step(:complete='e1 > 3' step='3')
+                  | Temps d&apos;attente
+                v-divider
+                v-stepper-step(:complete='e1 > 4' step='4')
                   | Evaluation
               v-stepper-items
                 v-stepper-content(step='1')
+                  v-card
+                    template
+                      v-row(justify='center')
+                        v-dialog(v-model='dialog' persistent='' max-width='600px')
+                          template(v-slot:activator='{ on, attrs }')
+                            v-btn(color='primary' dark='' v-bind='attrs' v-on='on' x-large='')
+                              | Pr&eacute;sentez-vous
+                          v-card
+                            v-card-title
+                              span.headline Profil
+                            v-card-text
+                              v-alert(v-show='alerte' color='red' type='error') Tout les champs * sont obligatoires
+                              v-alert(v-show='alerte2' color='red' type='error') L&apos;email n&apos;est pas valide
+                              v-container
+                                v-row
+                                  v-col(cols='12' sm='6' md='4')
+                                    v-text-field(label='Prénom*' v-model='prenom' required='')
+                                  v-col(cols='12' sm='6' md='4')
+                                    v-text-field(label='Nom*' v-model='nom' required='')
+                                  v-col(cols='12')
+                                    v-text-field(label='Email*' v-model='email' required='')
+                              small *obligatoire
+                            v-card-actions
+                              v-spacer
+                              v-btn(color='blue darken-1' text='' @click='dialog = false')
+                                | Fermer
+                              v-btn(color='blue darken-1' text='' @click='presenter')
+                                | Ok
+                v-stepper-content(step='2')
                   v-card
                     v-row
                       v-card-title Est-ce que le test s&apos;est bien d&eacute;roul&eacute; ?
@@ -84,38 +122,38 @@ head
                       v-card-actions
                         v-row
                           v-spacer
-                          v-btn.mx-2(fab='' dark='' small='' color='green' @click='e1 = 2')
+                          v-btn.mx-2(fab='' dark='' small='' color='green' @click='deroulement(1)')
                             | Oui
                           v-spacer
-                          v-btn.mx-2(fab='' dark='' small='' color='red' @click='e1 = 2')
+                          v-btn.mx-2(fab='' dark='' small='' color='red' @click='deroulement(2)')
                             | Non
                           v-spacer
-                    v-btn(@click='e1 = 2')
+                    v-btn(@click='e1 = 3')
                       | Ne pas r&eacute;pondre
-                v-stepper-content(step='2')
+                v-stepper-content(step='3')
                   v-card
                     v-card-title
                       | Combien de minutes avez vous attendu ?
                     v-card-subtitle
                       v-col(cols='12')
-                        v-slider(v-model='value' thumb-label='' ticks='')
-                    v-btn(color='blue' @click='e1 = 3')
+                        v-slider(max='60' min='0' step='5' v-model='duree' thumb-label='' ticks='')
+                    v-btn(color='blue' @click='attente')
                       | Continuer
-                    v-btn(@click='e1 = 3')
+                    v-btn(@click='e1 = 4')
                       | Ne pas r&eacute;pondre
-                v-stepper-content(step='3')
+                v-stepper-content(step='4')
                   v-card
                     v-row
                       v-card-title
                         | Evaluez votre exp&eacute;rience
                       v-rating(v-model='rating' color='yellow darken-3' background-color='grey darken-1' empty-icon='$ratingFull' hover='' large='')
                     v-card-subtitle
-                      v-textarea(label='Commentaire' auto-grow='' outlined='' rows='3' row-height='15' shaped='')
-                    v-btn(color='blue' @click='e1 = 4')
+                      v-textarea(v-model='com' label='Commentaire' auto-grow='' outlined='' rows='3' row-height='15' shaped='')
+                    v-btn(color='blue' @click='eval')
                       | Continuer
-                    v-btn(@click='e1 = 4')
+                    v-btn(@click='e1 = 5')
                       | Ne pas r&eacute;pondre
-                v-stepper-content(step='4')
+                v-stepper-content(step='5')
                   v-card
                     v-card-title
                       | Merci pour vos r&eacute;ponses
@@ -126,41 +164,28 @@ head
       // Fin Extension Avis
       // Extension Commentaire
       v-expand-transition
-        div(v-show='commentaire')
-          v-divider
-          template
-            v-responsive.overflow-y-auto(max-height='400')
-              .pa-6.text-center
-                | Scroll down
-              v-responsive.text-center.pa-2(height='200vh')
-                v-responsive(min-height='50vh')
-                .text-center.body-2.mb-12
-                  | The card will appear below:
-                v-lazy(v-model='isActive' :options='{\
-                threshold: .5\
-                }' min-height='200' transition='fade-transition')
-                  v-card.mx-auto(max-width='336')
-                    v-card-title Card title
-                    v-card-text
-                      | Phasellus magna. Quisque rutrum. Nunc egestas, augue at pellentesque laoreet, felis eros
-                      | vehicula leo, at malesuada velit leo quis pede. Aliquam lobortis. Quisque libero metus,
-                      | condimentum nec, tempor a, commodo mollis, magna.
-                      | In turpis. In dui magna, posuere eget, vestibulum et, tempor auctor, justo. In turpis.
-                      | Pellentesque dapibus hendrerit tortor. Ut varius tincidunt libero.
+        v-card.transition-fast-in-fast-out.v-card--reveal(v-if='reveal' style='height: 80%;')
+          div(v-show='reveal')
+            v-divider
+            template
+              v-responsive.overflow-y-auto(max-height='300')
+                .pa-6.text-center
+                  template
+                    v-row
+                      v-col(cols='12' sm='6' offset-sm='3')
+                        v-card(flat='')
+                          v-list(three-line='')
+                            template(v-for='(item, index) in items')
+                              v-subheader(v-if='item.header' :key='item.header')
+                                | Commentaires :
+                              v-divider(v-else-if='item.divider' :key='index' :inset='item.inset')
+                              v-list-item(v-else='')
+                                v-list-item-content
+                                  v-list-item-subtitle(v-html='item.subtitle')
+          v-card-actions.pt-0
+            v-btn(text='' color='teal accent-4' @click='fermeCom')
+              | Fermer
       // Fin Extension Commentaire
 script(src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js')
 script(src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js')
-script.
-    new Vue({
-        el: '#app',
-        vuetify: new Vuetify(),
-        data: () => ({
-            timeOuverture: '10:15',
-            timeFermeture: '10:15',
-            show: false,
-            commentaire: false,
-            e1: 1,
-            rating: 3,
-            isActive: false,
-        }),
-    })
+script(src='/js/popup.js')
