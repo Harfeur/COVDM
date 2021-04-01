@@ -10,7 +10,7 @@ head
     // Création popup
     v-card.mx-auto(max-width='700')
       // Titre
-      v-img(src='https://cdn.vuetifyjs.com/images/cards/cooking.png' height='200px')
+      v-img(src='/image?id='+_id height='200px')
         v-app-bar(flat='', color='rgba(0, 0, 0, 0)')
           v-toolbar-title.title.white--text.pl-0
           v-spacer
@@ -44,10 +44,16 @@ head
                           v-list-item-title {{ item.title }}
           v-col
             v-card-text(color='lighten-2')
-              | 
+              //- if (time[(jour[placement].title)].toLowerCase()).length>0
+              //-   | {{getHoraireToString(time[(jour[placement].title).toLowerCase()][0][0])}}
+              //- else 
+              //-   | Fermé
           v-col
             v-card-text(color='lighten-2')
-              | {{getHoraireToString(time[(jour[placement].title).toLowerCase()][0][1])}}
+              //- if (horaires[(jour[placement].title)].toLowerCase())[0].length>1
+              //-   | {{getHoraireToString(time[(jour[placement].title).toLowerCase()][0][1])}}
+              //- else 
+              //-   | Fermé
         v-row
           v-spacer
           if do_prel 
@@ -198,7 +204,7 @@ head
       // Fin Extension Avis
       // Extension Commentaire
       v-expand-transition
-        v-card.transition-fast-in-fast-out.v-card--reveal(v-if='reveal' style='height: 80%;')
+        v-card.transition-fast-in-fast-out.v-card--reveal(v-if='reveal' style='height: 80;')
           div(v-show='reveal')
             v-divider
             template
