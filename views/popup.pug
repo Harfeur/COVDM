@@ -10,8 +10,16 @@ head
     // Création popup
     v-card.mx-auto(max-width='700')
       // Titre
-      v-img.white--text.align-end(src='https://cdn.vuetifyjs.com/images/cards/cooking.png' gradient='to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)' height='200px')
-        v-card-title #{rs}
+      v-img(src='https://cdn.vuetifyjs.com/images/cards/cooking.png' height='200px')
+        v-app-bar(flat='', color='rgba(0, 0, 0, 0)')
+          v-toolbar-title.title.white--text.pl-0
+          v-spacer
+          v-btn(color='white', icon='', @click='hide')
+            v-icon mdi-close
+        div 
+          v-card-title.white--text.mt-4
+        v-card-title.white--text.mt-8
+          p.ml-3 #{rs}
       div
         p
           | #{adresse.adresse}
@@ -27,9 +35,8 @@ head
                     template(v-slot:activator='{ on: menu, attrs }')
                       v-tooltip(bottom='')
                         template(v-slot:activator='{ on: tooltip }')
-                          v-btn(rounded='' v-bind='attrs' v-on='{ ...tooltip, ...menu }')
-                            li
-                              | {{jour[placement].title}}
+                          v-btn(rounded='' v-on='{ ...tooltip, ...menu }')
+                            | {{jour[placement].title}}
                         span Cliquez pour changer le jour
                     v-list
                       v-list-item-group(v-model='model' color='indigo')
@@ -37,7 +44,7 @@ head
                           v-list-item-title {{ item.title }}
           v-col
             v-card-text(color='lighten-2')
-              | {{getHoraireToString(time[(jour[placement].title).toLowerCase()][0][0])}}
+              | 
           v-col
             v-card-text(color='lighten-2')
               | {{getHoraireToString(time[(jour[placement].title).toLowerCase()][0][1])}}
@@ -65,15 +72,33 @@ head
               v-expansion-panel-header
                 | Plus d&apos;informations
               v-expansion-panel-content
-                | Y&apos;a rien
+                if mod_prel!=""
+                  | #{mod_prel}
+                br
+                if public!=""
+                  | #{public}
+                br
+                if check_rdv!=""
+                  | #{check_rdv}
+                br
+                if tel_rdv!=""
+                  | Contacter : #{tel_rdv}
+                br
+                if web_rdv!=""
+                  | Site web : 
+                  a(href='#{web_rdv}') #{web_rdv}
       // Fin Horaire
       // Button Formulaire Avis + Commentaire
       v-card-actions
         v-btn(color='orange lighten-2' text='' @click='show = !show')
           | Partager mon exp&eacute;rience
         v-spacer
-        v-btn(color='green lighten-2' text='' @click='ouvreCom')
-          | Commentaires
+        if avis.length>0
+          v-btn(color='green lighten-2' text='' @click='ouvreCom')
+            | Commentaires
+        else
+          v-btn(disabled color='green lighten-2' text='' @click='ouvreCom')
+            | Commentaires
       // Fin Button Formulaire Avis + Commentaire
       // Extension Avis
       v-expand-transition
