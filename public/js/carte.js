@@ -1,10 +1,6 @@
 // Ajustation taille carte en fonction de l'écran
 $("#mapid").height(((window.innerHeight) - 20));
 
-$( "#popup" ).dialog({
-    autoOpen: false,
-    modal:true})
-
 //---------------------------------------------------------------Map--------------------------------------------------------------
 
 //Création de la map
@@ -203,15 +199,28 @@ $.get("/regions").done(dataR => {
 
 });
 
-function maFonction(e){
-    var i = "<iframe width='400' height='500' src='./batiment?id="+e+"'></iframe>";
-    //$( "#popup" ).dialog({with:800,maxHeight:1000});
-    $( "#popup" ).html(i).dialog({
-        width:450
+let popupOpen = false;
 
-      });
-    $( "#popup" ).html(i).dialog("open");
+function maFonction(e){
+    var i = "<iframe width='400' height='500' src='./batiment?id="+e+"'></iframe>" + "<a href=\"#\" onclick=\"hide(this.id)\">Ok!</a>";
+    //$( "#popup" ).dialog({with:800,maxHeight:1000});
+    $( "#popup" ).html(i).css('display', 'block');
+
+    setTimeout(() => {
+        popupOpen = true;
+    }, 500);
+
 }
+
+$("#popup").on('click', e =>
+{
+    console.log("bye")
+    if (popupOpen)
+    {
+        $("#popup").css('display', 'none');
+        popupOpen = false;
+    }
+});
 //---------------------------------------------------------------Map--------------------------------------------------------------
 
 map.on('zoomend', function (e) {

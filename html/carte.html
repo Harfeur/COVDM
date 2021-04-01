@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-    crossorigin=""/>  
-  <!-- Make sure you put this AFTER Leaflet's CSS -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-   crossorigin=""></script>
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
 
     <!-- CSS -->
     <link rel="stylesheet" href="/css/loading.css">
 
     <!-- Jquery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <!--- JQuery-UI-->
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -28,66 +29,26 @@
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
     <!-- icon  -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 
     <!-- Vuetify -->
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 
+
+
+
+
+
+    <link href="/css/carte.css" rel="stylesheet">
+
 </head>
 <style>
- 
-
-  /* / Hide scrollbar for IE, Edge and Firefox / */
-  body::-webkit-scrollbar{
-    display: none;
-  }
-
-  /* / Hide scrollbar for IE, Edge and Firefox / */
-body{
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-  /*
-   * These CSS rules affect the tooltips within maps with the custom-popup
-   * class. See the full CSS for all customizable options:
-   * https://github.com/mapbox/mapbox.js/blob/001754177f3985c0e6b4a26e3c869b0c66162c99/theme/style.css#L321-L366
-  */
-  .custom-popup .leaflet-popup-content-wrapper {
-    font-size:16px;
-    line-height:24px;
-    border-top-right-radius: 0px;
-    border-top-left-radius: 30px ;
-    border-bottom-left-radius: 0px ;
-    border-bottom-right-radius: 30px ;
-    }
-  /* .custom-popup .leaflet-popup-content-wrapper a {
-    } */
-  /* .custom-popup .leaflet-popup-tip-container {
-    width:40px;
-    height:30px;
-    } */
-  /* .custom-popup .leaflet-popup-tip {
-    border-top-right-radius: 0px;
-    border-top-left-radius: 20px ;
-    border-bottom-left-radius: 20px ;
-    border-bottom-right-radius: 0px ;
-    } */
-
-  /* .custom-popup .leaflet-popup {
-	position: absolute;
-	text-align: center;
-	margin-bottom: 0px;
-	} */
-
-  #mapid{
-    z-index: 10;
-  }
-  </style>
+</style>
 
 <body>
 
-  <div id=popup></div>
+<div class="popup" id=popup></div>
 
 <div id="loader-wrapper">
     <div id="loader"></div>
