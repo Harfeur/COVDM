@@ -16,6 +16,10 @@
 
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!--- JQuery-UI-->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <title>COVDM</title>
     
     <!-- markercluster  -->
@@ -28,16 +32,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 
     <!-- Vuetify -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 
 </head>
 <style>
-  #app{
-    display: none;
-  }
+ 
 
   /* / Hide scrollbar for IE, Edge and Firefox / */
   body::-webkit-scrollbar{
@@ -79,9 +78,15 @@ body{
 	text-align: center;
 	margin-bottom: 0px;
 	}
+
+  #mapid{
+    z-index: 10;
+  }
   </style>
 
 <body>
+
+  <div id=popup></div>
 
 <div id="loader-wrapper">
     <div id="loader"></div>
@@ -96,24 +101,9 @@ body{
     <!-- <div class="custom-popup" id="mapid"></div> -->
     <div id="mapid"></div>
 
- <div id="app">
-    <v-app>
-      <v-main>
-       
-      </v-main>
-    </v-app>
-  </div>
 
 </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-  <script>
-    new Vue({
-      el: '#app',
-      vuetify: new Vuetify(),
-    })
-  </script>
 </body>
 
 <script src="/js/fonction.js"></script>
