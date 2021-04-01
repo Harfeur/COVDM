@@ -34,7 +34,8 @@ $.get("/regions").done(dataR => {
                  var avis  = {
                     "y": (obj.avis).length,
                     "label": obj.rs,
-                    "ville":obj.adresse.ville}
+                    "ville":obj.adresse.ville,
+                    "exploded": true}
                     
             nbAvis.push(avis)
             
@@ -88,7 +89,7 @@ $.get("/regions").done(dataR => {
                 indexLabelFontColor: "#5A5757",
                   indexLabelFontSize: 16,
                 indexLabelPlacement: "outside",
-                toolTipContent: "<b>{label}</b><br>Ville: {ville}",
+                toolTipContent: "<b>{label}</b><br>Ville: {ville}<br><br>Nombre d'avis : {y}",
                 dataPoints: nbAvis
             }]
         });
