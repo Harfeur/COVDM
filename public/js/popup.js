@@ -34,6 +34,7 @@ new Vue({
         ],
         model: 1,
         dialog: false,
+        dialog1: false,
         com: "",
         prenom: "",
         nom: "",
@@ -41,6 +42,7 @@ new Vue({
         alerte:false,
         alerte2:false,
         placement: 0,
+        heureO: 1,
     }),
     methods: {
         ouvreCom() {
@@ -101,7 +103,11 @@ new Vue({
             var minute = dec.toString();
             return heure+":"+minute;
         
-        }
+        },
+        modifHoraire(){
+            console.log(this.heureO);
+            this.dialog1=false;
+          }
     },
     
 })
