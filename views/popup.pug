@@ -38,14 +38,14 @@ head
                         v-list-item(v-for='(item, index) in jour' :key='index' @click='liste(index)')
                           v-list-item-title {{ item.title }}
           v-col
-            v-card-text(color='lighten-2')
+            v-btn(style='height: 60px;' outlined='' rounded='' text='' aria-disabled='')
               //- S'il y a un horaire on l'affiche sinon fermé (normalement l'horaire change correctement)
               //- if 
               //-   | {{getHoraireToString(time[(jour[placement].title).toLowerCase()][0][0])}}
               //- else 
               //-   | Fermé
           v-col
-            v-card-text(color='lighten-2')
+            v-btn(style='height: 60px;' outlined='' rounded='' text='' aria-disabled='')
             //- pareil
               //- if 
               //-   | {{getHoraireToString(time[(jour[placement].title).toLowerCase()][0][1])}}
