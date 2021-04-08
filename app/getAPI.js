@@ -21,10 +21,17 @@ function download(uri, filename, callback) {
 module.exports = function (app, db, dirname) {
 
     app.get('/sitesPrelevements', (req, res) => {
-        db.collection('sites_prelevements').find({}).toArray((error, documents) => {
-            if (error) res.status(500).send(error);
-            res.send(documents);
-        })
+        if (req.query.id_region) {
+            db.collection('sites_prelevements').find({"adresse.codeRegion": req.query.id_region}).toArray((error, documents) => {
+                if (error) res.status(500).send(error);
+                res.send(documents);
+            })
+        } else {
+            db.collection('sites_prelevements').find({}).toArray((error, documents) => {
+                if (error) res.status(500).send(error);
+                res.send(documents);
+            })
+        }
     });
 
     app.get('/regions', (req, res) => {
