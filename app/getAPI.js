@@ -22,7 +22,7 @@ module.exports = function (app, db, dirname) {
 
     app.get('/sitesPrelevements', (req, res) => {
         if (req.query.id_region) {
-            db.collection('sites_prelevements').find({"adresse.codeRegion": req.query.id_region}).toArray((error, documents) => {
+            db.collection('sites_prelevements').find({"adresse.codeRegion": req.query.id_region.toString()}).toArray((error, documents) => {
                 if (error) res.status(500).send(error);
                 res.send(documents);
             })
@@ -40,6 +40,20 @@ module.exports = function (app, db, dirname) {
             res.send(documents);
         })
     });
+
+    app.get('/departements', (req, res) => {
+        if (req.query.id_region) {
+            db.collection('departement').find({"properties.codeRegion": req.query.id_region}).toArray((error, documents) => {
+                if (error) res.status(500).send(error);
+                res.send(documents);
+            })
+        } else {
+            db.collection('departement').find({}).toArray((error, documents) => {
+                if (error) res.status(500).send(error);
+                res.send(documents);
+            })
+        }
+    })
 
     app.get('/image', (req, res) => {
         let urlLocale = dirname + '/streetview/' + req.query.id + '.jpg'
