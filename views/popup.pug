@@ -10,16 +10,11 @@ head
     // Création popup
     v-card.mx-auto(max-width='700')
       // Titre
-      v-img(src='/image?id='+_id height='200px')
-        v-app-bar(flat='', color='rgba(0, 0, 0, 0)')
-          v-toolbar-title.title.white--text.pl-0
-          v-spacer
-          v-btn(color='white', icon='', @click='hide')
-            v-icon mdi-close
-        div 
-          v-card-title.white--text.mt-4
-        v-card-title.white--text.mt-8
-          p.ml-3 #{rs}
+      v-img.white--text.align-end(src='/image?id='+_id height='200px')
+        v-row(:align='center' style='height: 60px;')
+          v-col.mr-auto(cols='auto')
+            v-card.pa-2(color='#5B5959')
+              p.font-italic(style='color:white;') #{rs}
       div
         p
           | #{adresse.adresse}
