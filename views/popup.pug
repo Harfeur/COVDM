@@ -11,7 +11,7 @@ head
     v-card.mx-auto(max-width='700')
       // Titre
       v-img.white--text.align-end(src='/image?id='+_id height='200px')
-        v-row(:align='center' style='height: 60px;')
+        v-row(style='height: 60px;')
           v-col.mr-auto(cols='auto')
             v-card.pa-2(color='#5B5959')
               p.font-italic(style='color:white;') #{rs}
@@ -39,13 +39,15 @@ head
                           v-list-item-title {{ item.title }}
           v-col
             v-card-text(color='lighten-2')
-              //- if (time[(jour[placement].title)].toLowerCase()).length>0
+              //- S'il y a un horaire on l'affiche sinon fermé (normalement l'horaire change correctement)
+              //- if 
               //-   | {{getHoraireToString(time[(jour[placement].title).toLowerCase()][0][0])}}
               //- else 
               //-   | Fermé
           v-col
             v-card-text(color='lighten-2')
-              //- if (horaires[(jour[placement].title)].toLowerCase())[0].length>1
+            //- pareil
+              //- if 
               //-   | {{getHoraireToString(time[(jour[placement].title).toLowerCase()][0][1])}}
               //- else 
               //-   | Fermé
