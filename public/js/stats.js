@@ -1,7 +1,9 @@
-var cluster = {};
-var siteP = [];
+var region = {};
+var departement = {};
+var nbSiteReg = [];
+var nbSiteDep = [];
 var couleur = [];
-var total = 0;
+var totalSite = 0;
 var nbAvis = [];
 var avis = [];
 
@@ -18,26 +20,29 @@ $.get("/regions").done(dataR => {
 
     //création object pour chaque région
     dataR.forEach(elt => {
-        cluster[elt.properties.code] = {
+        region[elt.properties.code] = {
             "name": elt.properties.nom,
+            // y = nombre de site par région
             "y": 0,
+            "nbSite":0,
             "exploded": true
-        }
+        } 
         couleur.push(elt.properties.color)
     });
-
+    
     //-------------------------------------------------------- Site Prélevement-----------------------------------------------------------
 
 
-    //Données
-    $.get("/sitesPrelevements",{id_region :id_region}).done(dataP => {
-        
-        
-        //maj cluster
-        dataP.forEach(obj => {
-            cluster[obj.adresse.codeRegion].y += 1
-            total += 1
-            
+        //Données
+        $.get("/sitesPrelevements", {id_region: id_region}).done(dataP => {
+
+
+            //maj region
+            dataP.forEach(obj => {
+                //ajout du site par région
+                region[obj.adresse.codeRegion].y += 1
+                region[obj.adresse.codeRegion].nbSite += 1
+
                  var avis  = {
                     "y": (obj.avis).length,
                     "label": obj.rs,
@@ -49,16 +54,17 @@ $.get("/regions").done(dataR => {
             
         });
 
-        //console.log(nbAvis);
-        //mis en pourcentage + ajout dans liste pour les datas chart pie
-        for (const [key, value] of Object.entries(cluster)) {
-            cluster[key].y = ((value.y * 100) / total).toFixed(1)
-            siteP.push(value)
-        }
+            totalSite = dataP.length
+
+            //mis en pourcentage + ajout dans liste pour les datas chart pie
+            for (const [key, value] of Object.entries(region)) {
+                region[key].y = ((value.y * 100) / totalSite).toFixed(1)
+                nbSiteReg.push(value)
+            }
         //console.log(siteP);
 
-        //Chargement
-        $('body').addClass('loaded');
+            //Chargement
+            $('body').addClass('loaded');
 
         //couleur
         CanvasJS.addColorSet("couleurRegion", couleur);
