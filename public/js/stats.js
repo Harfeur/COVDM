@@ -6,6 +6,7 @@ var couleur = [];
 var totalSite = 0;
 var meilleureSite = [];
 var depBestSite = {};
+var nbContainer = 3;
 
 
 
@@ -149,31 +150,38 @@ $.get("/regions").done(dataR => {
                 chart.render();
 
                 //meilleure site par département pour une région donnée
-                var chart = new CanvasJS.Chart("chartContainer3", {
-                    animationEnabled: true,
-                    exportEnabled: true,
-                    theme: "light1", // "light1", "light2", "dark1", "dark2"
-                    title:{
-                        text: "Meilleure site en " + depBestSite[12].name
-                    },
-                      axisY: {
-                      includeZero: true
-                    },
-                    axisX:{
-                        labelFontSize:10
-                    },
-                    data: [{
-                        type: "bar", //change type to bar, line, area, pie, etc
-                        //indexLabel: "{y}", //Shows y value on all Data Points
-                        indexLabelFontColor: "#5A5757",
-                          indexLabelFontSize: 14,
-                        indexLabelPlacement: "outside",
-                        toolTipContent: "{label}<br> Moyenne avis : {y} <strong></strong> <br>Ville : {ville} " ,
-                        dataPoints: depBestSite[12].bestSite
-                    }]
-                });
-                
-                chart.render();
+                for (const [key, value] of Object.entries(departement)) {
+                    var id_Div = "chartContainer" + nbContainer
+                    var div = '<div class="chart" id="'+ id_Div + '"></div>'
+                    nbContainer += 1
+                    $("#chartContainer2").after(div);
+
+                      var chart = new CanvasJS.Chart(id_Div, {
+                        animationEnabled: true,
+                        exportEnabled: true,
+                        theme: "light1", // "light1", "light2", "dark1", "dark2"
+                        title:{
+                            text: "Moyenne des notes de chaque site en " + depBestSite[key].name
+                        },
+                        axisY: {
+                        includeZero: true
+                        },
+                        axisX:{
+                            labelFontSize:10
+                        },
+                        data: [{
+                            type: "bar", //change type to bar, line, area, pie, etc
+                            //indexLabel: "{y}", //Shows y value on all Data Points
+                            indexLabelFontColor: "#5A5757",
+                            indexLabelFontSize: 14,
+                            indexLabelPlacement: "outside",
+                            toolTipContent: "{label}<br> Moyenne avis : {y} <strong></strong> <br>Ville : {ville} " ,
+                            dataPoints: depBestSite[key].bestSite
+                        }]
+                    });
+                    
+                   chart.render();
+                }
             }
 
         });
