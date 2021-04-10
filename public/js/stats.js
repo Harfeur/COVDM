@@ -31,7 +31,16 @@ $.get("/regions").done(dataR => {
     });
     
     //-------------------------------------------------------- Site Prélevement-----------------------------------------------------------
-
+    $.get("/departements", {id_region: id_region}).done(dataD => {
+        dataD.forEach(oel => {
+            departement[oel.properties.code] = {
+                "name": oel.properties.nom,
+                // y = nombre de site par département
+                "y":0,
+                "nbSite":0,
+                //"nbAvis": []
+            }
+        })
 
         //Données
         $.get("/sitesPrelevements", {id_region: id_region}).done(dataP => {
@@ -43,16 +52,23 @@ $.get("/regions").done(dataR => {
                 region[obj.adresse.codeRegion].y += 1
                 region[obj.adresse.codeRegion].nbSite += 1
 
-                 var avis  = {
-                    "y": (obj.avis).length,
-                    "label": obj.rs,
-                    "ville":obj.adresse.ville,
-                    "exploded": true}
-                    
-            nbAvis.push(avis)
-            
-            
-        });
+                // var avis = {
+                //     "y": (obj.avis).length,
+                //     "rs": obj.rs,
+                //     "ville": obj.adresse.ville,
+                // }  
+                if(id_region){
+                    if (departement[obj.adresse.codeDepartement] != null) {                   
+                        departement[obj.adresse.codeDepartement].y += 1                  
+                        departement[obj.adresse.codeDepartement].nbSite += 1
+                        //avis["label"] =  departement[obj.adresse.codeDepartement].name                              
+                        //departement[obj.adresse.codeDepartement].nbAvis.push(avis)
+                    }
+                }
+                
+
+                //nbAvis.push(avis)
+            });
 
             totalSite = dataP.length
 
@@ -61,65 +77,66 @@ $.get("/regions").done(dataR => {
                 region[key].y = ((value.y * 100) / totalSite).toFixed(1)
                 nbSiteReg.push(value)
             }
-        //console.log(siteP);
+            for (const [key, value] of Object.entries(departement)) {
+                departement[key].y = ((value.y * 100) / totalSite).toFixed(1)
+                nbSiteDep.push(value)
+            }
 
             //Chargement
             $('body').addClass('loaded');
 
-        //couleur
-        CanvasJS.addColorSet("couleurRegion", couleur);
 
+            //affichage chart pie
+            if (!id_region) {
+                //couleur
+                CanvasJS.addColorSet("couleurRegion", couleur);
+                //nb site par region 
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    colorSet: "couleurRegion",
+                    exportEnabled: true,
+                    animationEnabled: true,
+                    title: {
+                        text: "Nombre de sites de prélèvements par région"
+                    },
+                    legend: {
+                        cursor: "pointer",
+                    },
+                    data: [{
+                        type: "pie",
+                        showInLegend: false,
+                        toolTipContent: "{name}: <strong>{y}%</strong> <br>Nombre de site de prélèvement : {nbSite}" ,
+                        indexLabel: "{name} - {y}%",
+                        dataPoints: nbSiteReg
+                    }]
+                });
 
+                chart.render();
+            } else {      
+                //nb site par département pour une région donnée
+                var chartnbSiteDepart = new CanvasJS.Chart("chartContainerDepart", {
+                    exportEnabled: true,
+                    animationEnabled: true,
+                    title: {
+                        text: "Nombre de sites de prélèvements par département de la région " + region[id_region].name
+                    },
+                    legend: {
+                        cursor: "pointer",
+                    },
+                    data: [{
+                        type: "pie",
+                        showInLegend: false,
+                        toolTipContent: "{name}: <strong>{y}%</strong> <br>Nombre de site de prélèvement : {nbSite}" ,
+                        indexLabel: "{name} - {y}%",
+                        dataPoints: nbSiteDep
+                    }]
+                });
 
+                chartnbSiteDepart.render();
 
+            }
 
-        //affichage chart pie
-        if(!id_region){    
-         //nb site par region 
-        var chart = new CanvasJS.Chart("chartContainer", {
-            colorSet: "couleurRegion",
-            exportEnabled: true,
-            animationEnabled: true,
-            title: {
-                text: "Nombre de sites de prélèvements par Région"
-            },
-            legend: {
-                cursor: "pointer",
-            },
-            data: [{
-                type: "pie",
-                showInLegend: false,
-                toolTipContent: "{name}: <strong>{y}%</strong>",
-                indexLabel: "{name} - {y}%",
-                dataPoints: siteP
-            }]
         });
-        
-        chart.render();  
-        }else{    
-            //Pour chaque région nb avis
-            var chartAvis = new CanvasJS.Chart("chartContainer", {
-                animationEnabled: true,
-                exportEnabled: true,
-                theme: "light1", // "light1", "light2", "dark1", "dark2"
-                title:{
-                    text: "Nombre d'avis par site en "+cluster[id_region].name
-                },
-                data: [{
-                    type: "column", //change type to bar, line, area, pie, etc
-                    //indexLabel: "{y}", //Shows y value on all Data Points
-                    indexLabelFontColor: "#5A5757",
-                      indexLabelFontSize: 16,
-                    indexLabelPlacement: "outside",
-                    toolTipContent: "<b>{label}</b><br>Ville: {ville}<br><br>Nombre d'avis : {y}",
-                    dataPoints: nbAvis
-                }]
-            }); 
-            chartAvis.render();
-        }
 
     });
 
-
 });
-
