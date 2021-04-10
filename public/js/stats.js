@@ -164,10 +164,10 @@ $.get("/regions").done(dataR => {
                             text: "Moyenne des notes de chaque site en " + depBestSite[key].name
                         },
                         axisY: {
-                        includeZero: true
+                        includeZero: true,
                         },
                         axisX:{
-                            labelFontSize:10
+                            labelFontSize:10,
                         },
                         data: [{
                             type: "bar", //change type to bar, line, area, pie, etc
