@@ -164,18 +164,19 @@ $.get("/regions").done(dataR => {
             }
             // Solution : base
             var popup = ""
+            //si c'est fermé ou ouvert
             if (cHo){
-                popup = obj.adresse.adresse +
-                '<br><br><h6>' + obj.rs +
-                '</h6><br> Actuellement' + ho +
-                '<br><br><strong>' + pcr + ' ' + ag + ' ' +
-                '</strong><button id="' + obj._id + '" onclick=maFonction(this.id)>En savoir plus</i></button>';
-            }else{                
-                popup = obj.adresse.adresse +
-                '<br><br><h6>' + obj.rs +
-                '</h6><br>Actuellement' + ho +
-                '<br><br><strong>' + pcr + ' ' + ag + ' ' +
-                '</strong><button id="' + obj._id + '" onclick=maFonction(this.id)>En savoir plus</i></button>';
+                popup =  '<div > <p class="adresse_popup">'+ obj.adresse.adresse +'</p>'+
+                '<p class="rs_popup">' + obj.rs + '</p>' +
+                '<p class="horaire-o" > Actuellement' + ho + "</p>"+
+                //'<br><br><strong>' + pcr + ' ' + ag + '</strong> ' +
+                '<button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></div>';
+                      }else{                
+                popup =  '<div > <p class="adresse_popup">'+ obj.adresse.adresse +'</p>'+
+                '<p class="rs_popup">' + obj.rs + '</p>' +
+                '<p class="horaire-f" > Actuellement' + ho + "</p>"+
+                //'<br><br><strong>' + pcr + ' ' + ag + ' </strong>' +
+                '<button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></div>';
             }
 
             //Création du marker et de son groupe
