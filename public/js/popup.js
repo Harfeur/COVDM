@@ -104,7 +104,10 @@ new Vue({
                     attente:this.duree,
                     bonDeroulement:this.der,
                     message:this.com
-                })
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             })
         },
         getFloatDecimalPortion(x) {

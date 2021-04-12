@@ -10,18 +10,19 @@ const {Db} = require('mongodb');
 module.exports = function (app, db, dirname) {
 
     app.post('/ajoutCommentaire', (req, res) => {
+        console.log(req.body)
         if (req.body.nom && req.body.email && req.body.id && req.body.note) {
-            const filter = {"_id": id};
+            const filter = {"_id": req.body.id};
             if (req.body.attente !== undefined) {
-                db.updateOne(filter, {$push: {"stats.attente": req.body.attente}});
+                db.collection('sites_prelevements').updateOne(filter, {$push: {"stats.attente": req.body.attente}});
             }
             if (req.body.bonDeroulement !== undefined) {
                 if (req.body.bonDeroulement)
-                    db.updateOne(filter, {$inc: {"stats.bonDeroulement.oui": 1}});
+                    db.collection('sites_prelevements').updateOne(filter, {$inc: {"stats.bonDeroulement.oui": 1}});
                 else
-                    db.updateOne(filter, {$inc: {"stats.bonDeroulement.non": 1}});
+                    db.collection('sites_prelevements').updateOne(filter, {$inc: {"stats.bonDeroulement.non": 1}});
             }
-            db.updateOne(filter, {
+            db.collection('sites_prelevements').updateOne(filter, {
                 $push: {
                     "avis": {
                         "nom": req.body.nom,
