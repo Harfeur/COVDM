@@ -18,7 +18,7 @@ function download(uri, filename, callback) {
     });
 }
 
-module.exports = function (app, db, dirname) {
+module.exports = function (app, db, dirname, data) {
 
     app.get('/sitesPrelevements', (req, res) => {
         if (req.query.id_region) {
@@ -27,16 +27,20 @@ module.exports = function (app, db, dirname) {
                 res.send(documents);
             })
         } else {
-            db.collection('sites_prelevements').find({}).toArray((error, documents) => {
+            if (data.sites) res.send(data.sites);
+            else db.collection('sites_prelevements').find({}).toArray((error, documents) => {
                 if (error) res.status(500).send(error);
+                data.sites = documents;
                 res.send(documents);
             })
         }
     });
 
     app.get('/regions', (req, res) => {
-        db.collection('region').find({}).toArray((error, documents) => {
+        if (data.regions) res.send(data.regions);
+        else db.collection('region').find({}).toArray((error, documents) => {
             if (error) res.status(500).send(error);
+            data.regions = documents;
             res.send(documents);
         })
     });
