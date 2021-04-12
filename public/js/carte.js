@@ -44,10 +44,22 @@ $.get("/regions").done(dataR => {
 
     dataRegion = dataR;
 
+    //Couleur
+    function getColor(d) {
+        return d > 100000 ? '#800026' :
+               d > 50000 ? '#BD0026' :
+               d > 40000  ? '#E31A1C' :
+               d > 30000  ? '#FC4E2A' :
+               d > 20000   ? '#FD8D3C' :
+               d > 10000  ? '#FEB24C' :
+               d > 1000   ? '#FED976' :
+                          '#FFEDA0';
+    }
+
     //style
     function style(feature) {
         return {
-            fillColor: feature.properties.color,
+            fillColor: getColor(feature.properties.color),
             weight: 2,
             opacity: 1,
             color: 'white',
@@ -93,8 +105,6 @@ $.get("/regions").done(dataR => {
         
     }
 
-    
-
     //ajout des events
     function onEachFeature(feature, layer) {
         layer.on({
@@ -121,6 +131,40 @@ $.get("/regions").done(dataR => {
         }
     });
     
+    var info = L.control({position: 'bottomright'});
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+        this.update();
+        return this._div;
+    };
+    // method that we will use to update the control based on feature properties passed
+    info.update = function (props) {
+        this._div.innerHTML = "<h4> Nombre de test réalisé jusqu'au 8 avril 2021</h4>" ;
+    };
+
+    info.addTo(map);
+    //legend
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+    
+        var div = L.DomUtil.create('div', 'info legend'),
+            grades = [0, 1000, 10000, 20000, 30000, 40000, 50000, 100000],
+            labels = [];
+    
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+        }
+    
+        return div;
+    };
+    
+    legend.addTo(map);
+
     //création des markerclustergroup pour chaque région
     dataR.forEach(elt => {
         cluster[elt.properties.code] = {
