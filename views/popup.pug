@@ -8,7 +8,7 @@ head
 #app
   v-app#inspire
     // Création popup
-    v-card.mx-auto(width='500')
+    v-card(width='550px' heigth='550px')
       // Titre
       v-img.white--text.align-end(src='/image?id='+_id height='200px')
         v-row(style='height: 60px;')
@@ -53,7 +53,19 @@ head
                       v-btn(color='dark' text='' @click='dialog1 = false')
                         | Fermer
                       v-spacer
-                      v-btn(color='primary' text='' @click='modifHoraire')
+                      v-btn(color='primary' text='' @click='modifHoraireOuverture')
+                        | Modifier
+            template
+              .text-center
+                v-dialog(v-model='dialog1' width='500')
+                  v-card
+                    v-card-text
+                      v-time-picker(v-model='heureO' full-width='' color='red' format='24hr'  scrollable='')
+                    v-card-actions
+                      v-btn(color='dark' text='' @click='dialog1 = false')
+                        | Fermer
+                      v-spacer
+                      v-btn(color='primary' text='' @click='modifHoraireFermeture')
                         | Modifier
         v-row
           v-spacer

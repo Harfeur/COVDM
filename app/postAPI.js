@@ -43,4 +43,23 @@ module.exports = function (app, db, dirname, data) {
         }
     });
 
+    app.post('/majHoraire', (req, res) => {
+        if (req.body.id && req.body.heureO && req.body.heureF && req.body.jour){
+            const filter = {"_id": req.body.id};
+            jour=req.body.jour ;
+            db.collection('sites_prelevements').updateOne(filter, {
+                $set: {
+                    "horaires[jour]": [[req.body.heureO, req.body.heureF]]
+                }
+            }).then(() => {
+                res.send("Ok");
+            }).catch(err => {
+                res.status(500);
+                console.error(err);
+            })
+        } else {
+            res.status(500);
+        }
+        
+    });
 }
