@@ -30,6 +30,8 @@ var ag = "";
 var ho = "";
 var cHo = false;
 var cluster = {};
+var geojson;
+var opacity;
 
  
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
@@ -38,6 +40,7 @@ var cluster = {};
 
 //Données
 $.get("/regions").done(dataR => {
+
 
     //style
     function style(feature) {
@@ -53,12 +56,11 @@ $.get("/regions").done(dataR => {
     //contour gris quand la souris passe par dessus
     function highlightFeature(e) {
         var layer = e.target;
-
         layer.setStyle({
-            weight: 5,
+            weight: 5, //augmenter la taille
             color: '#666',
             dashArray: '',
-            fillOpacity: 0.7
+            fillOpacity: 0
         });
 
         if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
@@ -66,7 +68,6 @@ $.get("/regions").done(dataR => {
         }
     }
 
-    var geojson;
 
     function resetHighlight(e) {
         geojson.resetStyle(e.target);
@@ -84,24 +85,60 @@ $.get("/regions").done(dataR => {
 
         if (map.getZoom() < 10) {
             map.fitBounds(e.target.getBounds());
-
+            geojson.removeFrom(map);
+            
+            //rajout du style par défaut sauf pour la région cliquer
+            geojson = L.geoJson(dataR, {
+                style: function(feature) {
+                    if(e.sourceTarget.feature.properties.code == feature.properties.code){
+                        opacity = 0
+                    }else{
+                        opacity = 0.7
+                    }
+                    return {
+                    fillColor: feature.properties.color,
+                    weight: 5,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: opacity
+                }},
+                onEachFeature: onEachFeature
+            }).addTo(map);
         }
+        
     }
+
+    
 
     //ajout des events
     function onEachFeature(feature, layer) {
         layer.on({
-            mouseover: highlightFeature,
-            mouseout: resetHighlight,
+            //mouseover: highlightFeature,
+            //mouseout: resetHighlight,
             click: zoomToFeature
         });
     }
 
-    geojson = L.geoJson(dataR, {
-        style: style,
-        onEachFeature: onEachFeature
-    }).addTo(map);
-
+    function addRegion(){
+        geojson = L.geoJson(dataR, {
+            style: style,
+            onEachFeature: onEachFeature
+        }).addTo(map);
+    }
+    addRegion()
+    
+    
+    map.on('zoomend', function (e) {
+        if (map.getZoom() < 7) {
+            for (const [key, value] of Object.entries(cluster)) {
+                value.markerCG.remove();
+            }            
+            geojson.removeFrom(map);
+            addRegion();
+        }
+    });
+    
     //création des markerclustergroup pour chaque région
     dataR.forEach(elt => {
         cluster[elt.properties.code] = {
@@ -223,13 +260,7 @@ $("#popup").on('click', e =>
 });
 //---------------------------------------------------------------Map--------------------------------------------------------------
 
-map.on('zoomend', function (e) {
-    if (map.getZoom() < 7) {
-        for (const [key, value] of Object.entries(cluster)) {
-            value.markerCG.remove();
-        }
-    }
-});
+
 
 
 //Geolocalisation
