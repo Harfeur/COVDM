@@ -62,7 +62,7 @@ $.get("/regions").done(dataR => {
             dashArray: '',
             fillOpacity: 0
         });
-
+    
         if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
             layer.bringToFront();
         }
@@ -114,8 +114,6 @@ $.get("/regions").done(dataR => {
     //ajout des events
     function onEachFeature(feature, layer) {
         layer.on({
-            //mouseover: highlightFeature,
-            //mouseout: resetHighlight,
             click: zoomToFeature
         });
     }
