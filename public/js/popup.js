@@ -5,9 +5,10 @@ new Vue({
         time: horaire,
         show: false,
         reveal: false,
+        id:id,
         e1: 1,
         rating: 3,
-        duree: 0,
+        duree: null,
         isActive: false,
         items: avis,
         jour: [{
@@ -35,7 +36,7 @@ new Vue({
         model: 1,
         dialog: false,
         dialog1: false,
-        com: "",
+        com: null,
         prenom: "",
         nom: "",
         email: "",
@@ -43,6 +44,7 @@ new Vue({
         alerte2:false,
         placement: 0,
         heureO: 1,
+        der:null,
     }),
     methods: {
         ouvreCom() {
@@ -64,8 +66,7 @@ new Vue({
             }
             else{
                 if(checkEmail(this.email)){
-                    console.log(this.prenom);
-                    console.log(this.nom);
+                    console.log(this.prenom+' '+this.nom);
                     console.log(this.email);
                     this.dialog=false;
                     this.e1 = 2;
@@ -77,20 +78,34 @@ new Vue({
         },
         deroulement(choix) {
             if (choix == 1) {
-                console.log("Oui");
+                this.der=true;
             } else {
-                console.log("Non");
+                this.der=false;
             }
             this.e1 = 3;
         },
         attente() {
             console.log(this.duree);
+
             this.e1 = 4;
         },
         eval() {
             console.log(this.rating);
             console.log(this.com);
             this.e1 = 5;
+            
+            fetch('/ajoutCommentaire', {
+                method: 'POST',
+                body: JSON.stringify({
+                    nom:this.prenom+' '+this.nom,
+                    email:this.email,
+                    id:this.id,
+                    note:this.rating,
+                    attente:this.duree,
+                    bonDeroulement:this.der,
+                    message:this.com
+                })
+            })
         },
         getFloatDecimalPortion(x) {
             

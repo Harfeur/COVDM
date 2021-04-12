@@ -30,6 +30,11 @@ module.exports = function (app, db, dirname) {
                         "note": req.body.note
                     }
                 }
+            }).then(() => {
+                res.send("Ok");
+            }).catch(err => {
+                res.status(500);
+                console.error(err);
             })
         } else {
             res.status(500);

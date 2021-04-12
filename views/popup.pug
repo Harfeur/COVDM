@@ -8,7 +8,7 @@ head
 #app
   v-app#inspire
     // Création popup
-    v-card.mx-auto(max-width='700' height='500px')
+    v-card.mx-auto(width='500')
       // Titre
       v-img.white--text.align-end(src='/image?id='+_id height='200px')
         v-row(style='height: 60px;')
@@ -39,18 +39,10 @@ head
                           v-list-item-title {{ item.title }}
           v-col
             v-btn(style='height: 60px;' outlined='' rounded='' text='' aria-disabled='' @click='dialog1=true')
-              //- S'il y a un horaire on l'affiche sinon fermé (normalement l'horaire change correctement)
-              //- if 
-              //-   | {{getHoraireToString(time[(jour[placement].title).toLowerCase()][0][0])}}
-              //- else 
-              //-   | Fermé
+              | {{time[(jour[placement].title).toLowerCase()].length == 0 ? "Fermé" : getHoraireToString(time[(jour[placement].title).toLowerCase()][0][0]) }}
           v-col
             v-btn(style='height: 60px;' outlined='' rounded='' text='' aria-disabled='' @click='dialog1=true')
-              //- pareil
-              //- if 
-              //-   | {{getHoraireToString(time[(jour[placement].title).toLowerCase()][0][1])}}
-              //- else 
-              //-   | Fermé
+              | {{time[(jour[placement].title).toLowerCase()].length == 0 ? time[(jour[placement].title).toLowerCase()].length == 0 ? "Fermé" : "-" : getHoraireToString(time[(jour[placement].title).toLowerCase()][0][1]) }}
             template
               .text-center
                 v-dialog(v-model='dialog1' width='500')
@@ -58,6 +50,8 @@ head
                     v-card-text
                       v-time-picker(v-model='heureO' full-width='' color='red' format='24hr'  scrollable='')
                     v-card-actions
+                      v-btn(color='dark' text='' @click='dialog1 = false')
+                        | Fermer
                       v-spacer
                       v-btn(color='primary' text='' @click='modifHoraire')
                         | Modifier
@@ -238,6 +232,7 @@ head
       // Fin Extension Commentaire
 script const avis = !{JSON.stringify(avis)}
 script const horaire = !{JSON.stringify(horaires)}
+script const id = !{JSON.stringify(_id)}
 script(src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js')
 script(src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js')
 script(src='/js/popup.js')
