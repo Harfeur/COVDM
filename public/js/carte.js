@@ -44,6 +44,45 @@ $.get("/regions").done(dataR => {
 
     dataRegion = dataR;
 
+    //LEGENDE
+    var info = L.control({position: 'bottomright'});
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+        this.update();
+        return this._div;
+    };
+    // method that we will use to update the control based on feature properties passed
+    info.update = function (props) {
+        this._div.innerHTML = "<h4> Nombre de test réalisé jusqu'au 8 avril 2021</h4>" ;
+    };
+
+    info.addTo(map);
+    
+    //legend
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+    
+        var div = L.DomUtil.create('div', 'info legend'),
+            grades = [0, 1000, 10000, 20000, 30000, 40000, 50000, 100000],
+            labels = [];
+    
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+        }
+    
+        return div;
+    };
+    
+    legend.addTo(map);
+
+
+
+
     //Couleur
     function getColor(d) {
         return d > 100000 ? '#800026' :
@@ -81,8 +120,11 @@ $.get("/regions").done(dataR => {
 
         if (map.getZoom() < 10) {
             map.fitBounds(e.target.getBounds());
-            geojson.removeFrom(map);
             
+            info.remove(map);
+            legend.remove(map);
+
+            geojson.removeFrom(map);
             //rajout du style par défaut sauf pour la région cliquer
             geojson = L.geoJson(dataR, {
                 style: function(feature) {
@@ -128,43 +170,11 @@ $.get("/regions").done(dataR => {
             }            
             geojson.removeFrom(map);
             addRegion();
+            info.addTo(map);
+            legend.addTo(map);
         }
     });
     
-    var info = L.control({position: 'bottomright'});
-
-    info.onAdd = function (map) {
-        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-        this.update();
-        return this._div;
-    };
-    // method that we will use to update the control based on feature properties passed
-    info.update = function (props) {
-        this._div.innerHTML = "<h4> Nombre de test réalisé jusqu'au 8 avril 2021</h4>" ;
-    };
-
-    info.addTo(map);
-    //legend
-    var legend = L.control({position: 'bottomright'});
-
-    legend.onAdd = function (map) {
-    
-        var div = L.DomUtil.create('div', 'info legend'),
-            grades = [0, 1000, 10000, 20000, 30000, 40000, 50000, 100000],
-            labels = [];
-    
-        // loop through our density intervals and generate a label with a colored square for each interval
-        for (var i = 0; i < grades.length; i++) {
-            div.innerHTML +=
-                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-        }
-    
-        return div;
-    };
-    
-    legend.addTo(map);
-
     //création des markerclustergroup pour chaque région
     dataR.forEach(elt => {
         cluster[elt.properties.code] = {
@@ -351,7 +361,7 @@ function geoFindMe() {
 //Bouton geolocation
 var localisation = L.Control.extend({
     onAdd: function() {
-        var button = L.DomUtil.create('button');
+        var button = L.DomUtil.create('button', 'info');
         button.innerHTML = '<h1><i class="fas fa-map-marked-alt"></i></h1>';
         L.DomEvent.on(button, 'click', function () {  
 
