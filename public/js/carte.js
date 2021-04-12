@@ -202,7 +202,7 @@ $.get("/regions").done(dataR => {
 let popupOpen = false;
 
 function maFonction(e){
-    var i = "<iframe width='400' height='500' src='./batiment?id="+e+"'></iframe>" + "<a href=\"#\" onclick=\"hide(this.id)\">Ok!</a>";
+    var i = "<iframe width='500' height='500' src='./batiment?id="+e+"'></iframe>" + "<a href=\"#\" onclick=\"hide(this.id)\">Ok!</a>";
     //$( "#popup" ).dialog({with:800,maxHeight:1000});
     $( "#popup" ).html(i).css('display', 'block');
 

@@ -53,7 +53,7 @@ body{
 .popup {
     display: none;
     position: fixed;
-    width: 400px;
+    width: 500px;
     left: 45%;
     margin-left: -150px;
     height: 500px;
@@ -192,4 +192,17 @@ background: linear-gradient(0deg, rgba(0,172,238,1) 0%, rgba(2,126,251,1) 100%);
 .rs_popup{
   font-size: medium;
 
+}
+
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+iframe::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+iframe {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
