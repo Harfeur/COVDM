@@ -32,6 +32,7 @@ var cHo = false;
 var cluster = {};
 var geojson;
 var opacity;
+var dataRegion;
 
  
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
@@ -41,6 +42,7 @@ var opacity;
 //Données
 $.get("/regions").done(dataR => {
 
+    dataRegion = dataR;
 
     //style
     function style(feature) {
@@ -53,25 +55,7 @@ $.get("/regions").done(dataR => {
             fillOpacity: 0.7
         };
     }
-    //contour gris quand la souris passe par dessus
-    function highlightFeature(e) {
-        var layer = e.target;
-        layer.setStyle({
-            weight: 5, //augmenter la taille
-            color: '#666',
-            dashArray: '',
-            fillOpacity: 0
-        });
     
-        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-            layer.bringToFront();
-        }
-    }
-
-
-    function resetHighlight(e) {
-        geojson.resetStyle(e.target);
-    }
 
     //zoom
     function zoomToFeature(e) {
@@ -279,6 +263,27 @@ function geoFindMe() {
                 value.markerCG.remove();
             }
     
+            //suppression des régions 
+            geojson.removeFrom(map);            
+            
+            //rajout styles des régions sauf celui où on est 
+            geojson = L.geoJson(dataRegion, {
+                style: function(feature) {
+                    if(data[0].codeRegion == feature.properties.code){
+                        opacity = 0
+                    }else{
+                        opacity = 0.7
+                    }
+                    return {
+                    fillColor: feature.properties.color,
+                    weight: 5,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: opacity
+                }}
+            }).addTo(map);
+
             map.addLayer(marker)
         })        
     });
