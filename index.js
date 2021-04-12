@@ -5,6 +5,10 @@ const bodyParser = require('body-parser');
 if (process.argv.includes('--dev')) require('dotenv').config()
 
 const app = express();
+let data = {
+    regions: null,
+    sites: null
+};
 
 // CONFIGURATION ==================================
 app.set('view engine', 'pug');
@@ -16,10 +20,15 @@ app.use(bodyParser.json());
 async function init() {
     const db = (await mongo.MongoClient.connect(process.env.MONGO_URI, { useUnifiedTopology: true })).db('covdm');
 
+    db.collection('sites_prelevements').find({}).toArray((error, documents) => {
+        if (error) return;
+        data.sites = documents;
+    });
+
     // ROUTES =========================================
     require('./app/webpages.js')(app, db, __dirname);
-    require('./app/getAPI.js')(app, db, __dirname);
-    require('./app/postAPI.js')(app, db, __dirname);
+    require('./app/getAPI.js')(app, db, __dirname, data);
+    require('./app/postAPI.js')(app, db, __dirname, data);
     require('./app/static.js')(app, __dirname);
 
     // LAUNCH ========================================

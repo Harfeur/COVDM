@@ -7,7 +7,7 @@ const {Db} = require('mongodb');
  * @param {String} dirname Nom du répertoire du serveur
  */
 
-module.exports = function (app, db, dirname) {
+module.exports = function (app, db, dirname, data) {
 
     app.post('/ajoutCommentaire', (req, res) => {
         console.log(req.body)
@@ -33,6 +33,7 @@ module.exports = function (app, db, dirname) {
                 }
             }).then(() => {
                 res.send("Ok");
+                data.sites = null;
             }).catch(err => {
                 res.status(500);
                 console.error(err);
