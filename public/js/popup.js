@@ -67,6 +67,10 @@ new Vue({
         liste(index) {
             this.placement = index;
         },
+        partageExp() {
+            this.show=!this.show;
+            setTimeout(scroll, 400);
+        },
         presenter() {
             if (this.prenom == "" || this.nom == "" || this.email == "") {
                 this.alerte = true;
@@ -141,7 +145,6 @@ new Vue({
             console.log(this.heureO);
         },
         ouvreHoraire1(){
-            console.log('ok')
             this.majHoraire();
             this.dialog1=true;
         },
