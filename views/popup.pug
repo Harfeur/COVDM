@@ -96,7 +96,7 @@ head
           v-spacer
         #exp
           v-expansion-panels(flat='')
-            v-expansion-panel
+            v-expansion-panel(@click='scrollMoiStp')
               v-expansion-panel-header
                 | Plus d&apos;informations
               v-expansion-panel-content
@@ -118,7 +118,7 @@ head
       // Fin Horaire
       // Button Formulaire Avis + Commentaire
       v-card-actions
-        v-btn(color='orange lighten-2' text='' @click='show = !show')
+        v-btn(color='orange lighten-2' text='' @click='partageExp' onClick='scroll')
           | Partager mon exp&eacute;rience
         v-spacer
         if avis.length>0

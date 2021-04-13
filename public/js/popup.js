@@ -61,6 +61,9 @@ new Vue({
             this.reveal = false;
             expansion.style.display = "block";
         },
+        scrollMoiStp() {
+            setTimeout(scroll, 200);
+        },
         liste(index) {
             this.placement = index;
         },
@@ -73,6 +76,7 @@ new Vue({
                     console.log(this.email);
                     this.dialog = false;
                     this.e1 = 2;
+                    setTimeout(scroll, 400);
                 } else {
                     this.alerte2 = true;
                 }
@@ -85,11 +89,13 @@ new Vue({
                 this.der = false;
             }
             this.e1 = 3;
+            setTimeout(scroll, 400);
         },
         attente() {
             console.log(this.duree);
 
             this.e1 = 4;
+            setTimeout(scroll, 400);
         },
         eval() {
             console.log(this.rating);
@@ -166,7 +172,7 @@ new Vue({
                     this.pb1=true;
                     this.sheet=true;
                 }
-                
+
             }
         },
         modifHoraireFermeture() {
@@ -189,11 +195,11 @@ new Vue({
                     })
                     this.majHoraire;
                 }
-                else { 
+                else {
                     this.pb1=false;
                     this.sheet=true;
                 }
-                
+
             }
         }
     },
@@ -203,4 +209,12 @@ new Vue({
 function checkEmail(inputText) {
     var expressionReguliere = /^(([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
     return expressionReguliere.test(inputText)
+}
+
+function scroll() {
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        left: 0,
+        behavior: 'smooth'
+    });
 }
