@@ -47,11 +47,31 @@ module.exports = function (app, db, dirname, data) {
         if (req.body.id && req.body.heureO && req.body.heureF && req.body.jour){
             const filter = {"_id": req.body.id};
             jour=req.body.jour ;
-            db.collection('sites_prelevements').updateOne(filter, {
-                $set: {
-                    "horaires[jour]": [[req.body.heureO, req.body.heureF]]
-                }
-            }).then(() => {
+            let update;
+            switch (jour) {
+                case "lundi":
+                    update = {$set: {"horaires.lundi": [[req.body.heureO, req.body.heureF]]}};
+                    break;
+                case "mardi":
+                    update = {$set: {"horaires.mardi": [[req.body.heureO, req.body.heureF]]}};
+                    break;
+                case "mercredi":
+                    update = {$set: {"horaires.mercredi": [[req.body.heureO, req.body.heureF]]}};
+                    break;
+                case "jeudi":
+                    update = {$set: {"horaires.jeudi": [[req.body.heureO, req.body.heureF]]}};
+                    break;
+                case "vendredi":
+                    update = {$set: {"horaires.vendredi": [[req.body.heureO, req.body.heureF]]}};
+                    break;
+                case "samedi":
+                    update = {$set: {"horaires.samedi": [[req.body.heureO, req.body.heureF]]}};
+                    break;
+                case "dimanche":
+                    update = {$set: {"horaires.dimanche": [[req.body.heureO, req.body.heureF]]}};
+                    break;
+            }
+            db.collection('sites_prelevements').updateOne(filter, update).then(() => {
                 res.send("Ok");
             }).catch(err => {
                 res.status(500);
