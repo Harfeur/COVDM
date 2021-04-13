@@ -36,6 +36,8 @@ new Vue({
         model: 1,
         dialog: false,
         dialog1: false,
+        dialog2: false,
+        sheet: false,
         com: null,
         prenom: "",
         nom: "",
@@ -46,6 +48,7 @@ new Vue({
         heureO: 1,
         heureF: 1,
         der: null,
+        pb1: true,
     }),
     methods: {
         ouvreCom() {
@@ -117,38 +120,80 @@ new Vue({
             var minute = dec.toString();
             return heure + ":" + minute;
         },
+        getStringToHoraire(x){
+            var tab = x.split(':');
+            var hh = parseInt(tab[0]);
+            var mm = parseInt(tab[1])/100;
+            return hh+mm;
+
+        },
+        majHoraire(){
+            if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
+                this.heureO=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0][0]);
+                this.heureF=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0][1]);
+            }
+            console.log(this.heureO);
+        },
+        ouvreHoraire1(){
+            console.log('ok')
+            this.majHoraire();
+            this.dialog1=true;
+        },
+        ouvreHoraire2(){
+            this.majHoraire();
+            this.dialog2=true;
+        },
         modifHoraireOuverture() {
             if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
-                this.dialog1 = false;
-                fetch('/majHoraire', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        id: this.id,
-                        jour: (this.jour[this.placement].title).toLowerCase(),
-                        heureO: this.heureO,
-                        heureF: horaire[(this.jour[this.placement].title).toLowerCase()][0][1]
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+                var heureOuverture = this.getStringToHoraire(this.heureO);
+                if(heureOuverture<horaire[(this.jour[this.placement].title).toLowerCase()][0][1]){
+                    this.dialog1=false;
+                    fetch('/majHoraire', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            id: this.id,
+                            jour: (this.jour[this.placement].title).toLowerCase(),
+                            heureO: heureOuverture,
+                            heureF: horaire[(this.jour[this.placement].title).toLowerCase()][0][1]
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    this.majHoraire;
+                }
+                else {
+                    this.pb1=true;
+                    this.sheet=true;
+                }
+                
             }
         },
         modifHoraireFermeture() {
             if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
-                this.dialog1 = false;
-                fetch('/majHoraire', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        id: this.id,
-                        jour: (this.jour[this.placement].title).toLowerCase(),
-                        heureO: horaire[(this.jour[this.placement].title).toLowerCase()][0][0],
-                        heureF: this.heureO
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+                var heureFermeture = this.getStringToHoraire(this.heureF);
+                console.log(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0][0])
+                if(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0][0]){
+                    this.dialog2 = false;
+                    fetch('/majHoraire', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            id: this.id,
+                            jour: (this.jour[this.placement].title).toLowerCase(),
+                            heureO: horaire[(this.jour[this.placement].title).toLowerCase()][0][0],
+                            heureF: heureFermeture
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    this.majHoraire;
+                }
+                else { 
+                    this.pb1=false;
+                    this.sheet=true;
+                }
+                
             }
         }
     },

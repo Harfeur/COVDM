@@ -38,11 +38,11 @@ head
                         v-list-item(v-for='(item, index) in jour' :key='index' @click='liste(index)')
                           v-list-item-title {{ item.title }}
           v-col
-            v-btn(style='height: 60px;' outlined='' rounded='' text='' aria-disabled='' @click='dialog1=true')
+            v-btn(style='height: 60px;' outlined='' rounded='' text='' aria-disabled='' @click='ouvreHoraire1')
               | {{time[(jour[placement].title).toLowerCase()].length == 0 ? "Fermé" : getHoraireToString(time[(jour[placement].title).toLowerCase()][0][0]) }}
           v-col
-            v-btn(style='height: 60px;' outlined='' rounded='' text='' aria-disabled='' @click='dialog1=true')
-              | {{time[(jour[placement].title).toLowerCase()].length == 0 ? time[(jour[placement].title).toLowerCase()].length == 0 ? "Fermé" : "-" : getHoraireToString(time[(jour[placement].title).toLowerCase()][0][1]) }}
+            v-btn(style='height: 60px;' outlined='' rounded='' text='' aria-disabled='' @click='ouvreHoraire2')
+              | {{time[(jour[placement].title).toLowerCase()].length == 0 ? "Fermé" : getHoraireToString(time[(jour[placement].title).toLowerCase()][0][1]) }}
             template
               .text-center
                 v-dialog(v-model='dialog1' width='500')
@@ -57,16 +57,25 @@ head
                         | Modifier
             template
               .text-center
-                v-dialog(v-model='dialog1' width='500')
+                v-dialog(v-model='dialog2' width='500')
                   v-card
                     v-card-text
-                      v-time-picker(v-model='heureO' full-width='' color='red' format='24hr'  scrollable='')
+                      v-time-picker(v-model='heureF' full-width='' color='red' format='24hr'  scrollable='')
                     v-card-actions
-                      v-btn(color='dark' text='' @click='dialog1 = false')
+                      v-btn(color='dark' text='' @click='dialog2 = false')
                         | Fermer
                       v-spacer
                       v-btn(color='primary' text='' @click='modifHoraireFermeture')
                         | Modifier
+            template
+              .text-center
+                v-bottom-sheet(v-model='sheet' inset='')
+                  v-sheet.text-center(height='200px')
+                    v-btn.mt-6(text='' color='error' @click='sheet = !sheet')
+                      | close
+                    .my-3
+                      |{{pb1 ? "Il est impossible que l'heure d'ouverture soit plus tard que l'heure de fermeture. Veuillez modifier dans un premier temps l'heure de fermeture." : " Il est impossible que l'heure de fermeture soit plus tôt que l'heure d'ouverture. Veuillez modifier dans un premier temps l'heure d'ouverture." }}
+
         v-row
           v-spacer
           if do_prel 
@@ -186,7 +195,7 @@ head
                 v-stepper-content(step='3')
                   v-card
                     v-card-title
-                      | Combien de minutes avez vous attendu ?
+                      | Combien de minutes avez-vous attendu ?
                     v-card-subtitle
                       v-col(cols='12')
                         v-slider(max='60' min='0' step='5' v-model='duree' thumb-label='' ticks='')
