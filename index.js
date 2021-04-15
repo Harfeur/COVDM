@@ -7,7 +7,13 @@ if (process.argv.includes('--dev')) require('dotenv').config()
 const app = express();
 let data = {
     regions: null,
-    sites: null
+    sites: null,
+    resetSites: function () {
+        db.collection('sites_prelevements').find({}).toArray((error, documents) => {
+            if (error) return;
+            data.sites = documents;
+        });
+    }
 };
 
 // CONFIGURATION ==================================
@@ -20,10 +26,7 @@ app.use(bodyParser.json());
 async function init() {
     const db = (await mongo.MongoClient.connect(process.env.MONGO_URI, { useUnifiedTopology: true })).db('covdm');
 
-    db.collection('sites_prelevements').find({}).toArray((error, documents) => {
-        if (error) return;
-        data.sites = documents;
-    });
+    data.resetSites();
 
     // ROUTES =========================================
     require('./app/webpages.js')(app, db, __dirname);
