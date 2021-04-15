@@ -143,18 +143,18 @@ head
         v-row
           v-spacer
           if do_prel 
-            v-alert.mt-4(dense='' text='' type='success')
+            v-alert.mt-8(dense='' text='' type='success')
               | PCR
           else
-            v-alert.mt-4(dense='' outlined='' type='error')
+            v-alert.mt-8(dense='' outlined='' type='error')
               .text-decoration-line-through
                 | PCR
           v-spacer
           if do_antigenic 
-            v-alert.mt-4(dense='' text='' type='success')
+            v-alert.mt-8(dense='' text='' type='success')
               | Antig&eacute;nique
           else
-            v-alert.mt-4(dense='' outlined='' type='error')
+            v-alert.mt-8(dense='' outlined='' type='error')
               .text-decoration-line-through
                 | Antig&eacute;nique
           v-spacer
@@ -294,10 +294,10 @@ head
       // Fin Extension Avis
       // Extension Commentaire
       v-expand-transition
-        v-card.transition-fast-in-fast-out.v-card--reveal(v-if='reveal' flat=''  id='footer')
+        v-card.mb-n16.transition-fast-in-fast-out.v-card--reveal(v-if='reveal' flat=''  id='footer')
           div(v-show='reveal')
             template
-              v-responsive.overflow-y-auto(max-height='300')
+              v-responsive.overflow-y-auto.pt-12(max-height='300')
                 .pa-6
                   template
                     v-row
@@ -314,8 +314,8 @@ head
                                     v-list-item-action-text
                                       v-rating(:value='item.note', color='amber', dense='', half-increments='', readonly='', size='14')
 
-          v-card-actions.pt-0
-            v-btn(text='' color='teal accent-4' @click='fermeCom')
+          v-card-actions
+            v-btn(text='' color='#FF5454' @click='fermeCom')
               | Fermer
       // Fin Extension Commentaire
 
