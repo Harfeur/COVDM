@@ -105,13 +105,13 @@ head
        
         template
           .text-center
-            v-dialog(v-model='nouvelHeure' width='500')
+            v-dialog(v-model='nouvelHeure' width='500' height='600')
               v-divider
               v-card-text
                 v-stepper(v-model='e2')
                   v-stepper-items
                     v-stepper-content(step='1')
-                      v-card
+                      v-card.mt-n8
                         template
                           .text-center
                             v-card-text
