@@ -54,25 +54,25 @@ module.exports = function (app, db, dirname, data) {
             let update;
             switch (jour) {
                 case "lundi":
-                    update = {$set: {"horaires.lundi": [[req.body.heureO, req.body.heureF]]}};
+                    update = {$set: {"horaires.lundi": [req.body.heureO, req.body.heureF]}};
                     break;
                 case "mardi":
-                    update = {$set: {"horaires.mardi": [[req.body.heureO, req.body.heureF]]}};
+                    update = {$set: {"horaires.mardi": [req.body.heureO, req.body.heureF]}};
                     break;
                 case "mercredi":
-                    update = {$set: {"horaires.mercredi": [[req.body.heureO, req.body.heureF]]}};
+                    update = {$set: {"horaires.mercredi": [req.body.heureO, req.body.heureF]}};
                     break;
                 case "jeudi":
-                    update = {$set: {"horaires.jeudi": [[req.body.heureO, req.body.heureF]]}};
+                    update = {$set: {"horaires.jeudi": [req.body.heureO, req.body.heureF]}};
                     break;
                 case "vendredi":
-                    update = {$set: {"horaires.vendredi": [[req.body.heureO, req.body.heureF]]}};
+                    update = {$set: {"horaires.vendredi": [req.body.heureO, req.body.heureF]}};
                     break;
                 case "samedi":
-                    update = {$set: {"horaires.samedi": [[req.body.heureO, req.body.heureF]]}};
+                    update = {$set: {"horaires.samedi": [req.body.heureO, req.body.heureF]}};
                     break;
                 case "dimanche":
-                    update = {$set: {"horaires.dimanche": [[req.body.heureO, req.body.heureF]]}};
+                    update = {$set: {"horaires.dimanche": [req.body.heureO, req.body.heureF]}};
                     break;
             }
             console.log(`Mise à jour dans la base pour le lieu ${req.body.id} et le jour ${jour} : ${req.body.heureO}-${req.body.heureF}`);

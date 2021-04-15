@@ -159,8 +159,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             },
             majHoraire(){
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
-                    this.heureO=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0][0]);
-                    this.heureF=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0][1]);
+                    this.heureO=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0]);
+                    this.heureF=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][1]);
                     this.tabs=null;
                     this.clock=true;
                     return true
@@ -195,17 +195,17 @@ window.addEventListener("DOMContentLoaded", (event) => {
             modifHoraireOuverture() {
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
                     var heureOuverture = this.getStringToHoraire(this.changeO);
-                    if(heureOuverture<horaire[(this.jour[this.placement].title).toLowerCase()][0][1]){
+                    if(heureOuverture<horaire[(this.jour[this.placement].title).toLowerCase()][1]){
                         this.dialog1=false;
                         console.log(heureOuverture)
-                        console.log(horaire[(this.jour[this.placement].title).toLowerCase()][0][1])
+                        console.log(horaire[(this.jour[this.placement].title).toLowerCase()][1])
                         fetch('/majHoraire', {
                             method: 'POST',
                             body: JSON.stringify({
                                 id: this.id,
                                 jour: (this.jour[this.placement].title).toLowerCase(),
                                 heureO: heureOuverture,
-                                heureF: horaire[(this.jour[this.placement].title).toLowerCase()][0][1]
+                                heureF: horaire[(this.jour[this.placement].title).toLowerCase()][1]
                             }),
                             headers: {
                                 'Content-Type': 'application/json'
@@ -223,15 +223,15 @@ window.addEventListener("DOMContentLoaded", (event) => {
             modifHoraireFermeture() {
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
                     var heureFermeture = this.getStringToHoraire(this.changeF);
-                    console.log(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0][0])
-                    if(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0][0]){
+                    console.log(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0])
+                    if(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0]){
                         this.dialog2 = false;
                         fetch('/majHoraire', {
                             method: 'POST',
                             body: JSON.stringify({
                                 id: this.id,
                                 jour: (this.jour[this.placement].title).toLowerCase(),
-                                heureO: horaire[(this.jour[this.placement].title).toLowerCase()][0][0],
+                                heureO: horaire[(this.jour[this.placement].title).toLowerCase()][0],
                                 heureF: heureFermeture
                             }),
                             headers: {
