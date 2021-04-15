@@ -227,6 +227,7 @@ $.get("/regions").done(dataR => {
                         ho = ho.concat(getHoraireToString(hH[i][0]));
                         ho = ho.concat(" à ");
                         ho = ho.concat(getHoraireToString(hH[i][1]))
+                        //console.log(obj._id+"--"+hH[i][0]+"------------------"+hH[i][1]+"----"+ho);
                     } else {
                         ho = ho.concat("<br>Et de ")
                         ho = ho.concat(getHoraireToString(hH[i][0]))
@@ -239,13 +240,13 @@ $.get("/regions").done(dataR => {
             var popup = ""
             //si c'est fermé ou ouvert
             if (cHo){
-                popup =  '<div > <p class="adresse_popup">'+ obj.adresse.adresse +'</p>'+
+                popup =  '<div > <p class="adresse_popup">'+ obj.adresse.adresse +'<br>'+ obj.adresse.ville +'</p>'+
                 '<p class="rs_popup">' + obj.rs + '</p>' +
                 '<p class="horaire-o" > Actuellement' + ho + "</p>"+
                 //'<br><br><strong>' + pcr + ' ' + ag + '</strong> ' +
                 '<button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></div>';
                       }else{                
-                popup =  '<div > <p class="adresse_popup">'+ obj.adresse.adresse +'</p>'+
+                popup =  '<div > <p class="adresse_popup">'+ obj.adresse.adresse +'<br>'+ obj.adresse.ville +'</p>'+
                 '<p class="rs_popup">' + obj.rs + '</p>' +
                 '<p class="horaire-f" > Actuellement' + ho + "</p>"+
                 //'<br><br><strong>' + pcr + ' ' + ag + ' </strong>' +
