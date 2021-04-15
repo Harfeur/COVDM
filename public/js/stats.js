@@ -79,7 +79,7 @@ $.get("/regions").done(dataR => {
                             })
                             var totalA = nbA / obj.avis.length
                             var siteAvis = {
-                                "moyenne":totalA,
+                                "y":totalA,
                                 "label":obj.rs,
                                 "ville": obj.adresse.ville,
                                 "departement":depBestSite[obj.adresse.codeDepartement].name
@@ -101,7 +101,7 @@ $.get("/regions").done(dataR => {
                             })
                             var totalA = nbA / obj.avis.length
                             var siteAvis = {
-                                "y":totalA,
+                                "y":totalA, //moyenne
                                 "label":obj.rs,
                                 "ville": obj.adresse.ville
                             }
