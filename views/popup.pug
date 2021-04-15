@@ -6,49 +6,69 @@ head
   link(href='/css/popup.css' rel='stylesheet')
   meta(name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui')
   script const avis = !{JSON.stringify(avis)}
-  script const horaire = !{JSON.stringify(horaires)}
   script const id = !{JSON.stringify(_id)}
+  script const horaire = !{JSON.stringify(horaires)}
+  script const region = !{JSON.stringify(adresse.codeRegion)}
+  script const departement = !{JSON.stringify(adresse.codeDepartement)}
+  script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")  
   script(src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js')
   script(src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js')
   script(src='/js/popup.js')
 #app
   v-app#inspire
     // Création popup
-    v-card(width='550' heigth='550')
+    v-card(width='550' heigth='550' )
       // Titre
       v-img.white--text.align-end(src='/image?id='+_id height='200px')
         v-row(style='height: 60px;')
           v-col.mr-auto(cols='auto')
             v-card.pa-2(color='#5B5959')
               p.font-italic(style='color:white;') #{rs}
-      div
-        p
-          | #{adresse.adresse}
+      v-card-text
+        v-row.mb-n6
+          div
+            p
+              | #{adresse.adresse}, #{adresse.ville} 
+          v-spacer 
+          v-rating.mr-6( :value="4.5" color="amber" dense readonly size="14")
+        v-row
+          v-spacer
+          div
+            p(style="color:#4FE15B;")
+              |L'un des mieux notés !
+         
       // Début formulaire
       // Horaire
       v-card-subtitle
         v-row
-          v-col
-            .my-4.subtitle-1
-              template
-                .text-center
-                  v-menu
-                    template(v-slot:activator='{ on: menu, attrs }')
-                      v-tooltip(bottom='')
-                        template(v-slot:activator='{ on: tooltip }')
-                          v-btn(rounded='' v-on='{ ...tooltip, ...menu }')
-                            | {{jour[placement].title}}
-                        span Cliquez pour changer le jour
-                    v-list
-                      v-list-item-group(v-model='model' color='indigo')
-                        v-list-item(v-for='(item, index) in jour' :key='index' @click='liste(index)')
-                          v-list-item-title {{ item.title }}
-          v-col
-            v-btn( :disabled="activeFab.disabled" id='horaire' style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire1')
-              | {{majHoraire() ? heureO : "Fermé"}}
-          v-col
-            v-btn( :disabled="activeFab.disabled" style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire2')
-              | {{majHoraire() ? heureF : "Fermé" }}
+          .my-4.subtitle-1
+            template
+              .text-center
+                v-menu
+                  template(v-slot:activator='{ on: menu, attrs }')
+                    v-tooltip(bottom='')
+                      template(v-slot:activator='{ on: tooltip }')
+                        v-btn.ml-12(rounded='' v-on='{ ...tooltip, ...menu }')
+                          | {{jour[placement].title}}
+                      span Cliquez pour changer le jour
+                  v-list
+                    v-list-item-group(v-model='model' color='indigo')
+                      v-list-item(v-for='(item, index) in jour' :key='index' @click='liste(index)')
+                        v-list-item-title {{ item.title }}
+        
+          v-btn.ml-12( :disabled="activeFab.disabled" id='horaire' style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire1')
+            | {{majHoraire() ? heureO : "Fermé"}}
+        
+          v-btn.ml-12( :disabled="activeFab.disabled" style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire2')
+            | {{majHoraire() ? heureF : "Fermé" }}
+        
+          v-tooltip(bottom='' )
+            template(v-slot:activator='{ on, attrs }')
+              v-icon.ml-6(color='#1EE2F7' v-show='clock' dark='' v-bind='attrs' v-on='on')
+                | mdi-clock-fast
+            span Attente rapide !
+
+         
             template
               .text-center
                 v-dialog(v-model='dialog1' width='500')
@@ -81,31 +101,34 @@ head
                       | Fermer
                     .my-3
                       |{{pb1 ? "Il est impossible que l'heure d'ouverture soit plus tard que l'heure de fermeture. Veuillez modifier dans un premier temps l'heure de fermeture." : " Il est impossible que l'heure de fermeture soit plus tôt que l'heure d'ouverture. Veuillez modifier dans un premier temps l'heure d'ouverture." }}
+          
+         
 
         v-row
           v-spacer
           if do_prel 
-            v-alert(dense='' text='' type='success')
+            v-alert.mt-4(dense='' text='' type='success')
               | PCR
           else
-            v-alert(dense='' outlined='' type='error')
+            v-alert.mt-4(dense='' outlined='' type='error')
               .text-decoration-line-through
                 | PCR
           v-spacer
           if do_antigenic 
-            v-alert(dense='' text='' type='success')
+            v-alert.mt-4(dense='' text='' type='success')
               | Antig&eacute;nique
           else
-            v-alert(dense='' outlined='' type='error')
+            v-alert.mt-4(dense='' outlined='' type='error')
               .text-decoration-line-through
                 | Antig&eacute;nique
           v-spacer
         #exp
-          v-expansion-panels(flat='')
-            v-expansion-panel(@click='scrollMoiStp')
-              v-expansion-panel-header
+          v-expansion-panels(flat='' )
+            v-expansion-panel(@click='scrollMoiStp' )
+              v-expansion-panel-header.mt-5(color='#A6E4D3')
                 | Plus d&apos;informations
-              v-expansion-panel-content
+              v-expansion-panel-content(color="#CCECE3")
+                p.mt-1
                 if mod_prel!=""
                   | #{mod_prel}
                 br
@@ -121,15 +144,12 @@ head
                 if web_rdv!=""
                   | Site web : 
                   a(href='#{web_rdv}') #{web_rdv}
-      // Séparateur 
-      div(v-show="img")
-        v-img(height="50")
       
       
       
       // Fin Horaire
       // Button Formulaire Avis + Commentaire
-      v-card-actions
+      v-card-actions.mt-2
         v-btn(color='orange lighten-2' text='' @click='partageExp' onClick='scroll')
           | Partager mon exp&eacute;rience
         v-spacer

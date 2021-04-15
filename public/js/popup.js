@@ -1,7 +1,5 @@
 
-
 window.addEventListener("DOMContentLoaded", (event) => {
-    
     var el = document.getElementById('footer');
     function majHauteur(x){
         switch(x){
@@ -51,6 +49,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             dialog1: false,
             dialog2: false,
             sheet: false,
+            clock:true,
             com: null,
             prenom: "",
             nom: "",
@@ -62,7 +61,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
             heureF: 1,
             der: null,
             pb1: true,
-            img: true,
             tabs: null,
         }),
         methods: {
@@ -161,9 +159,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     this.heureO=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0][0]);
                     this.heureF=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0][1]);
                     this.tabs=null;
+                    this.clock=true;
                     return true
                 }
                 this.tabs='one';
+                this.clock=false;
                 return false
             },
             ouvreHoraire1(){
