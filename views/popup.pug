@@ -74,7 +74,7 @@ head
               v-dialog(v-model='dialog1' width='500')
                 v-card
                   v-card-text
-                    v-time-picker(v-model='heureO' full-width='' color='red' format='24hr'  scrollable='')
+                    v-time-picker(v-model='changeO' full-width='' color='red' format='24hr'  scrollable='')
                   v-card-actions
                     v-btn(color='dark' text='' @click='dialog1 = false')
                       | Fermer
@@ -86,7 +86,7 @@ head
               v-dialog(v-model='dialog2' width='500')
                 v-card
                   v-card-text
-                    v-time-picker(v-model='heureF' full-width='' color='red' format='24hr'  scrollable='')
+                    v-time-picker(v-model='changeF' full-width='' color='red' format='24hr'  scrollable='')
                   v-card-actions
                     v-btn(color='dark' text='' @click='dialog2 = false')
                       | Fermer

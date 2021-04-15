@@ -62,6 +62,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             der: null,
             pb1: true,
             tabs: null,
+            changeO:'',
+            changeF:'',
         }),
         methods: {
             ouvreCom() {
@@ -174,9 +176,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
             },
             modifHoraireOuverture() {
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
-                    var heureOuverture = this.getStringToHoraire(this.heureO);
+                    var heureOuverture = this.getStringToHoraire(this.changeO);
                     if(heureOuverture<horaire[(this.jour[this.placement].title).toLowerCase()][0][1]){
                         this.dialog1=false;
+                        console.log(heureOuverture)
+                        console.log(horaire[(this.jour[this.placement].title).toLowerCase()][0][1])
                         fetch('/majHoraire', {
                             method: 'POST',
                             body: JSON.stringify({
@@ -200,7 +204,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             },
             modifHoraireFermeture() {
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
-                    var heureFermeture = this.getStringToHoraire(this.heureF);
+                    var heureFermeture = this.getStringToHoraire(this.changeF);
                     console.log(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0][0])
                     if(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0][0]){
                         this.dialog2 = false;
