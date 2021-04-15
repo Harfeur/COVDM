@@ -123,27 +123,27 @@ $.get("/regions").done(dataR => {
             
             info.remove(map);
             legend.remove(map);
-
-            geojson.removeFrom(map);
-            //rajout du style par défaut sauf pour la région cliquer
-            geojson = L.geoJson(dataR, {
-                style: function(feature) {
-                    if(e.sourceTarget.feature.properties.code == feature.properties.code){
-                        opacity = 0
-                    }else{
-                        opacity = 0.7
-                    }
-                    return {
-                    fillColor: feature.properties.color,
-                    weight: 5,
-                    opacity: 1,
-                    color: 'white',
-                    dashArray: '3',
-                    fillOpacity: opacity
-                }},
-                onEachFeature: onEachFeature
-            }).addTo(map);
         }
+        geojson.removeFrom(map);
+        //rajout du style par défaut sauf pour la région cliquer
+        geojson = L.geoJson(dataR, {
+            style: function(feature) {
+                if(e.sourceTarget.feature.properties.code == feature.properties.code){
+                    opacity = 0
+                }else{
+                    opacity = 0.7
+                }
+                return {
+                fillColor: feature.properties.color,
+                weight: 5,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: opacity
+            }},
+            onEachFeature: onEachFeature
+        }).addTo(map);
+        
         
     }
 
