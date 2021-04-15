@@ -3,20 +3,19 @@ const {Db} = require('mongodb');
 const fs = require('fs');
 const request = require('request');
 
+// Télécharge une image depuis internet
+function download(uri, filename, callback) {
+    request.head(uri, () => {
+        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    });
+}
+
 /**
  * @param {Application} app Application express
  * @param {Db} db Base de données
  * @param {String} dirname Nom du répertoire du serveur
+ * @param {Object} data Mémoire cache
  */
-
-function download(uri, filename, callback) {
-    request.head(uri, function (err, res, body) {
-        console.log('content-type:', res.headers['content-type']);
-        console.log('content-length:', res.headers['content-length']);
-
-        request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-    });
-}
 
 module.exports = function (app, db, dirname, data) {
 
@@ -31,7 +30,7 @@ module.exports = function (app, db, dirname, data) {
                 if (error) res.status(500).send(error);
                 res.send(documents);
             })
-        }else {
+        } else {
             if (data.sites) res.send(data.sites);
             else db.collection('sites_prelevements').find({}).toArray((error, documents) => {
                 if (error) res.status(500).send(error);
@@ -61,7 +60,7 @@ module.exports = function (app, db, dirname, data) {
                 if (error) res.status(500).send(error);
                 res.send(documents);
             })
-        }else {
+        } else {
             db.collection('departement').find({}).toArray((error, documents) => {
                 if (error) res.status(500).send(error);
                 res.send(documents);
@@ -77,6 +76,7 @@ module.exports = function (app, db, dirname, data) {
             } else {
                 db.collection('sites_prelevements').find({"_id": req.query.id}).toArray((error, documents) => {
                     if (error) res.status(500).send(error);
+                    console.log(`Téléchargement d'une image depuis Google Street pour le lieu ${req.body.id}`)
                     download(`https://maps.googleapis.com/maps/api/streetview?size=390x200&location=${documents[0].latitude},${documents[0].longitude}&key=${process.env.STREET_VIEW}`,
                         urlLocale, () => {
                             res.sendFile(urlLocale);
@@ -86,7 +86,6 @@ module.exports = function (app, db, dirname, data) {
         } catch (err) {
             res.status(500);
         }
-
     })
 
 }
