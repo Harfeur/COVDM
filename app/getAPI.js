@@ -26,7 +26,12 @@ module.exports = function (app, db, dirname, data) {
                 if (error) res.status(500).send(error);
                 res.send(documents);
             })
-        } else {
+        } else if (req.query.id_departement) {
+            db.collection('sites_prelevements').find({"adresse.codeDepartement": req.query.id_departement.toString()}).toArray((error, documents) => {
+                if (error) res.status(500).send(error);
+                res.send(documents);
+            })
+        }else {
             if (data.sites) res.send(data.sites);
             else db.collection('sites_prelevements').find({}).toArray((error, documents) => {
                 if (error) res.status(500).send(error);
@@ -51,7 +56,12 @@ module.exports = function (app, db, dirname, data) {
                 if (error) res.status(500).send(error);
                 res.send(documents);
             })
-        } else {
+        } else if (req.query.id_departement) {
+            db.collection('departement').find({"properties.code": req.query.id_departement.toString()}).toArray((error, documents) => {
+                if (error) res.status(500).send(error);
+                res.send(documents);
+            })
+        }else {
             db.collection('departement').find({}).toArray((error, documents) => {
                 if (error) res.status(500).send(error);
                 res.send(documents);
