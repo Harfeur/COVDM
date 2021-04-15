@@ -2,10 +2,10 @@ var region = {};
 var departement = {};
 var nbSiteReg = [];
 var nbSiteDep = [];
-var couleur = [];
 var totalSite = 0;
 var meilleureSite = [];
 var depBestSite = {};
+var unDepartement = {};
 var nbContainer = 3;
 
 
@@ -13,6 +13,7 @@ var nbContainer = 3;
 
 const urlParams = new URLSearchParams(window.location.search);
 let id_region = urlParams.get('id_region');
+let id_departement = urlParams.get('id_departement');
 
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 //Données
@@ -21,33 +22,42 @@ $.get("/regions").done(dataR => {
 
     //création object pour chaque région
     dataR.forEach(elt => {
+        //region : regroupe le nombre de sites pour chaque region
         region[elt.properties.code] = {
             "name": elt.properties.nom,
-            // y = nombre de site par région
+            // y = nombre de site par région en pourcentage et nbSite le nombre exacte
             "y": 0,
             "nbSite":0,
             "exploded": true
         } 
-        couleur.push(elt.properties.color)
     });
     
     //-------------------------------------------------------- Site Prélevement-----------------------------------------------------------
-    $.get("/departements", {id_region: id_region}).done(dataD => {
+    $.get("/departements", {id_region: id_region, id_departement:id_departement}).done(dataD => {
         dataD.forEach(oel => {
+            //departement : regroupe le nombre de sites pour chaque departement
             departement[oel.properties.code] = {
                 "name": oel.properties.nom,
-                // y = nombre de site par département
+                // y = nombre de site par département en pourcentage et nbSite le nombre exacte
                 "y":0,
                 "nbSite":0,
             }
+            //depBestSite : regroupe la moyenne de chaque site pour chaque departement
             depBestSite[oel.properties.code] = {
                 "name":oel.properties.nom,
                 "bestSite": []
             }
+            if(id_departement && id_departement == oel.properties.code){
+                unDepartement[id_departement] = {
+                    "name": oel.properties.nom,
+                    "bestSite": [],
+                    "nbSite":0,
+                }
+            }
         })
 
         //Données
-        $.get("/sitesPrelevements", {id_region: id_region}).done(dataP => {
+        $.get("/sitesPrelevements", {id_region: id_region, id_departement:id_departement}).done(dataP => {
 
 
             //maj region
@@ -69,13 +79,34 @@ $.get("/regions").done(dataR => {
                             })
                             var totalA = nbA / obj.avis.length
                             var siteAvis = {
-                                "y":totalA,
+                                "moyenne":totalA,
                                 "label":obj.rs,
                                 "ville": obj.adresse.ville,
                                 "departement":depBestSite[obj.adresse.codeDepartement].name
                             }
                             
                             depBestSite[obj.adresse.codeDepartement].bestSite.push(siteAvis)
+                        }
+                    }
+                }
+
+                if (id_departement) {
+                    if (unDepartement[obj.adresse.codeDepartement] != null){
+                        unDepartement[obj.adresse.codeDepartement].nbSite += 1
+                        //meilleure site
+                        if(obj.avis.length != 0){
+                            var nbA = 0
+                            obj.avis.forEach(a => {
+                                nbA += a.note
+                            })
+                            var totalA = nbA / obj.avis.length
+                            var siteAvis = {
+                                "y":totalA,
+                                "label":obj.rs,
+                                "ville": obj.adresse.ville
+                            }
+                            
+                            unDepartement[obj.adresse.codeDepartement].bestSite.push(siteAvis)
                         }
                     }
                 }
@@ -103,12 +134,9 @@ $.get("/regions").done(dataR => {
 
 
             //affichage chart pie
-            if (!id_region) {
-                //couleur
-                CanvasJS.addColorSet("couleurRegion", couleur);
+            if (!id_region && !id_departement) {
                 //nb site par region 
                 var chart = new CanvasJS.Chart("chartContainer1", {
-                    colorSet: "couleurRegion",
                     exportEnabled: true,
                     animationEnabled: true,
                     title: {
@@ -127,6 +155,9 @@ $.get("/regions").done(dataR => {
                 });
 
                 chart.render();
+            
+            } else if (id_departement) { 
+                console.log(unDepartement);
             } else {      
                 //nb site par département pour une région donnée
                 var chart = new CanvasJS.Chart("chartContainer2", {
