@@ -18,6 +18,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             reveal: false,
             id: id,
             e1: 1,
+            e2:1,
             rating: 3,
             duree: null,
             isActive: false,
@@ -61,9 +62,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
             heureF: 1,
             der: null,
             pb1: true,
-            tabs: null,
             changeO:'',
             changeF:'',
+            nouvelHeure:false,
         }),
         methods: {
             ouvreCom() {
@@ -164,15 +165,32 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     this.clock=true;
                     return true
                 }
-                this.tabs='one';
                 this.clock=false;
                 return false
             },
             ouvreHoraire1(){
-                this.dialog1=true;
+                var texte = document.getElementsByClassName('v-btn__content')[1].innerHTML
+                if(texte=='Fermé'){
+                    this.e2=1;
+                    this.nouvelHeure=true;
+
+                }
+                else{
+                    this.dialog1=true;
+                }
+                
             },
             ouvreHoraire2(){
-                this.dialog2=true;
+                var texte = document.getElementsByClassName('v-btn__content')[2].innerHTML
+                if(texte=='Fermé'){
+                    this.e2=1;
+                    this.nouvelHeure=true;
+
+                }
+                else{
+                    this.dialog2=true;
+                }
+                
             },
             modifHoraireOuverture() {
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
@@ -228,15 +246,24 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     }
 
                 }
-            }
-        },
-        computed: {
-            activeFab () {
-              switch (this.tabs) {
-                case 'one': return { disabled: ''}
-                default: return {}
-              }
             },
+            modifHoraire(){
+                var heureOuverture = this.getStringToHoraire(this.changeO);
+                var heureFermeture = this.getStringToHoraire(this.changeF);
+                fetch('/majHoraire', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        id: this.id,
+                        jour: (this.jour[this.placement].title).toLowerCase(),
+                        heureO: heureOuverture,
+                        heureF: heureFermeture
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                window.location.reload();
+            }
         },
 
     })

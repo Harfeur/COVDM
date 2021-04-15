@@ -56,10 +56,10 @@ head
                       v-list-item(v-for='(item, index) in jour' :key='index' @click='liste(index)')
                         v-list-item-title {{ item.title }}
         
-          v-btn.ml-12( :disabled="activeFab.disabled" id='horaire' style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire1')
+          v-btn.ml-12( id='horaire' style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire1')
             | {{majHoraire() ? heureO : "Fermé"}}
         
-          v-btn.ml-12( :disabled="activeFab.disabled" style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire2')
+          v-btn.ml-12( style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire2')
             | {{majHoraire() ? heureF : "Fermé" }}
         
           v-tooltip(bottom='' )
@@ -101,9 +101,45 @@ head
                     | Fermer
                   .my-3
                     |{{pb1 ? "Il est impossible que l'heure d'ouverture soit plus tard que l'heure de fermeture. Veuillez modifier dans un premier temps l'heure de fermeture." : " Il est impossible que l'heure de fermeture soit plus tôt que l'heure d'ouverture. Veuillez modifier dans un premier temps l'heure d'ouverture." }}
-        
-        
-
+          
+       
+        template
+          .text-center
+            v-dialog(v-model='nouvelHeure' width='500')
+              v-divider
+              v-card-text
+                v-stepper(v-model='e2')
+                  v-stepper-items
+                    v-stepper-content(step='1')
+                      v-card
+                        template
+                          .text-center
+                            v-card-text
+                              v-time-picker(v-model='changeO' full-width='' color='red' format='24hr'  scrollable='')
+                            v-card-actions
+                              v-btn(color='dark' text='' @click='nouvelHeure = false')
+                                | Fermer
+                              v-spacer
+                              p Heure d'ouverture 
+                              v-spacer
+                              v-btn(color='primary' text='' @click='e2=2')
+                                | Modifier
+                    v-stepper-content(step='2')
+                      v-card
+                        template
+                          .text-center
+                            v-card-text
+                              v-time-picker(v-model='changeF' full-width='' color='red' format='24hr'  scrollable='')
+                            v-card-actions
+                              v-btn(color='dark' text='' @click='nouvelHeure = false')
+                                | Fermer
+                              v-spacer
+                              p Heure de fermeture
+                              v-spacer
+                              v-btn(color='primary' text='' @click='modifHoraire')
+                                | Modifier
+                        
+                   
         v-row
           v-spacer
           if do_prel 
@@ -266,7 +302,7 @@ head
                   template
                     v-row
                       v-col
-                        v-card(flat='' class='mx-auto' max-width="500")
+                        v-card.mt-n12(flat='' class='mx-auto' max-width="500")
                           v-list(three-line='')
                             v-list-item-group
                               template(v-for='(item, index) in items')
