@@ -193,14 +193,30 @@ $.get("/regions").done(dataR => {
         var date = new Date();
         var jour;
         switch (date.getDay()) {
-            case 1: jour = "lundi";break;
-            case 2: jour = "mardi";break;
-            case 3: jour = "mercredi";break;
-            case 4: jour = "jeudi";break;
-            case 5: jour = "vendredi";break;
-            case 6: jour = "samedi";break;
-            case 0: jour = "dimanche";break;        
-            default: jour = "";break;
+            case 1:
+                jour = "lundi";
+                break;
+            case 2:
+                jour = "mardi";
+                break;
+            case 3:
+                jour = "mercredi";
+                break;
+            case 4:
+                jour = "jeudi";
+                break;
+            case 5:
+                jour = "vendredi";
+                break;
+            case 6:
+                jour = "samedi";
+                break;
+            case 0:
+                jour = "dimanche";
+                break;
+            default:
+                jour = "";
+                break;
         }
 
         dataP.forEach(obj => {
@@ -213,19 +229,18 @@ $.get("/regions").done(dataR => {
                 ag = "AG";
             }
 
-            if (obj.horaires[jour].length == 0 || obj.horaires[jour][0] == null || date.getHours() < obj.horaires[jour][0] || date.getHours() > obj.horaires[jour][1]){
+            if (obj.horaires[jour].length == 0) {
                 ho = " fermé";
                 cHo = false;
             } else {
                 ho = " ouvert :<br>";
                 cHo = true;
-                var hH = obj.horaires[jour];                
-               
+                var hH = obj.horaires[jour];
                 ho = ho.concat("De ");
                 ho = ho.concat(getHoraireToString(hH[0]));
                 ho = ho.concat(" à ");
                 ho = ho.concat(getHoraireToString(hH[1]))
-                //console.log(getHoraireToString(hH[0]));   
+                //console.log(obj._id+"--"+hH[i][0]+"------------------"+hH[i][1]+"----"+ho);
             }
             
             // Solution : base
