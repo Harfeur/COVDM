@@ -234,6 +234,7 @@ $.get("/regions").done(dataR => {
                 cHo = false;
             } else {
                 ho = " ouvert";
+                cHo = true;
             }
             
             // Solution : base
