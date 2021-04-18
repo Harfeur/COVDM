@@ -211,7 +211,7 @@ $.get("/regions").done(dataR => {
             case 6:
                 jour = "samedi";
                 break;
-            case 7:
+            case 0:
                 jour = "dimanche";
                 break;
             default:
