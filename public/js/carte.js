@@ -229,7 +229,7 @@ $.get("/regions").done(dataR => {
                 ag = "AG";
             }
 
-            if (obj.horaires[jour].length == 0) {
+            if (obj.horaires[jour].length == 0 || obj.horaires[jour][0] == null || date.getHours() < obj.horaires[jour][0] || date.getHours() > obj.horaires[jour][1]){
                 ho = " fermé";
                 cHo = false;
             } else {
