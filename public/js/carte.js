@@ -234,6 +234,7 @@ $.get("/regions").done(dataR => {
                 cHo = false;
             } else {
                 ho = " ouvert :<br>";
+                // Version 2 (pas d'horaire) ho=" ouvert";
                 cHo = true;
                 var hH = obj.horaires[jour];
                 ho = ho.concat("De ");
@@ -252,13 +253,28 @@ $.get("/regions").done(dataR => {
                     '<p class="horaire-o" > Actuellement' + ho + "</p>" +
                     //'<br><br><strong>' + pcr + ' ' + ag + '</strong> ' +
                     '<button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></div>';
+                // if (obj.rs.indexOf('-')!=-1)  var tab = obj.rs.split('-');
+                // else var tab = obj.rs.split(obj.adresse.ville);
+                // popup = '<table > '+
+                // '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>'+
+                // '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
+                // '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>'+
+                // '<tr> <td  colspan="2"> <p class="horaire-o" > Actuellement' + ho + '</p> </td> </tr> </table>';
+                
             } else {
                 popup = '<div > <p class="adresse_popup">' + obj.adresse.adresse + '<br>' + obj.adresse.ville + '</p>' +
                     '<p class="rs_popup">' + obj.rs + '</p>' +
                     '<p class="horaire-f" > Actuellement' + ho + "</p>" +
                     //'<br><br><strong>' + pcr + ' ' + ag + ' </strong>' +
                     '<button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></div>';
-            }
+                // if (obj.rs.indexOf('-')!=-1)  var tab = obj.rs.split('-');
+                // else var tab = obj.rs.split(obj.adresse.ville);
+                // popup = '<table > '+
+                // '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>'+
+                // '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
+                // '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>'+
+                // '<tr> <td  colspan="2"> <p class="horaire-f" > Actuellement' + ho + '</p> </td> </tr> </table>';   
+                }
 
             //Création du marker et de son groupe
             var mSP = L.marker([obj.latitude, obj.longitude], {
