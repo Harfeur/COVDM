@@ -233,15 +233,7 @@ $.get("/regions").done(dataR => {
                 ho = " fermé";
                 cHo = false;
             } else {
-                ho = " ouvert :<br>";
-                // Version 2 (pas d'horaire) ho=" ouvert";
-                cHo = true;
-                var hH = obj.horaires[jour];
-                ho = ho.concat("De ");
-                ho = ho.concat(getHoraireToString(hH[0]));
-                ho = ho.concat(" à ");
-                ho = ho.concat(getHoraireToString(hH[1]))
-                //console.log(obj._id+"--"+hH[i][0]+"------------------"+hH[i][1]+"----"+ho);
+                ho = " ouvert";
             }
             
             // Solution : base
