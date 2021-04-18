@@ -72,7 +72,7 @@ $.get("/regions").done(dataR => {
         for (var i = 0; i < grades.length; i++) {
             div.innerHTML +=
                 '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+                grades[i] + (grades[i + 1] ? ' &ndash; ' + grades[i + 1] + '<br>' : '+');
         }
     
         return div;
@@ -200,7 +200,7 @@ $.get("/regions").done(dataR => {
             case 4: jour = "jeudi";break;
             case 5: jour = "vendredi";break;
             case 6: jour = "samedi";break;
-            case 7: jour = "dimanche";break;        
+            case 0: jour = "dimanche";break;        
             default: jour = "";break;
         }
 
@@ -214,28 +214,21 @@ $.get("/regions").done(dataR => {
                 ag = "AG";
             }
 
-            if (obj.horaires[jour].length == 0){
+            if (obj.horaires[jour].length == 0 || obj.horaires[jour][0] == null || date.getHours() < obj.horaires[jour][0] || date.getHours() > obj.horaires[jour][1]){
                 ho = " fermé";
                 cHo = false;
             }else{ 
                 ho = " ouvert :<br>";
                 cHo = true;
-                var hH = obj.horaires[jour];
-                for(var i=0;i<hH.length;i++){
-                    if (i==0) {
-                        ho = ho.concat("De ");
-                        ho = ho.concat(getHoraireToString(hH[i][0]));
-                        ho = ho.concat(" à ");
-                        ho = ho.concat(getHoraireToString(hH[i][1]))
-                        //console.log(obj._id+"--"+hH[i][0]+"------------------"+hH[i][1]+"----"+ho);
-                    } else {
-                        ho = ho.concat("<br>Et de ")
-                        ho = ho.concat(getHoraireToString(hH[i][0]))
-                        ho = ho.concat(" à ");
-                        ho = ho.concat(getHoraireToString(hH[i][1]))
-                    }
-                }
+                var hH = obj.horaires[jour];                
+               
+                ho = ho.concat("De ");
+                ho = ho.concat(getHoraireToString(hH[0]));
+                ho = ho.concat(" à ");
+                ho = ho.concat(getHoraireToString(hH[1]))
+                //console.log(getHoraireToString(hH[0]));   
             }
+            
             // Solution : base
             var popup = ""
             //si c'est fermé ou ouvert
