@@ -17,7 +17,7 @@ head
 #app
   v-app#inspire
     // Création popup
-    v-card(width='550' heigth='550' )
+    v-card(width='550' heigth='550' color='#F8F9F9')
       // Titre
       v-img.white--text.align-end(src='/image?id='+_id height='200px')
         v-row(style='height: 60px;')
@@ -58,7 +58,6 @@ head
         
           v-btn.ml-12( id='horaire' style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire1')
             | {{majHoraire() ? heureO : "Fermé"}}
-        
           v-btn.ml-12( style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire2')
             | {{majHoraire() ? heureF : "Fermé" }}
         
@@ -66,7 +65,7 @@ head
             template(v-slot:activator='{ on, attrs }')
               v-icon.ml-6(color='#1EE2F7' v-show='clock' dark='' v-bind='attrs' v-on='on')
                 | mdi-clock-fast
-            span Attente rapide !
+            span Prise en charge rapide !
 
          
           template
@@ -125,7 +124,7 @@ head
                               v-btn(color='primary' text='' @click='e2=2')
                                 | Modifier
                     v-stepper-content(step='2')
-                      v-card
+                      v-card.mt-n8
                         template
                           .text-center
                             v-card-text
@@ -160,7 +159,7 @@ head
           v-spacer
         #exp
           v-expansion-panels(flat='' )
-            v-expansion-panel(@click='scrollMoiStp' )
+            v-expansion-panel(@click='scrollMoiStp' style='background-color:#F8F9F9;')
               v-expansion-panel-header.mt-5(color='#A6E4D3')
                 | Plus d&apos;informations
               v-expansion-panel-content(color="#CCECE3")
@@ -189,108 +188,102 @@ head
         v-btn(color='orange lighten-2' text='' @click='partageExp' onClick='scroll')
           | Partager mon exp&eacute;rience
         v-spacer
-        if avis.length>0
-          v-btn(color='green lighten-2' text='' @click='ouvreCom')
-            | {{ tailleCom() ? "Commentaires" : "error" }}
-        else
-          v-btn(disabled color='green lighten-2' text='' @click='ouvreCom')
-            | Commentaires
+        v-btn(:disabled="nbCom" color='green lighten-2' text='' @click='ouvreCom')
+          | {{ tailleCom() ? "Commentaires" : "error" }}
       // Fin Button Formulaire Avis + Commentaire
       // Extension Avis
       v-expand-transition
         div(v-show='show')
-          v-divider
-          v-card-text
-            v-stepper(v-model='e1')
-              v-stepper-header
-                v-stepper-step(:complete='e1 > 1' step='1')
-                  | Pr&eacute;sentation
-                v-divider
-                v-stepper-step(:complete='e1 > 2' step='2')
-                  | Satisfaction
-                v-divider
-                v-stepper-step(:complete='e1 > 3' step='3')
-                  | Temps d&apos;attente
-                v-divider
-                v-stepper-step(:complete='e1 > 4' step='4')
-                  | Evaluation
-              v-stepper-items
-                v-stepper-content(step='1')
-                  v-card
-                    template
-                      v-row(justify='center')
-                        v-dialog(v-model='dialog' persistent='' max-width='600px')
-                          template(v-slot:activator='{ on, attrs }')
-                            v-btn(color='primary' dark='' v-bind='attrs' v-on='on' x-large='')
-                              | Pr&eacute;sentez-vous
-                          v-card
-                            v-card-title
-                              span.headline Profil
-                            v-card-text
-                              v-alert(v-show='alerte' color='red' type='error') Tout les champs * sont obligatoires
-                              v-alert(v-show='alerte2' color='red' type='error') L&apos;email n&apos;est pas valide
-                              v-container
-                                v-row
-                                  v-col(cols='12' sm='6' md='4')
-                                    v-text-field(label='Prénom*' v-model='prenom' required='')
-                                  v-col(cols='12' sm='6' md='4')
-                                    v-text-field(label='Nom*' v-model='nom' required='')
-                                  v-col(cols='12')
-                                    v-text-field(label='Email*' v-model='email' required='')
-                              small *obligatoire
-                            v-card-actions
-                              v-spacer
-                              v-btn(color='blue darken-1' text='' @click='dialog = false')
-                                | Fermer
-                              v-btn(color='blue darken-1' text='' @click='presenter')
-                                | Ok
-                v-stepper-content(step='2')
-                  v-card
-                    v-row
-                      v-card-title Est-ce que le test s&apos;est bien d&eacute;roul&eacute; ?
-                    v-card-subtitle
-                      v-card-actions
-                        v-row
-                          v-spacer
-                          v-btn.mx-2(fab='' dark='' small='' color='green' @click='deroulement(1)')
-                            | Oui
-                          v-spacer
-                          v-btn.mx-2(fab='' dark='' small='' color='red' @click='deroulement(2)')
-                            | Non
-                          v-spacer
-                    v-btn(@click='e1 = 3')
-                      | Ne pas r&eacute;pondre
-                v-stepper-content(step='3')
-                  v-card
+          v-stepper(v-model='e1')
+            v-stepper-header
+              v-stepper-step(:complete='e1 > 1' step='1')
+                | Pr&eacute;sentation
+              v-divider
+              v-stepper-step(:complete='e1 > 2' step='2')
+                | Satisfaction
+              v-divider
+              v-stepper-step(:complete='e1 > 3' step='3')
+                | Temps d&apos;attente
+              v-divider
+              v-stepper-step(:complete='e1 > 4' step='4')
+                | Evaluation
+            v-stepper-items
+              v-stepper-content(step='1')
+                v-card
+                  template
+                    v-row(justify='center')
+                      v-dialog(v-model='dialog' persistent='' max-width='600px')
+                        template(v-slot:activator='{ on, attrs }')
+                          v-btn(color='primary' dark='' v-bind='attrs' v-on='on' x-large='')
+                            | Pr&eacute;sentez-vous
+                        v-card
+                          v-card-title
+                            span.headline Profil
+                          v-card-text
+                            v-alert(v-show='alerte' color='red' type='error') Tout les champs * sont obligatoires
+                            v-alert(v-show='alerte2' color='red' type='error') L&apos;email n&apos;est pas valide
+                            v-container
+                              v-row
+                                v-col(cols='12' sm='6' md='4')
+                                  v-text-field(label='Prénom*' v-model='prenom' required='')
+                                v-col(cols='12' sm='6' md='4')
+                                  v-text-field(label='Nom*' v-model='nom' required='')
+                                v-col(cols='12')
+                                  v-text-field(label='Email*' v-model='email' required='')
+                            small *obligatoire
+                          v-card-actions
+                            v-spacer
+                            v-btn(color='blue darken-1' text='' @click='dialog = false')
+                              | Fermer
+                            v-btn(color='blue darken-1' text='' @click='presenter')
+                              | Ok
+              v-stepper-content(step='2')
+                v-card
+                  v-row
+                    v-card-title Est-ce que le test s&apos;est bien d&eacute;roul&eacute; ?
+                  v-card-subtitle
+                    v-card-actions
+                      v-row
+                        v-spacer
+                        v-btn.mx-2(fab='' dark='' small='' color='green' @click='deroulement(1)')
+                          | Oui
+                        v-spacer
+                        v-btn.mx-2(fab='' dark='' small='' color='red' @click='deroulement(2)')
+                          | Non
+                        v-spacer
+                  v-btn(@click='e1 = 3')
+                    | Ne pas r&eacute;pondre
+              v-stepper-content(step='3')
+                v-card
+                  v-card-title
+                    | Combien de minutes avez-vous attendu ?
+                  v-card-subtitle
+                    v-col(cols='12')
+                      v-slider(max='60' min='0' step='5' v-model='duree' thumb-label='' ticks='')
+                  v-btn(color='blue' @click='attente')
+                    | Continuer
+                  v-btn(@click='e1 = 4')
+                    | Ne pas r&eacute;pondre
+              v-stepper-content(step='4')
+                v-card
+                  v-row
                     v-card-title
-                      | Combien de minutes avez-vous attendu ?
-                    v-card-subtitle
-                      v-col(cols='12')
-                        v-slider(max='60' min='0' step='5' v-model='duree' thumb-label='' ticks='')
-                    v-btn(color='blue' @click='attente')
-                      | Continuer
-                    v-btn(@click='e1 = 4')
-                      | Ne pas r&eacute;pondre
-                v-stepper-content(step='4')
-                  v-card
-                    v-row
-                      v-card-title
-                        | Evaluez votre exp&eacute;rience
-                      v-rating(v-model='rating' color='yellow darken-3' background-color='grey darken-1' empty-icon='$ratingFull' hover='' large='')
-                    v-card-subtitle
-                      v-textarea(v-model='com' label='Commentaire' auto-grow='' outlined='' rows='3' row-height='15' shaped='')
-                    v-btn(color='blue' @click='eval')
-                      | Continuer
-                    v-btn(@click='e1 = 5')
-                      | Ne pas r&eacute;pondre
-                v-stepper-content(step='5')
-                  v-card
-                    v-card-title
-                      | Merci pour vos r&eacute;ponses
-                      v-icon(x-large='' color='orange darken-2')
-                        | mdi-emoticon-excited
-                    v-btn(@click='show = !show')
-                      | Fermer
+                      | Evaluez votre exp&eacute;rience
+                    v-rating(v-model='rating' color='yellow darken-3' background-color='grey darken-1' empty-icon='$ratingFull' hover='' large='')
+                  v-card-subtitle
+                    v-textarea(v-model='com' label='Commentaire' auto-grow='' outlined='' rows='3' row-height='15' shaped='')
+                  v-btn(color='blue' @click='eval')
+                    | Continuer
+                  v-btn(@click='e1 = 5')
+                    | Ne pas r&eacute;pondre
+              v-stepper-content(step='5')
+                v-card
+                  v-card-title
+                    | Merci pour vos r&eacute;ponses
+                    v-icon(x-large='' color='orange darken-2')
+                      | mdi-emoticon-excited
+                  v-btn(@click='show = !show')
+                    | Fermer
       // Fin Extension Avis
       // Extension Commentaire
       v-expand-transition
