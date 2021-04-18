@@ -1,7 +1,7 @@
 
 
+
 window.addEventListener("DOMContentLoaded", (event) => {
-    
     var el = document.getElementById('footer');
     function majHauteur(x){
         switch(x){
@@ -20,6 +20,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             reveal: false,
             id: id,
             e1: 1,
+            e2:1,
             rating: 3,
             duree: null,
             isActive: false,
@@ -51,6 +52,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             dialog1: false,
             dialog2: false,
             sheet: false,
+            clock:true,
             com: null,
             prenom: "",
             nom: "",
@@ -62,8 +64,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
             heureF: 1,
             der: null,
             pb1: true,
-            img: true,
-            tabs: null,
+            changeO:'',
+            changeF:'',
+            nouvelHeure:false,
+            nbCom:true,
         }),
         methods: {
             ouvreCom() {
@@ -82,6 +86,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     case 2: majHauteur(2); break;
                     default: majHauteur(3); break;
                 }
+                console.log(this.items.length)
+                this.nbCom=(this.items.length==0);
                 return true;
             },
             scrollMoiStp() {
@@ -139,7 +145,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         'Content-Type': 'application/json'
                     }
                 })
-                window.location.reload();
+                this.items.push({
+                    "nom": this.prenom + ' ' + this.nom,
+                    "email": this.email,
+                    "message": this.com,
+                    "note": this.rating
+                });
+                this.tailleCom();
             },
             getHoraireToString(x) {
                 var heure = parseInt(x).toString();
@@ -158,38 +170,56 @@ window.addEventListener("DOMContentLoaded", (event) => {
             },
             majHoraire(){
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
-                    this.heureO=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0][0]);
-                    this.heureF=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0][1]);
-                    this.tabs=null;
+                    this.heureO=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0]);
+                    this.heureF=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][1]);
+                    this.clock=true;
                     return true
                 }
-                this.tabs='one';
+                this.clock=false;
                 return false
             },
             ouvreHoraire1(){
-                this.dialog1=true;
+                var texte = document.getElementsByClassName('v-btn__content')[1].innerHTML
+                if(texte=='Fermé'){
+                    this.e2=1;
+                    this.nouvelHeure=true;
+
+                }
+                else{
+                    this.dialog1=true;
+                }
+                
             },
             ouvreHoraire2(){
-                this.dialog2=true;
+                var texte = document.getElementsByClassName('v-btn__content')[2].innerHTML
+                if(texte=='Fermé'){
+                    this.e2=1;
+                    this.nouvelHeure=true;
+
+                }
+                else{
+                    this.dialog2=true;
+                }
+                
             },
             modifHoraireOuverture() {
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
-                    var heureOuverture = this.getStringToHoraire(this.heureO);
-                    if(heureOuverture<horaire[(this.jour[this.placement].title).toLowerCase()][0][1]){
-                        this.dialog1=false;
+                    var heureOuverture = this.getStringToHoraire(this.changeO);
+                    if(heureOuverture<horaire[(this.jour[this.placement].title).toLowerCase()][1]){
                         fetch('/majHoraire', {
                             method: 'POST',
                             body: JSON.stringify({
                                 id: this.id,
                                 jour: (this.jour[this.placement].title).toLowerCase(),
                                 heureO: heureOuverture,
-                                heureF: horaire[(this.jour[this.placement].title).toLowerCase()][0][1]
+                                heureF: horaire[(this.jour[this.placement].title).toLowerCase()][1]
                             }),
                             headers: {
                                 'Content-Type': 'application/json'
                             }
                         })
-                        window.location.reload();
+                        this.time[(this.jour[this.placement].title).toLowerCase()][0]=heureOuverture;
+                        this.majHoraire();
                     }
                     else {
                         this.pb1=true;
@@ -200,23 +230,23 @@ window.addEventListener("DOMContentLoaded", (event) => {
             },
             modifHoraireFermeture() {
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
-                    var heureFermeture = this.getStringToHoraire(this.heureF);
-                    console.log(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0][0])
-                    if(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0][0]){
-                        this.dialog2 = false;
+                    var heureFermeture = this.getStringToHoraire(this.changeF);
+                    console.log(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0])
+                    if(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0]){
                         fetch('/majHoraire', {
                             method: 'POST',
                             body: JSON.stringify({
                                 id: this.id,
                                 jour: (this.jour[this.placement].title).toLowerCase(),
-                                heureO: horaire[(this.jour[this.placement].title).toLowerCase()][0][0],
+                                heureO: horaire[(this.jour[this.placement].title).toLowerCase()][0],
                                 heureF: heureFermeture
                             }),
                             headers: {
                                 'Content-Type': 'application/json'
                             }
                         })
-                        window.location.reload();
+                        this.time[(this.jour[this.placement].title).toLowerCase()][1]=heureFermeture;
+                        this.majHoraire();
                     }
                     else {
                         this.pb1=false;
@@ -224,29 +254,42 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     }
 
                 }
-            }
-        },
-        computed: {
-            activeFab () {
-              switch (this.tabs) {
-                case 'one': return { disabled: ''}
-                default: return {}
-              }
             },
-        },
+            modifHoraire(){
+                var heureOuverture = this.getStringToHoraire(this.changeO);
+                var heureFermeture = this.getStringToHoraire(this.changeF);
+                fetch('/majHoraire', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        id: this.id,
+                        jour: (this.jour[this.placement].title).toLowerCase(),
+                        heureO: heureOuverture,
+                        heureF: heureFermeture
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                this.time[(this.jour[this.placement].title).toLowerCase()][1]=heureFermeture;
+                this.time[(this.jour[this.placement].title).toLowerCase()][0]=heureOuverture;
+                this.majHoraire();
+                this.nouvelHeure=false;
+                }
+            },
+            
+        })
+        
+        function checkEmail(inputText) {
+            var expressionReguliere = /^(([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
+            return expressionReguliere.test(inputText)
+        }
 
-    })
-
-    function checkEmail(inputText) {
-        var expressionReguliere = /^(([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
-        return expressionReguliere.test(inputText)
-    }
-
-    function scroll() {
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            left: 0,
-            behavior: 'smooth'
+        function scroll() {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                left: 0,
+                behavior: 'smooth'
         });
     }
 });
+

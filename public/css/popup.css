@@ -33,6 +33,7 @@ html, body {
 }
 
 #footer {
+    background-color:#F7D497;
     position: absolute;
     bottom: 0;
 }
