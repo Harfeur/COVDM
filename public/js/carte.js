@@ -378,4 +378,30 @@ var localisation = L.Control.extend({
 var localisation = (new localisation()).addTo(map);
 
 
+function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+    document.getElementById("main").style.marginLeft = "250px";
+    document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+  }
+  
+  function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("main").style.marginLeft= "0";
+    document.body.style.backgroundColor = "white";
+  }
+  
+//Bouton onglet statistique
+var boutonStats = L.Control.extend({
+    onAdd: function () {
+        var button = L.DomUtil.create('button', 'info');
+        button.innerHTML = '<h1><i class="fas fa-chart-pie"></i><h1>';
+        L.DomEvent.on(button, 'click', function () {
 
+            openNav();
+
+        });
+        return button;
+    }
+});
+
+var boutonStats = (new boutonStats()).addTo(map);
