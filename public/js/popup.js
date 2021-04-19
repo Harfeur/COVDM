@@ -69,6 +69,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             nouvelHeure:false,
             nbCom:true,
             attenteMoy:0,
+            moyenne:parseInt(moy)+Math.round((moy-Math.trunc(moy))*2)*0.5,
         }),
         methods: {
             tempsAttente(x){
@@ -91,7 +92,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     case 2: majHauteur(2); break;
                     default: majHauteur(3); break;
                 }
-                console.log(this.items.length)
                 this.nbCom=(this.items.length==0);
                 return true;
             },

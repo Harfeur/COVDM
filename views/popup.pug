@@ -8,6 +8,7 @@ head
   script const avis = !{JSON.stringify(avis)}
   script const id = !{JSON.stringify(_id)}
   script const horaire = !{JSON.stringify(horaires)}
+  script const moy = !{JSON.stringify(stats.noteMoyenne)}
   script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")  
   script(src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js')
   script(src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js')
@@ -22,13 +23,15 @@ head
           v-col.mr-auto(cols='auto')
             v-card.pa-2(color='#5B5959')
               p.font-italic(style='color:white;') #{rs}
+      // Adresse + Moyenne du site
       v-card-text
         v-row.mb-n6
           div
             p
               | #{adresse.adresse}, #{adresse.ville} 
           v-spacer 
-          v-rating.mr-6( :value="4.5" color="amber" dense readonly size="14")
+          v-rating.mr-6( :value="moyenne" half-increments='' background-color="gray" color="amber" dense readonly size="14")
+        // Ajout phrase selon stat
         v-row
           if stats.region.best
             v-spacer
@@ -163,7 +166,7 @@ head
           else
             v-alert.mt-8(dense='' outlined='' type='error')
               .text-decoration-line-through
-                | PCR
+              | PCR
           v-spacer
           if do_antigenic 
             v-alert.mt-8(dense='' text='' type='success')
