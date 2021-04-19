@@ -26,6 +26,12 @@ const updateSite = (db, site) => {
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.attenteRapide": attenteRapide}})
                 .catch(console.error);
 
+            // Calcul de la moyenne des notes
+            let moyenne = document.avis.length === 0 ? 0 : document.avis.reduce((nb, avis) => nb + avis.note, 0) / document.avis.length;
+
+            db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.noteMoyenne": moyenne}})
+                .catch(console.error);
+
             console.log(`Site ${site} mis à jour`);
             resolve([document.adresse.codeRegion, document.adresse.codeDepartement]);
         })
@@ -53,11 +59,20 @@ const updateDepartement = (db, departement) => {
 
             // Calcul du meilleur site
             let moyenneNote = documents.map(site => site.avis.length === 0 ? 1 : site.avis.reduce((a, b) => a + b.note, 0) / site.avis.length);
-            let meilleurSite = moyenneNote.length === 0 ? "" : documents[moyenneNote.indexOf(Math.max(...moyenneNote))]._id;
+            let meilleursSites = []
+            let noteMax = 0;
+            moyenneNote.forEach((note, index) => {
+                if (note > noteMax) {
+                    noteMax = note;
+                    meilleursSites = [documents[index]._id];
+                } else if (note === noteMax) {
+                    meilleursSites.push(documents[index]._id);
+                }
+            })
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.departement.best": false}})
                 .then(() => {
                     console.log(`Département ${departement} mis à jour`);
-                    return db.collection('sites_prelevements').updateOne({_id: meilleurSite}, {$set: {"stats.departement.best": true}});
+                    return db.collection('sites_prelevements').updateOne({_id: {$in: meilleursSites}}, {$set: {"stats.departement.best": true}});
                 })
                 .then(resolve)
                 .catch(reject);
@@ -95,7 +110,7 @@ const updateRegion = (db, region) => {
                 } else if (note === noteMax) {
                     meilleursSites.push(documents[index]._id);
                 }
-            })
+            });
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.region.best": false}})
                 .then(() => {
                     console.log(`Région ${region} mise à jour`);
