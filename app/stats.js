@@ -84,13 +84,22 @@ const updateRegion = (db, region) => {
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.region.nb": documents.length}})
                 .catch(console.error);
 
-            // Calcul du meilleur site
+            // Calcul des meilleurs sites
             let moyenneNote = documents.map(site => site.avis.length === 0 ? 1 : site.avis.reduce((a, b) => a + b.note, 0) / site.avis.length);
-            let meilleurSite = moyenneNote.length === 0 ? "" : documents[moyenneNote.indexOf(Math.max(...moyenneNote))]._id;
+            let meilleursSites = []
+            let noteMax = 0;
+            moyenneNote.forEach((note, index) => {
+                if (note > noteMax) {
+                    noteMax = note;
+                    meilleursSites = [documents[index]._id];
+                } else if (note === noteMax) {
+                    meilleursSites.push(documents[index]._id);
+                }
+            })
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.region.best": false}})
                 .then(() => {
                     console.log(`Région ${region} mise à jour`);
-                    return db.collection('sites_prelevements').updateOne({_id: meilleurSite}, {$set: {"stats.region.best": true}})
+                    return db.collection('sites_prelevements').updateOne({_id: {$in: meilleursSites}}, {$set: {"stats.region.best": true}})
                 })
                 .then(resolve)
                 .catch(reject);

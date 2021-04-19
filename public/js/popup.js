@@ -68,8 +68,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
             changeF:'',
             nouvelHeure:false,
             nbCom:true,
+            attenteMoy:0,
         }),
         methods: {
+            tempsAttente(x){
+                this.attente = parseInt(x).toString();
+                return true;
+            },
             ouvreCom() {
                 var expansion = document.getElementById('exp');
                 this.reveal = true;
