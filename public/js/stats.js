@@ -47,6 +47,7 @@ function afficherStat(id_region) {
                     // y = nombre de site par département en pourcentage et nbSite le nombre exacte
                     "y": 0,
                     "nbSite": 0,
+                    "exploded": true
                 }
                 //depBestSite : regroupe la moyenne de chaque site pour chaque departement
                 depBestSite[oel.properties.code] = {
@@ -58,6 +59,7 @@ function afficherStat(id_region) {
                         "name": oel.properties.nom,
                         "bestSite": [],
                         "nbSite": 0,
+                        "exploded": true
                     }
                 }
             })
