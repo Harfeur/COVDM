@@ -51,9 +51,12 @@ $.get("/regions").done(dataR => {
         this.update();
         return this._div;
     };
+
+    const lastUpdate = new Date(dataR[0].properties.lastUpdate);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     // method that we will use to update the control based on feature properties passed
     info.update = function (props) {
-        this._div.innerHTML = "<h4> Nombre de test réalisé jusqu'au 8 avril 2021</h4>";
+        this._div.innerHTML = `<h4> Nombre de test réalisé jusqu'au ${lastUpdate.toLocaleDateString('fr-FR', options)}</h4>`;
     };
 
     info.addTo(map);
