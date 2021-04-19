@@ -8,8 +8,6 @@ head
   script const avis = !{JSON.stringify(avis)}
   script const id = !{JSON.stringify(_id)}
   script const horaire = !{JSON.stringify(horaires)}
-  script const region = !{JSON.stringify(adresse.codeRegion)}
-  script const departement = !{JSON.stringify(adresse.codeDepartement)}
   script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")  
   script(src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js')
   script(src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js')
@@ -61,11 +59,18 @@ head
           v-btn.ml-12( style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire2')
             | {{majHoraire() ? heureF : "Fermé" }}
         
-          v-tooltip(bottom='' )
-            template(v-slot:activator='{ on, attrs }')
-              v-icon.ml-6(color='#1EE2F7' v-show='clock' dark='' v-bind='attrs' v-on='on')
-                | mdi-clock-fast
-            span Prise en charge rapide !
+          if stats.attenteRapide
+            v-tooltip(bottom='' )
+              template(v-slot:activator='{ on, attrs }')
+                v-icon.ml-6(color='#1EE2F7' v-show='clock' dark='' v-bind='attrs' v-on='on')
+                  | mdi-clock-fast
+              span Prise en charge rapide !
+          else 
+            v-tooltip(bottom='' )
+              template(v-slot:activator='{ on, attrs }')
+                v-icon.ml-6(color='#E72525' v-show='clock' dark='' v-bind='attrs' v-on='on')
+                  | mdi-account-clock
+              span {{tempsAttente(#{stats.attenteMoyenne}) ? "Temps d'attente : "+attenteMoy+" min": "error"}} 
 
          
           template
