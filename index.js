@@ -1,6 +1,7 @@
 const express = require('express');
 const mongo = require('mongodb');
 const bodyParser = require('body-parser');
+const stats = require('./app/stats.js');
 
 if (process.argv.includes('--dev')) require('dotenv').config()
 
@@ -19,6 +20,12 @@ app.use(bodyParser.json());
 
 async function init() {
     const db = (await mongo.MongoClient.connect(process.env.MONGO_URI, {useUnifiedTopology: true})).db('covdm');
+
+    /**
+     * CODE À UTILISER POUR RESET LES STATS ET LES RECALCULER
+     * Peut prendre plusieurs minutes à se calculer
+     */
+    // await stats.updateAll(db);
 
     data.resetSites = function () {
         db.collection('sites_prelevements').find({}).toArray((error, documents) => {

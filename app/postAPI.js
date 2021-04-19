@@ -1,5 +1,6 @@
 const {Application} = require('express');
 const {Db} = require('mongodb');
+const stats = require('./stats.js');
 
 /**
  * @param {Application} app Application express
@@ -38,6 +39,7 @@ module.exports = function (app, db, dirname, data) {
             }).then(() => {
                 res.send("Ok");
                 data.sites = null;
+                stats.updateOne(db, req.body.id);
             }).catch(err => {
                 res.status(500);
                 console.error(err);
