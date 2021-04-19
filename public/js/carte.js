@@ -33,6 +33,7 @@ var cluster = {};
 var geojson;
 var opacity;
 var dataRegion;
+let statFrance;
 
 
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
@@ -142,7 +143,8 @@ $.get("/regions").done(dataR => {
             onEachFeature: onEachFeature
         }).addTo(map);
 
-
+        //Affichage stat
+        afficherStat(e.sourceTarget.feature.properties.code);
     }
 
     //ajout des events
@@ -160,7 +162,8 @@ $.get("/regions").done(dataR => {
     }
 
     addRegion()
-
+    //Afficher stat de toute la france
+    afficherStat(statFrance);
 
     map.on('zoomend', function (e) {
         if (map.getZoom() < 7) {
@@ -169,6 +172,9 @@ $.get("/regions").done(dataR => {
             }
             geojson.removeFrom(map);
             addRegion();
+            console.log("totuotutotu");
+            
+            afficherStat(statFrance);
             info.addTo(map);
             legend.addTo(map);
         }
@@ -379,8 +385,8 @@ var localisation = (new localisation()).addTo(map);
 
 
 function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
+    document.getElementById("mySidenav").style.width = "500px";
+    document.getElementById("main").style.marginLeft = "500px";
     document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
   }
   
@@ -389,7 +395,9 @@ function openNav() {
     document.getElementById("main").style.marginLeft= "0";
     document.body.style.backgroundColor = "white";
   }
-  
+
+
+
 //Bouton onglet statistique
 var boutonStats = L.Control.extend({
     onAdd: function () {
