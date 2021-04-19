@@ -30,11 +30,22 @@ head
           v-spacer 
           v-rating.mr-6( :value="4.5" color="amber" dense readonly size="14")
         v-row
-          v-spacer
-          div
-            p(style="color:#4FE15B;")
-              |L'un des mieux notés !
-         
+          if stats.region.best
+            v-spacer
+            div
+              p(style="color:#4FE15B;")
+                |L'un des mieux notés de la région !
+          else
+            if stats.departement.best
+              v-spacer
+              div
+                p(style="color:#4FE15B;")
+                  |L'un des mieux notés du département !
+            else 
+              v-spacer
+              div
+                p.mb-10(style="color:#4FE15B;")
+          
       // Début formulaire
       // Horaire
       v-card-subtitle
