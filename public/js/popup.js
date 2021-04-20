@@ -70,6 +70,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             nbCom:true,
             attenteMoy:0,
             moyenne:parseInt(moy)+Math.round((moy-Math.trunc(moy))*2)*0.5,
+            oui:0,
+            non:100,
         }),
         methods: {
             tempsAttente(x){
@@ -78,6 +80,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
             },
             ouvreCom() {
                 var expansion = document.getElementById('exp');
+                var nbVote = ((deroulement.oui)+(deroulement.non));
+                this.oui = (deroulement.oui*100)/nbVote;
+                this.non = (deroulement.non*100)/nbVote;
                 this.reveal = true;
                 expansion.style.display = "none";
             },

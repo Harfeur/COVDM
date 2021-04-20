@@ -9,6 +9,7 @@ head
   script const id = !{JSON.stringify(_id)}
   script const horaire = !{JSON.stringify(horaires)}
   script const moy = !{JSON.stringify(stats.noteMoyenne)}
+  script const deroulement = !{JSON.stringify(stats.bonDeroulement)}
   script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")  
   script(src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js')
   script(src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js')
@@ -329,5 +330,8 @@ head
           v-card-actions
             v-btn(text='' color='#FF5454' @click='fermeCom')
               | Fermer
+            v-spacer 
+            v-sheet#oui(color="green" height="25" :width="oui")
+            v-sheet.mr-8#non(color="blue" height="25" :width="non")
       // Fin Extension Commentaire
 
