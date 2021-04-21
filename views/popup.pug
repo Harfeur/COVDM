@@ -242,6 +242,8 @@ head
                           v-card-text
                             v-alert(v-show='alerte' color='red' type='error') Tout les champs * sont obligatoires
                             v-alert(v-show='alerte2' color='red' type='error') L&apos;email n&apos;est pas valide
+                            v-alert(v-show='alerte3' border="left" color="indigo" dark) Vous avez déjà laissé un avis sur ce site.
+
                             v-container
                               v-row
                                 v-col(cols='12' sm='6' md='4')
@@ -328,10 +330,22 @@ head
                                       v-rating(:value='item.note', color='amber', dense='', half-increments='', readonly='', size='14')
 
           v-card-actions
-            v-btn(text='' color='#FF5454' @click='fermeCom')
-              | Fermer
-            v-spacer 
-            v-sheet#oui(color="green" height="25" :width="oui")
-            v-sheet.mr-8#non(color="blue" height="25" :width="non")
+            v-row 
+              v-col 
+                v-btn(text='' color='#BCB8AE' @click='fermeCom')
+                  | Fermer
+              v-col#graphe
+                v-card-text
+                  v-row
+                    span.pr-3.mt-1.caption % de satisfaction : 
+                    v-tooltip(bottom='' )
+                      template(v-slot:activator='{ on, attrs }')
+                        v-sheet#oui.mb-1(color="#6DF0A0" height="25" :width="oui" v-bind="attrs" v-on="on")
+                      span {{oui + "% ont eu une bonne expérience."}}
+                    v-tooltip(bottom='' )
+                      template(v-slot:activator='{ on, attrs }')
+                        v-sheet.mb-1#non(color="#F0716D" height="25" :width="non" v-bind="attrs" v-on="on")
+                      span {{non + "% ont eu une mauvaise expérience."}}
+              
       // Fin Extension Commentaire
 

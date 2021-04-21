@@ -59,6 +59,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             email: "",
             alerte: false,
             alerte2: false,
+            alerte3: false,
             placement: 0,
             heureO: 1,
             heureF: 1,
@@ -81,8 +82,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             ouvreCom() {
                 var expansion = document.getElementById('exp');
                 var nbVote = ((deroulement.oui)+(deroulement.non));
-                this.oui = (deroulement.oui*100)/nbVote;
-                this.non = (deroulement.non*100)/nbVote;
+                this.oui = Math.round((deroulement.oui*100)/nbVote);
+                this.non = Math.round((deroulement.non*100)/nbVote);
                 this.reveal = true;
                 expansion.style.display = "none";
             },
@@ -112,15 +113,27 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 setTimeout(scroll, 400);
             },
             presenter() {
+                this.alerte=false;
+                this.alerte2=false;
+                this.alerte3=false;
                 if (this.prenom == "" || this.nom == "" || this.email == "") {
                     this.alerte = true;
                 } else {
-                    if (checkEmail(this.email)) {
+                    var ok = true;
+                    this.items.forEach(element => {
+                        if(element.nom==this.prenom+" "+this.nom){
+                            this.alerte3=true;
+                            ok=false
+                        }
+                    });
+                    if (checkEmail(this.email) && ok) {
                         this.dialog = false;
                         this.e1 = 2;
                         setTimeout(scroll, 400);
                     } else {
-                        this.alerte2 = true;
+                        if(ok){
+                           this.alerte2 = true; 
+                        }
                     }
                 }
             },
@@ -139,7 +152,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
             },
             eval() {
                 this.e1 = 5;
-
                 fetch('/ajoutCommentaire', {
                     method: 'POST',
                     body: JSON.stringify({
