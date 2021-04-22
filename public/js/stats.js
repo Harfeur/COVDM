@@ -19,6 +19,7 @@ function afficherStat(id_region) {
     var depBestSite = {};
     var unDepartement = {};
     var nbContainer = 3;
+    $("#contentchartSupp").empty();
     //Données
     $.get("/regions").done(dataR => {
 
@@ -147,6 +148,7 @@ function afficherStat(id_region) {
                 //affichage chart pie
                 if (!id_region && !id_departement) {
                     //nb site par region 
+                    $('#chartContainer1').show();
                     $('#chartContainer2').hide();
                     var chart = new CanvasJS.Chart("chartContainer1", {
                         exportEnabled: true,
@@ -175,6 +177,7 @@ function afficherStat(id_region) {
                 } else {
                     //nb site par département pour une région donnée
                     $("#chartContainer2").show();
+                    $("#chartContainer1").hide();
                     var chart = new CanvasJS.Chart("chartContainer2", {
                         exportEnabled: true,
                         animationEnabled: true,
@@ -197,40 +200,41 @@ function afficherStat(id_region) {
                     chart.render();
 
                     //meilleure site par département pour une région donnée
-                    // for (const [key, value] of Object.entries(departement)) {
-                    //     var id_Div = "chartContainer" + nbContainer
-                    //     var div = '<div class="chart" id="' + id_Div + '"></div>'
-                    //     nbContainer += 1
-                    //     $("#chartContainer2").after(div);
+                    for (const [key, value] of Object.entries(departement)) {
+                        
+                        var id_Div = "chartContainer" + nbContainer
+                        var div = '<div class="chartPlus" style="height: 300px;width: 48%;display:inline-block" id="' + id_Div + '"></div>'
+                        nbContainer += 1
+                        $("#contentchartSupp").append(div);
+                        $(".chartPlus").hide();
+                        var chart = new CanvasJS.Chart(id_Div, {
+                            animationEnabled: true,
+                            exportEnabled: true,
+                            theme: "light1", // "light1", "light2", "dark1", "dark2"
+                            width: 500,
+                            title: {
+                                text: "Moyenne des notes de chaque site en " + depBestSite[key].name,
+                            fontSize: 20,
+                            },
+                            axisY: {
+                                includeZero: true,
+                            },
+                            axisX: {
+                                labelFontSize: 10,
+                            },
+                            data: [{
+                                type: "bar", //change type to bar, line, area, pie, etc
+                                //indexLabel: "{y}", //Shows y value on all Data Points
+                                indexLabelFontColor: "#5A5757",
+                                indexLabelFontSize: 14,
+                                indexLabelPlacement: "outside",
+                                toolTipContent: "{label}<br> Moyenne avis : {y} <strong></strong> <br>Ville : {ville} ",
+                                dataPoints: depBestSite[key].bestSite
+                            }]
+                        });
 
-                    //     var chart = new CanvasJS.Chart(id_Div, {
-                    //         animationEnabled: true,
-                    //         exportEnabled: true,
-                    //         theme: "light1", // "light1", "light2", "dark1", "dark2"
-                    //         width: 500,
-                    //         title: {
-                    //             text: "Moyenne des notes de chaque site en " + depBestSite[key].name,
-                    //         fontSize: 20,
-                    //         },
-                    //         axisY: {
-                    //             includeZero: true,
-                    //         },
-                    //         axisX: {
-                    //             labelFontSize: 10,
-                    //         },
-                    //         data: [{
-                    //             type: "bar", //change type to bar, line, area, pie, etc
-                    //             //indexLabel: "{y}", //Shows y value on all Data Points
-                    //             indexLabelFontColor: "#5A5757",
-                    //             indexLabelFontSize: 14,
-                    //             indexLabelPlacement: "outside",
-                    //             toolTipContent: "{label}<br> Moyenne avis : {y} <strong></strong> <br>Ville : {ville} ",
-                    //             dataPoints: depBestSite[key].bestSite
-                    //         }]
-                    //     });
-
-                    //     chart.render();
-                    // }
+                        chart.render();
+                    }
                 }
 
             });
@@ -239,3 +243,5 @@ function afficherStat(id_region) {
 
     });
 }
+//afficherStat(76);
+

@@ -63,16 +63,14 @@
 
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <!-- <a href="#">Voir plus de graphiiiiiique</a> -->
 
             <div id="contentStat" style="display: block;">
-                <div id="test" style="color: aliceblue;">
-                    <h5>Il n'y pas tout les sites de prélèvements car certain site ne possède aucun avis (jamais
-                        visité).</h5>
-                </div>
                 <div class="chart" id="chartContainer1"></div>
                 <div class="chart" id="chartContainer2"></div>
             </div>
+            <div id="contentchartSupp" style="margin-bottom: 5%;"></div>
+            <button id="graphSupp" class="custom-btn btn-1" onclick="openNav(true)"><i class="fas fa-plus"></i> graphique</button>
+            <button id="graphMoins" style="display: inline-block;" class="custom-btn btn-1" onclick="openNav(false)"><i class="fas fa-minus"></i> graphique</button>
         </div>
 
         <div class="info" id="main">

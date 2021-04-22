@@ -175,7 +175,6 @@ $.get("/regions").done(dataR => {
             }
             geojson.removeFrom(map);
             addRegion();
-            console.log("totuotutotu");
             
             afficherStat(statFrance);
             info.addTo(map);
@@ -387,10 +386,33 @@ var localisation = L.Control.extend({
 var localisation = (new localisation()).addTo(map);
 
 
-function openNav() {
-    document.getElementById("mySidenav").style.width = "500px";
-    document.getElementById("main").style.marginLeft = "500px";
-    document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+//Onglet statistique
+function openNav(i) {
+    if (i){
+        //Grande ouverture avec le bouton plus de graphique
+        document.getElementById("mySidenav").style.width = "100%";
+        document.getElementById("main").style.marginLeft = "100%";
+
+        $("#graphSupp").hide();
+        $("#graphMoins").show();
+        $(".chartPlus").show();
+        
+    }else if (i==false){
+        //Petite ouverture avec le bouton moins de graphique
+        document.getElementById("mySidenav").style.width = "500px";
+        document.getElementById("main").style.marginLeft = "500px";
+       
+        $(".chartPlus").hide();
+        $("#graphSupp").show();
+        $("#graphMoins").hide();
+    }else{
+        //petite ouverture à partie bouton de la carte
+        document.getElementById("mySidenav").style.width = "500px";
+        document.getElementById("main").style.marginLeft = "500px";
+        $(".chartPlus").hide();
+        $("#graphMoins").hide();
+    }
+    document.body.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
   }
   
   function closeNav() {
