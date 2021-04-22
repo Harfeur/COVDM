@@ -68,7 +68,7 @@ $.get("/regions").done(dataR => {
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-            grades = [0, 1000, 10000, 20000, 30000, 40000, 50000, 100000],
+            grades = [0, 400, 800, 2000, 4000, 8000, 10000, 20000],
             labels = [];
 
         // loop through our density intervals and generate a label with a colored square for each interval
@@ -86,13 +86,13 @@ $.get("/regions").done(dataR => {
 
     //Couleur
     function getColor(d) {
-        return d > 100000 ? '#800026' :
-            d > 50000 ? '#BD0026' :
-                d > 40000 ? '#E31A1C' :
-                    d > 30000 ? '#FC4E2A' :
-                        d > 20000 ? '#FD8D3C' :
-                            d > 10000 ? '#FEB24C' :
-                                d > 1000 ? '#FED976' :
+        return d > 20000 ? '#800026' :
+            d > 10000 ? '#BD0026' :
+                d > 8000 ? '#E31A1C' :
+                    d > 4000 ? '#FC4E2A' :
+                        d > 2000 ? '#FD8D3C' :
+                            d > 800 ? '#FEB24C' :
+                                d > 400 ? '#FED976' :
                                     '#FFEDA0';
     }
 
