@@ -1,6 +1,32 @@
 const Db = require('mongodb').Db
 
 
+// sort array ascending
+const asc = arr => arr.sort((a, b) => a - b);
+const sum = arr => arr.reduce((a, b) => a + b, 0);
+const mean = arr => sum(arr) / arr.length;
+// sample standard deviation
+const std = (arr) => {
+    const mu = mean(arr);
+    const diffArr = arr.map(a => (a - mu) ** 2);
+    return Math.sqrt(sum(diffArr) / (arr.length - 1));
+};
+const quantile = (arr, q) => {
+    const sorted = asc(arr);
+    const pos = (sorted.length - 1) * q;
+    const base = Math.floor(pos);
+    const rest = pos - base;
+    if (sorted[base + 1] !== undefined) {
+        return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+    } else {
+        return sorted[base];
+    }
+};
+const q25 = arr => quantile(arr, .25);
+const q50 = arr => quantile(arr, .50);
+const q75 = arr => quantile(arr, .75);
+const median = arr => q50(arr);
+
 /**
  * Met à jour les stats d'un site
  * @param {Db} db Base de données
@@ -38,6 +64,40 @@ const updateSite = (db, site) => {
     });
 }
 
+function calculData(documents) {
+    // Calcul du meilleur site
+    let moyenneNote = documents.map(site => site.avis.length === 0 ? 1 : site.avis.reduce((a, b) => a + b.note, 0) / site.avis.length);
+    let meilleursSites = []
+    let noteMax = 0;
+    moyenneNote.forEach((note, index) => {
+        if (note > noteMax) {
+            noteMax = note;
+            meilleursSites = [documents[index]._id];
+        } else if (note === noteMax) {
+            meilleursSites.push(documents[index]._id);
+        }
+    });
+
+    // Calcul des délais d'attente
+    let attente = documents.map(site => site.stats.attente.reduce((sum, nb) => sum + nb, 0) / site.stats.attente.length);
+    let dataAttente = {
+        mediane: median(attente),
+        min: Math.min(...attente),
+        max: Math.max(...attente),
+        q1: q25(attente),
+        q3: q75(attente),
+        ecart_type: std(attente),
+        liste: attente.map((moy, index) => {
+            return {
+                label: documents[index].rs,
+                value: moy
+            }
+        })
+    };
+    return {meilleursSites, dataAttente};
+}
+
+
 /**
  * Met à jour les stats des établissements d'un département
  * @param {Db} db Base de données
@@ -57,18 +117,10 @@ const updateDepartement = (db, departement) => {
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.departement.nb": documents.length}})
                 .catch(console.error);
 
-            // Calcul du meilleur site
-            let moyenneNote = documents.map(site => site.avis.length === 0 ? 1 : site.avis.reduce((a, b) => a + b.note, 0) / site.avis.length);
-            let meilleursSites = []
-            let noteMax = 0;
-            moyenneNote.forEach((note, index) => {
-                if (note > noteMax) {
-                    noteMax = note;
-                    meilleursSites = [documents[index]._id];
-                } else if (note === noteMax) {
-                    meilleursSites.push(documents[index]._id);
-                }
-            })
+            let {meilleursSites, dataAttente} = calculData(documents);
+
+            db.collection('departement').updateOne({"properties.code": departement}, {$set: {"properties.dataAttente": dataAttente}});
+
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.departement.best": false}})
                 .then(() => {
                     console.log(`Département ${departement} mis à jour`);
@@ -99,18 +151,10 @@ const updateRegion = (db, region) => {
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.region.nb": documents.length}})
                 .catch(console.error);
 
-            // Calcul des meilleurs sites
-            let moyenneNote = documents.map(site => site.avis.length === 0 ? 1 : site.avis.reduce((a, b) => a + b.note, 0) / site.avis.length);
-            let meilleursSites = []
-            let noteMax = 0;
-            moyenneNote.forEach((note, index) => {
-                if (note > noteMax) {
-                    noteMax = note;
-                    meilleursSites = [documents[index]._id];
-                } else if (note === noteMax) {
-                    meilleursSites.push(documents[index]._id);
-                }
-            });
+            let {meilleursSites, dataAttente} = calculData(documents);
+
+            db.collection('region').updateOne({"properties.code": region}, {$set: {"properties.dataAttente": dataAttente}});
+
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.region.best": false}})
                 .then(() => {
                     console.log(`Région ${region} mise à jour`);
@@ -167,7 +211,7 @@ const updateAll = (db) => {
             console.log("Initialisation des stats départements finis")
         });
 
-        db.collection('sites_prelevements').find({}).toArray(async(err, documents) => {
+        db.collection('sites_prelevements').find({}).toArray(async (err, documents) => {
             if (err) {
                 console.error(err);
                 return;
