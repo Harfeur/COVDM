@@ -233,7 +233,7 @@ iframe {
 .legend {
   line-height: 25px;
   color: #555;
-  width: 26%;
+  width: auto;
 }
 
 .legend i {
