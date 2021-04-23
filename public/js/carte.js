@@ -414,12 +414,6 @@ function openNav(i) {
         $(".chartPlus").hide();
         $("#graphSupp").show();
         $("#graphMoins").hide();
-    }else{
-        //petite ouverture à partie bouton de la carte
-        document.getElementById("mySidenav").style.width = "500px";
-        document.getElementById("main").style.marginLeft = "500px";
-        $(".chartPlus").hide();
-        $("#graphMoins").hide();
     }
     document.body.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
   }
@@ -428,6 +422,9 @@ function openNav(i) {
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("main").style.marginLeft= "0";
     document.body.style.backgroundColor = "white";
+
+    $("#graphSupp").show();
+
   }
 
 
@@ -439,7 +436,7 @@ var boutonStats = L.Control.extend({
         button.innerHTML = '<h1 id="buttonGraph"><i class="fas fa-chart-pie"></i><h1>';
         L.DomEvent.on(button, 'click', function () {
 
-            openNav();
+            openNav(false);
 
         });
         return button;
