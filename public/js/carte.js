@@ -146,6 +146,13 @@ $.get("/regions").done(dataR => {
             onEachFeature: onEachFeature
         }).addTo(map);
 
+        if (e.sourceTarget.feature.properties.code == "06"){
+            $("#buttonGraph").parent().hide();
+        }else{
+            $("#buttonGraph").parent().show();
+        }
+        
+
         //Affichage stat
         afficherStat(e.sourceTarget.feature.properties.code);
     }
@@ -179,6 +186,7 @@ $.get("/regions").done(dataR => {
             afficherStat(statFrance);
             info.addTo(map);
             legend.addTo(map);
+            $("#buttonGraph").parent().show();
         }
     });
 
@@ -349,7 +357,8 @@ function geoFindMe() {
                     }
                 }).addTo(map);
 
-                map.addLayer(marker)
+                map.addLayer(marker);
+                afficherStat(data[0].codeRegion);
             })
         });
 
@@ -427,7 +436,7 @@ function openNav(i) {
 var boutonStats = L.Control.extend({
     onAdd: function () {
         var button = L.DomUtil.create('button', 'info');
-        button.innerHTML = '<h1><i class="fas fa-chart-pie"></i><h1>';
+        button.innerHTML = '<h1 id="buttonGraph"><i class="fas fa-chart-pie"></i><h1>';
         L.DomEvent.on(button, 'click', function () {
 
             openNav();
