@@ -10,6 +10,8 @@ head
   script const horaire = !{JSON.stringify(horaires)}
   script const moy = !{JSON.stringify(stats.noteMoyenne)}
   script const deroulement = !{JSON.stringify(stats.bonDeroulement)}
+  script const nomBat =!{JSON.stringify(rs)}
+  script const addrVille = !{JSON.stringify(adresse.ville)}
   script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")  
   script(src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js')
   script(src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js')
@@ -23,7 +25,8 @@ head
         v-row(style='height: 60px;')
           v-col.mr-auto(cols='auto')
             v-card.pa-2(color='#5B5959')
-              p.font-italic(style='color:white;') #{rs}
+              p.font-italic(style='color:white;')
+               | {{titre}}
       // Adresse + Moyenne du site
       v-card-text
         v-row.mb-n6
@@ -31,7 +34,7 @@ head
             p
               | #{adresse.adresse}, #{adresse.ville} 
           v-spacer 
-          v-rating.mr-6( :value="moyenne" half-increments='' background-color="gray" color="amber" dense readonly size="14")
+          v-rating.mr-6( v-if="moyenne!=0" :value="moyenne" empty-icon="mdi-star-outline" full-icon="mdi-star"  background-color="gray" color="amber" dense readonly size="14")
         // Ajout phrase selon stat
         v-row
           if stats.region.best
@@ -54,38 +57,43 @@ head
       // Horaire
       v-card-subtitle
         v-row
-          .my-4.subtitle-1
-            template
-              .text-center
-                v-menu
-                  template(v-slot:activator='{ on: menu, attrs }')
-                    v-tooltip(bottom='')
-                      template(v-slot:activator='{ on: tooltip }')
-                        v-btn.ml-12(rounded='' v-on='{ ...tooltip, ...menu }')
-                          | {{jour[placement].title}}
-                      span Cliquez pour changer le jour
-                  v-list
-                    v-list-item-group(v-model='model' color='indigo')
-                      v-list-item(v-for='(item, index) in jour' :key='index' @click='liste(index)')
-                        v-list-item-title {{ item.title }}
-        
-          v-btn.ml-12( id='horaire' style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire1')
-            | {{majHoraire() ? heureO : "Fermé"}}
-          v-btn.ml-12( style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire2')
-            | {{majHoraire() ? heureF : "Fermé" }}
-        
-          if stats.attenteRapide
-            v-tooltip(bottom='' )
-              template(v-slot:activator='{ on, attrs }')
-                v-icon.ml-6(color='#1EE2F7' v-show='clock' dark='' v-bind='attrs' v-on='on')
-                  | mdi-clock-fast
-              span Prise en charge rapide !
-          else 
-            v-tooltip(bottom='' )
-              template(v-slot:activator='{ on, attrs }')
-                v-icon.ml-6(color='#E72525' v-show='clock' dark='' v-bind='attrs' v-on='on')
-                  | mdi-account-clock
-              span {{tempsAttente(#{stats.attenteMoyenne}) ? "Temps d'attente : "+attenteMoy+" min": "error"}} 
+          table#heure
+            tbody
+              tr
+                td
+                  .my-4.subtitle-1
+                    template
+                      .text-center
+                        v-menu
+                          template(v-slot:activator='{ on: menu, attrs }')
+                            v-tooltip(bottom='')
+                              template(v-slot:activator='{ on: tooltip }')
+                                v-btn.ml-12(rounded='' v-on='{ ...tooltip, ...menu }')
+                                  | {{jour[placement].title}}
+                              span Cliquez pour changer le jour
+                          v-list
+                            v-list-item-group(v-model='model' color='indigo')
+                              v-list-item(v-for='(item, index) in jour' :key='index' @click='liste(index)')
+                                v-list-item-title {{ item.title }}
+                td
+                  v-btn.ml-12( id='horaire' style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire1')
+                   | {{majHoraire() ? heureO : "Fermé"}}
+                td
+                  v-btn.ml-12( style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire2')
+                    | {{majHoraire() ? heureF : "Fermé" }}
+                td
+                  if stats.attenteRapide
+                    v-tooltip(bottom='' )
+                      template(v-slot:activator='{ on, attrs }')
+                        v-icon.ml-6(color='#1EE2F7' v-show='clock' dark='' v-bind='attrs' v-on='on')
+                          | mdi-clock-fast
+                      span Prise en charge rapide !
+                  else 
+                    v-tooltip(bottom='' )
+                      template(v-slot:activator='{ on, attrs }')
+                        v-icon.ml-6(color='#E72525' v-if="attenteMoy!=0" v-show='clock' dark='' v-bind='attrs' v-on='on')
+                          | mdi-account-clock
+                      span {{tempsAttente(#{stats.attenteMoyenne}) ? "Temps d'attente : "+attenteMoy+" min": "error"}} 
 
          
           template
@@ -205,11 +213,17 @@ head
       // Fin Horaire
       // Button Formulaire Avis + Commentaire
       v-card-actions.mt-2
-        v-btn(color='orange lighten-2' text='' @click='partageExp' onClick='scroll')
+        v-btn(color='orange lighten-2' v-if="!nbCom" text='' @click='partageExp' onClick='scroll')
           | Partager mon exp&eacute;rience
+        v-tooltip(bottom='' )
+          template(v-slot:activator='{ on, attrs }')
+            v-btn(color='orange lighten-2'  v-if="nbCom" text='' @click='partageExp' onClick='scroll' v-bind="attrs" v-on="on")
+              | Partager mon exp&eacute;rience
+          span Soyez le premier a mettre un commentaire !
+
         v-spacer
-        v-btn(:disabled="nbCom" color='green lighten-2' text='' @click='ouvreCom')
-          | {{ tailleCom() ? "Commentaires" : "error" }}
+        v-btn(:disabled="items.length==0" color='green lighten-2' text='' @click='ouvreCom')
+          | Commentaires
       // Fin Button Formulaire Avis + Commentaire
       // Extension Avis
       v-expand-transition
