@@ -77,24 +77,7 @@ function calculData(documents) {
             meilleursSites.push(documents[index]._id);
         }
     });
-
-    // Calcul des délais d'attente
-    let attente = documents.map(site => site.stats.attente.reduce((sum, nb) => sum + nb, 0) / site.stats.attente.length);
-    let dataAttente = {
-        mediane: median(attente),
-        min: Math.min(...attente),
-        max: Math.max(...attente),
-        q1: q25(attente),
-        q3: q75(attente),
-        ecart_type: std(attente),
-        liste: attente.map((moy, index) => {
-            return {
-                label: documents[index].rs,
-                value: moy
-            }
-        })
-    };
-    return {meilleursSites, dataAttente};
+    return meilleursSites;
 }
 
 
@@ -117,7 +100,24 @@ const updateDepartement = (db, departement) => {
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.departement.nb": documents.length}})
                 .catch(console.error);
 
-            let {meilleursSites, dataAttente} = calculData(documents);
+            let meilleursSites = calculData(documents);
+
+            // Calcul des délais d'attente
+            let attente = documents.map(site => site.stats.attente.length === 0 ? 15 : site.stats.attente.reduce((sum, nb) => sum + nb, 0) / site.stats.attente.length);
+            let dataAttente = {
+                mediane: median(attente),
+                min: Math.min(...attente),
+                max: Math.max(...attente),
+                q1: q25(attente),
+                q3: q75(attente),
+                ecart_type: std(attente),
+                liste: attente.map((moy, index) => {
+                    return {
+                        label: documents[index].rs,
+                        value: moy
+                    }
+                })
+            };
 
             db.collection('departement').updateOne({"properties.code": departement}, {$set: {"properties.dataAttente": dataAttente}});
 
@@ -151,17 +151,38 @@ const updateRegion = (db, region) => {
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.region.nb": documents.length}})
                 .catch(console.error);
 
-            let {meilleursSites, dataAttente} = calculData(documents);
+            let meilleursSites = calculData(documents);
 
-            db.collection('region').updateOne({"properties.code": region}, {$set: {"properties.dataAttente": dataAttente}});
 
-            db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.region.best": false}})
-                .then(() => {
-                    console.log(`Région ${region} mise à jour`);
-                    return db.collection('sites_prelevements').updateOne({_id: {$in: meilleursSites}}, {$set: {"stats.region.best": true}})
-                })
-                .then(resolve)
-                .catch(reject);
+            db.collection('departement').find({"properties.codeRegion": region}).toArray((err, docs) => {
+                // Calcul des délais d'attente
+                let attente = docs.map(dpt => dpt.properties.dataAttente.liste.reduce((sum, nb) => sum + nb.value, 0) / dpt.properties.dataAttente.liste.length);
+                let dataAttente = {
+                    mediane: median(attente),
+                    min: Math.min(...attente),
+                    max: Math.max(...attente),
+                    q1: q25(attente),
+                    q3: q75(attente),
+                    ecart_type: std(attente),
+                    liste: attente.map((moy, index) => {
+                        return {
+                            label: docs[index].properties.nom,
+                            value: moy
+                        }
+                    })
+                };
+
+                db.collection('region').updateOne({"properties.code": region}, {$set: {"properties.dataAttente": dataAttente}});
+
+                db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.region.best": false}})
+                    .then(() => {
+                        console.log(`Région ${region} mise à jour`);
+                        return db.collection('sites_prelevements').updateOne({_id: {$in: meilleursSites}}, {$set: {"stats.region.best": true}})
+                    })
+                    .then(resolve)
+                    .catch(reject);
+            })
+
         });
     });
 
