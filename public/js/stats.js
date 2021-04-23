@@ -9,17 +9,17 @@ let id_departement = urlParams.get('id_departement');
 
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 
-function attenteMoyenne(){
+function attenteMoyenne(id_region){
     var div = '<div class="chartPlus" style="height: 300px;width: 48%;display:inline-block" id="my_dataviz"></div>'
 
     $("#contentchartSupp").append(div);
     $(".chartPlus").hide();
 
     // set the dimensions and margins of the graph
-    var margin = {top: 30, right: 30, bottom: 50, left: 70},
+    var margin = {top: 100, right: 100, bottom: 100, left: 100},
     width = 450 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
-    console.log(width);
+    
 
     // append the svg object to the body of the page
     var svg = d3.select("#my_dataviz")
@@ -30,167 +30,218 @@ function attenteMoyenne(){
     .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
-    //title
-    svg.append("text")
-    .attr("x", (width / 2))             
-    .attr("y", 0 - (margin.top / 2))
-    .attr("text-anchor", "middle")  
-    .style("font-size", "17px") 
-    .style("text-decoration", "underline")  
-    .style("font-weight", "bold")  
-    .text("Temps d'attente en France dans chaque région");
-
     // Read the data and compute summary statistics for each specie
     $.get("/regions").done(dataR =>{
         var sumstat = [];
         var reg = {};
+        var dep = {};
         var domain = [];
         var point = [];
 
+
         dataR.forEach(elt => {   
-            sumstat.push({
-                "key":elt.properties.nom,
-                "value":{
-                    "interQuantileRange":elt.properties.dataAttente.ecart_type,
-                    "median":elt.properties.dataAttente.mediane,
-                    "min":elt.properties.dataAttente.min,
-                    "max":elt.properties.dataAttente.max,
-                    "q1":elt.properties.dataAttente.q1,
-                    "q3":elt.properties.dataAttente.q3
-                }
-            });
+            if(!id_region){
 
+                sumstat.push({
+                    "key":elt.properties.nom,
+                    "value":{
+                        "interQuantileRange":elt.properties.dataAttente.ecart_type,
+                        "median":elt.properties.dataAttente.mediane,
+                        "min":elt.properties.dataAttente.min,
+                        "max":elt.properties.dataAttente.max,
+                        "q1":elt.properties.dataAttente.q1,
+                        "q3":elt.properties.dataAttente.q3
+                    }
+                });
+
+                domain.push(elt.properties.nom)
+            }
+            
             reg[elt.properties.code] = {"nom":elt.properties.nom}
-
-            domain.push(elt.properties.nom)
         });
         
-        $.get("/departements").done(dataD => {
+        $.get("/departements",{
+            id_region: id_region}).done(dataD => {
 
-            dataD.forEach(obj => {
-                point.push(
-                    {"attente":obj.properties.dataAttente.mediane, 
-                        "nomRegion":reg[obj.properties.codeRegion].nom,
-                    "nom":obj.properties.nom})
+                    dataD.forEach(obj => {
+                        if(id_region && id_region == obj.properties.codeRegion){
 
-            });
+                            sumstat.push({
+                                "key":obj.properties.nom,
+                                "value":{
+                                    "interQuantileRange":obj.properties.dataAttente.ecart_type,
+                                    "median":obj.properties.dataAttente.mediane,
+                                    "min":obj.properties.dataAttente.min,
+                                    "max":obj.properties.dataAttente.max,
+                                    "q1":obj.properties.dataAttente.q1,
+                                    "q3":obj.properties.dataAttente.q3
+                                }
+                            });
+                            
+                            dep[obj.properties.code] = {"nom":obj.properties.nom}
+
+                            domain.push(obj.properties.nom)
+                        }else{
+                            point.push(
+                                {"attente":obj.properties.dataAttente.mediane, 
+                                    "nomRegion":reg[obj.properties.codeRegion].nom,
+                                "nom":obj.properties.nom})
+                        }
+                    });
+                
             
-            //console.log(point);
-            // Show the Y scale
-            var y = d3.scaleBand()
-            .range([ height, 0 ])
-            .domain(domain)
-            .padding(.4);
-            svg.append("g")
-            .call(d3.axisLeft(y).tickSize(0))
-            .select(".domain").remove()
+            $.get("/sitesPrelevements").done(dataP =>{
+                if (id_region) {
 
-            // Show the X scale
-            var x = d3.scaleLinear()
-            .domain([0,25])
-            .range([0, width])
-            svg.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x).ticks(10))
-            .select(".domain").remove()
+                    dataP.forEach(oel => {
+                        if(dep[oel.adresse.codeDepartement] != null){
+                            point.push(
+                                {"attente":oel.stats.attenteMoyenne, 
+                                    "nomRegion":dep[oel.adresse.codeDepartement].nom,
+                                "nom":oel.rs})
+                        }
+                    })
+                }
+            
+                //console.log(point);
+                // Show the Y scale
+                var y = d3.scaleBand()
+                .range([ height, 0 ])
+                .domain(domain)
+                .padding(.4);
+                svg.append("g")
+                .call(d3.axisLeft(y).tickSize(0))
+                .select(".domain").remove()
 
-            // Color scale
-            var myColor = d3.scaleSequential()
-            .interpolator(d3.interpolateInferno)
-            .domain([4,8])
+                // Show the X scale
+                var x = d3.scaleLinear()
+                .domain([0,25])
+                .range([0, width])
+                svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x).ticks(10))
+                .select(".domain").remove()
 
-            // Add X axis label:
-            svg.append("text")
-            .attr("text-anchor", "end")
-            .attr("x", width)
-            .attr("y", height + margin.top + 30)
-            .text("Temps attente");
+                // Color scale
+                var myColor = d3.scaleSequential()
+                .interpolator(d3.interpolateInferno)
+                .domain([4,8])
 
-            // Show the main vertical line
-            svg
-            .selectAll("vertLines")
-            .data(sumstat)
-            .enter()
-            .append("line")
-            .attr("x1", function(d){return(x(d.value.min))})
-            .attr("x2", function(d){return(x(d.value.max))})
-            .attr("y1", function(d){return(y(d.key) + y.bandwidth()/2)})
-            .attr("y2", function(d){return(y(d.key) + y.bandwidth()/2)})
-            .attr("stroke", "black")
-            .style("width", 40)
+                // Add X axis label:
+                svg.append("text")
+                .attr("text-anchor", "end")
+                .attr("x", width)
+                .attr("y", height + margin.top + 30)
+                .text("Temps attente");
 
-            // rectangle for the main box
-            svg
-            .selectAll("boxes")
-            .data(sumstat)
-            .enter()
-            .append("rect")
-                .attr("x", function(d){return(x(d.value.q1))}) // console.log(x(d.value.q1)) ;
-                .attr("width", function(d){ ; return(x(d.value.q3)-x(d.value.q1))}) //console.log(x(d.value.q3)-x(d.value.q1))
-                .attr("y", function(d) { return y(d.key); })
-                .attr("height", y.bandwidth() )
+                // Show the main vertical line
+                svg
+                .selectAll("vertLines")
+                .data(sumstat)
+                .enter()
+                .append("line")
+                .attr("x1", function(d){return(x(d.value.min))})
+                .attr("x2", function(d){return(x(d.value.max))})
+                .attr("y1", function(d){return(y(d.key) + y.bandwidth()/2)})
+                .attr("y2", function(d){return(y(d.key) + y.bandwidth()/2)})
                 .attr("stroke", "black")
-                .style("fill", "#69b3a2")
-                .style("opacity", 0.3)
+                .style("width", 40)
 
-            // Show the median
-            svg
-            .selectAll("medianLines")
-            .data(sumstat)
-            .enter()
-            .append("line")
-            .attr("y1", function(d){return(y(d.key))})
-            .attr("y2", function(d){return(y(d.key) + y.bandwidth()/2)})
-            .attr("x1", function(d){return(x(d.value.median))})
-            .attr("x2", function(d){return(x(d.value.median))})
-            .attr("stroke", "black")
-            .style("width", 80)
+                // rectangle for the main box
+                svg
+                .selectAll("boxes")
+                .data(sumstat)
+                .enter()
+                .append("rect")
+                    .attr("x", function(d){return(x(d.value.q1))}) // console.log(x(d.value.q1)) ;
+                    .attr("width", function(d){ ; return(x(d.value.q3)-x(d.value.q1))}) //console.log(x(d.value.q3)-x(d.value.q1))
+                    .attr("y", function(d) { return y(d.key); })
+                    .attr("height", y.bandwidth() )
+                    .attr("stroke", "black")
+                    .style("fill", "#69b3a2")
+                    .style("opacity", 0.3)
 
-            // create a tooltip
-            var tooltip = d3.select("#my_dataviz")
-            .append("div")
-            .style("opacity", 0)
-            .attr("class", "tooltip")
-            .style("font-size", "16px")
-            // Three function that change the tooltip when user hover / move / leave a cell
-            var mouseover = function(d) {
-            tooltip
-            .transition()
-            .duration(200)
-            .style("opacity", 1)
-            tooltip
-                .html("<span style='color:grey'>Département: </span>" + d.nom) // + d.Prior_disorder + "<br>" + "HR: " +  d.HR)
+                // Show the median
+                svg
+                .selectAll("medianLines")
+                .data(sumstat)
+                .enter()
+                .append("line")
+                .attr("y1", function(d){return(y(d.key))})
+                .attr("y2", function(d){return(y(d.key) + y.bandwidth()/2)})
+                .attr("x1", function(d){return(x(d.value.median))})
+                .attr("x2", function(d){return(x(d.value.median))})
+                .attr("stroke", "black")
+                .style("width", 80)
+
+                // create a tooltip
+                var tooltip = d3.select("#my_dataviz")
+                .append("div")
+                .style("opacity", 0)
+                .attr("class", "tooltip")
+                .style("font-size", "16px")
+                // Three function that change the tooltip when user hover / move / leave a cell
+                var mouseover = function(d) {
+                tooltip
+                .transition()
+                .duration(200)
+                .style("opacity", 1)
+                tooltip
+                    .html("<span style='color:grey'>Département: </span>" + d.nom) // + d.Prior_disorder + "<br>" + "HR: " +  d.HR)
+                    .style("left", (d3.mouse(this)[0]+100) + "px")
+                    .style("top", (d3.mouse(this)[1]+500) + "px")
+                }
+                var mousemove = function(d) {
+                tooltip
                 .style("left", (d3.mouse(this)[0]+100) + "px")
                 .style("top", (d3.mouse(this)[1]+500) + "px")
-            }
-            var mousemove = function(d) {
-            tooltip
-            .style("left", (d3.mouse(this)[0]+100) + "px")
-            .style("top", (d3.mouse(this)[1]+500) + "px")
-            }
-            var mouseleave = function(d) {
-            tooltip
-            .transition()
-            .duration(200)
-            .style("opacity", 0)
-            }
+                }
+                var mouseleave = function(d) {
+                tooltip
+                .transition()
+                .duration(200)
+                .style("opacity", 0)
+                }
 
-            // Add individual points with jitter
-            var jitterWidth = 50
-            svg
-            .selectAll("indPoints")
-            .data(point)
-            .enter()
-            .append("circle")
-            .attr("cx", function(d){ return(x(d.attente))})  //temps attente
-            .attr("cy", function(d){ return( y(d.nomRegion) + (y.bandwidth()/2) - jitterWidth/2 + Math.random()*jitterWidth )}) //nom region
-            .attr("r", 4)
-            .style("fill", function(d){ return(myColor(+d.attente)) })
-            .attr("stroke", "black")
-            .on("mouseover", mouseover)
-            .on("mousemove", mousemove)
-            .on("mouseleave", mouseleave)
+                // Add individual points with jitter
+                var jitterWidth = 50
+                svg
+                .selectAll("indPoints")
+                .data(point)
+                .enter()
+                .append("circle")
+                .attr("cx", function(d){ return(x(d.attente))})  //temps attente
+                .attr("cy", function(d){ return( y(d.nomRegion) + (y.bandwidth()/2) - jitterWidth/2 + Math.random()*jitterWidth )}) //nom region
+                .attr("r", 4)
+                .style("fill", function(d){ return(myColor(+d.attente)) })
+                .attr("stroke", "black")
+                .on("mouseover", mouseover)
+                .on("mousemove", mousemove)
+                .on("mouseleave", mouseleave)
 
+                //title
+                if(!id_region){                
+                    //en France
+                    svg.append("text")
+                    .attr("x", (width / 2))             
+                    .attr("y", 0 - (margin.top / 2))
+                    .attr("text-anchor", "middle")  
+                    .style("font-size", "17px") 
+                    .style("text-decoration", "underline")  
+                    .style("font-weight", "bold")  
+                    .text("Temps d'attente en France dans chaque région");
+                }else{            
+                    //pour une région
+                    svg.append("text")
+                    .attr("x", (width / 2))             
+                    .attr("y", 0 - (margin.top / 2))
+                    .attr("text-anchor", "middle")  
+                    .style("font-size", "17px") 
+                    .style("text-decoration", "underline")  
+                    .style("font-weight", "bold")  
+                    .text("Temps d'attente en "+ reg[id_region].nom +" dans chaque département");
+                }
+            });
         });      
 
     });
@@ -389,7 +440,7 @@ function afficherStat(id_region) {
                         }]
                     });
                     chart.render();
-
+                    attenteMoyenne(id_region);
                     //meilleure site par département pour une région donnée
                     for (const [key, value] of Object.entries(departement)) {
                         
