@@ -37,6 +37,8 @@
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 
 
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v4.js"></script>
 
 
 
@@ -69,8 +71,8 @@
                 <div class="chart" id="chartContainer2"></div>
             </div>
             <div id="contentchartSupp" style="margin-bottom: 5%;"></div>
-            <button id="graphSupp" class="custom-btn btn-1" onclick="openNav(true)"><i class="fas fa-plus"></i> graphique</button>
-            <button id="graphMoins" style="display: inline-block;" class="custom-btn btn-1" onclick="openNav(false)"><i class="fas fa-minus"></i> graphique</button>
+            <button id="graphSupp" class="custom-btn btn-1" onclick="openNav(true)"><i class="fas fa-plus"></i></button>
+            <button id="graphMoins" style="display: inline-block;" class="custom-btn btn-1" onclick="openNav(false)"><i class="fas fa-minus"></i></button>
         </div>
 
         <div class="info" id="main">
@@ -86,6 +88,11 @@
     </div>
 
 </body>
+
+
+  
+<!-- Plugin for color scale -->
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="/js/fonction.js"></script>
