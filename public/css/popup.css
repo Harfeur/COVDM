@@ -38,3 +38,8 @@ html, body {
     bottom: 0;
 }
 
+#heure{
+    table-layout: fixed;
+    width: 500px;
+}
+

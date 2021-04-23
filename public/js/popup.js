@@ -10,10 +10,26 @@ window.addEventListener("DOMContentLoaded", (event) => {
             default:el.style.setProperty("height", 295+'px');break;
         }
     }
+    var tabCom=[];
+    avis.forEach(function(e){
+        if (e.message!=""){
+            tabCom.push({
+                "nom": e.nom,
+                "email": e.email,
+                "message": e.message,
+                "note": e.note
+                });
+        }
+    })
+
+    if (nomBat.indexOf('-')!=-1)  var tab = nomBat.split('-');
+    else var tab = nomBat.split(addrVille);
+    var titreBat=tab[0];
     
     new Vue({
         el: '#app',
         vuetify: new Vuetify(),
+        
         data: () => ({
             time: horaire,
             show: false,
@@ -24,7 +40,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             rating: 3,
             duree: null,
             isActive: false,
-            items: avis,
+            items:tabCom,
             jour: [{
                     title: 'Lundi'
                 },
@@ -70,9 +86,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
             nouvelHeure:false,
             nbCom:true,
             attenteMoy:0,
-            moyenne:parseInt(moy)+Math.round((moy-Math.trunc(moy))*2)*0.5,
+            moyenne:parseInt(moy)+Math.round((moy-Math.trunc(moy))*2),
             oui:0,
             non:100,
+            titre: titreBat,
         }),
         methods: {
             tempsAttente(x){
@@ -91,15 +108,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 var expansion = document.getElementById('exp');
                 this.reveal = false;
                 expansion.style.display = "block";
-            },
-            tailleCom(){
-                switch(avis.length){
-                    case 1: majHauteur(1); break;
-                    case 2: majHauteur(2); break;
-                    default: majHauteur(3); break;
-                }
-                this.nbCom=(this.items.length==0);
-                return true;
             },
             scrollMoiStp() {
                 this.img=!this.img;
@@ -167,13 +175,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         'Content-Type': 'application/json'
                     }
                 })
-                this.items.push({
+                if (this.com!=""){
+                    this.items.push({
                     "nom": this.prenom + ' ' + this.nom,
                     "email": this.email,
                     "message": this.com,
                     "note": this.rating
-                });
-                this.tailleCom();
+                    });
+                }
             },
             getHoraireToString(x) {
                 var heure = parseInt(x).toString();
@@ -188,7 +197,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 var hh = parseInt(tab[0]);
                 var mm = parseInt(tab[1])/100;
                 return hh+mm;
-
             },
             majHoraire(){
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
