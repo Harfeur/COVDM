@@ -9,6 +9,7 @@ head
   script const id = !{JSON.stringify(_id)}
   script const horaire = !{JSON.stringify(horaires)}
   script const moy = !{JSON.stringify(stats.noteMoyenne)}
+  script const attenteMoyenne = !{JSON.stringify(stats.attenteMoyenne)}
   script const deroulement = !{JSON.stringify(stats.bonDeroulement)}
   script const nomBat =!{JSON.stringify(rs)}
   script const addrVille = !{JSON.stringify(adresse.ville)}
@@ -209,18 +210,17 @@ head
                   a(href='#{web_rdv}') #{web_rdv}
       
       
-      
-      // Fin Horaire
-      // Button Formulaire Avis + Commentaire
+
       v-card-actions.mt-2
-        v-btn(color='orange lighten-2' v-if="!nbCom" text='' @click='partageExp' onClick='scroll')
+        v-btn(color='orange lighten-2' v-if="items.length!=0 && show==false" text='' @click='partageExp')
           | Partager mon exp&eacute;rience
         v-tooltip(bottom='' )
           template(v-slot:activator='{ on, attrs }')
-            v-btn(color='orange lighten-2'  v-if="nbCom" text='' @click='partageExp' onClick='scroll' v-bind="attrs" v-on="on")
+            v-btn(color='orange lighten-2'  v-if="items.length==0 && show==false" text='' @click='partageExp' v-bind="attrs" v-on="on")
               | Partager mon exp&eacute;rience
           span Soyez le premier a mettre un commentaire !
-
+        v-btn(color='orange lighten-2' v-if="show==true" text='' @click='partageExp')
+          | Fermer
         v-spacer
         v-btn(:disabled="items.length==0" color='green lighten-2' text='' @click='ouvreCom')
           | Commentaires
@@ -296,10 +296,12 @@ head
                   v-card-subtitle
                     v-col(cols='12')
                       v-slider(max='60' min='0' step='5' v-model='duree' thumb-label='' ticks='')
-                  v-btn(color='blue' @click='attente')
-                    | Continuer
-                  v-btn(@click='e1 = 4')
-                    | Ne pas r&eacute;pondre
+                  v-card-actions
+                    v-btn(color='blue' @click='dureeDonner')
+                      | Continuer
+                    v-spacer
+                    v-btn(@click='e1 = 4')
+                      | Ne pas r&eacute;pondre
               v-stepper-content(step='4')
                 v-card
                   v-row
@@ -308,18 +310,20 @@ head
                     v-rating(v-model='rating' color='yellow darken-3' background-color='grey darken-1' empty-icon='$ratingFull' hover='' large='')
                   v-card-subtitle
                     v-textarea(v-model='com' label='Commentaire' auto-grow='' outlined='' rows='3' row-height='15' shaped='')
-                  v-btn(color='blue' @click='eval')
-                    | Continuer
-                  v-btn(@click='e1 = 5')
-                    | Ne pas r&eacute;pondre
+                  v-card-actions
+                    v-btn(color='blue' @click='eval')
+                      | Continuer
+                    v-spacer
+                    v-btn(@click='e1 = 5;')
+                      | Ne pas r&eacute;pondre
               v-stepper-content(step='5')
                 v-card
-                  v-card-title
-                    | Merci pour vos r&eacute;ponses
-                    v-icon(x-large='' color='orange darken-2')
-                      | mdi-emoticon-excited
-                  v-btn(@click='show = !show')
-                    | Fermer
+                  v-row
+                    v-card-title
+                      | Merci pour vos r&eacute;ponses
+                    iframe.giphy-embed.pl-6(src='https://giphy.com/embed/xIJLgO6rizUJi' width='250' height='246' frameborder='0')
+                      p
+                        a(href='https://giphy.com/gifs/alice-in-wonderland-thank-you-xIJLgO6rizUJi') 
       // Fin Extension Avis
       // Extension Commentaire
       v-expand-transition

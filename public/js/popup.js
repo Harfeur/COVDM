@@ -85,7 +85,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             changeF:'',
             nouvelHeure:false,
             nbCom:true,
-            attenteMoy:0,
+            attenteMoy:attenteMoyenne,
             moyenne:parseInt(moy)+Math.round((moy-Math.trunc(moy))*2),
             oui:0,
             non:100,
@@ -154,12 +154,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 this.e1 = 3;
                 setTimeout(scroll, 400);
             },
-            attente() {
+            dureeDonner() {
                 this.e1 = 4;
                 setTimeout(scroll, 400);
             },
             eval() {
                 this.e1 = 5;
+                setTimeout(scroll, 400);
                 fetch('/ajoutCommentaire', {
                     method: 'POST',
                     body: JSON.stringify({
