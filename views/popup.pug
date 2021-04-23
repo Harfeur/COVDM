@@ -222,7 +222,7 @@ head
         v-btn(color='orange lighten-2' v-if="show==true" text='' @click='partageExp')
           | Fermer
         v-spacer
-        v-btn(:disabled="items.length==0" color='green lighten-2' text='' @click='ouvreCom')
+        v-btn(:disabled="items.length==0 || show==true" color='green lighten-2' text='' @click='ouvreCom')
           | Commentaires
       // Fin Button Formulaire Avis + Commentaire
       // Extension Avis
@@ -314,16 +314,16 @@ head
                     v-btn(color='blue' @click='eval')
                       | Continuer
                     v-spacer
-                    v-btn(@click='e1 = 5;')
+                    v-btn(@click='e1 = 5; choixGif();')
                       | Ne pas r&eacute;pondre
               v-stepper-content(step='5')
                 v-card
                   v-row
                     v-card-title
                       | Merci pour vos r&eacute;ponses
-                    iframe.giphy-embed.pl-6(src='https://giphy.com/embed/xIJLgO6rizUJi' width='250' height='246' frameborder='0')
+                    iframe.giphy-embed.pl-6(:src='tabGif[gif][0]' width='250' height='246' frameborder='0')
                       p
-                        a(href='https://giphy.com/gifs/alice-in-wonderland-thank-you-xIJLgO6rizUJi') 
+                        a(:href='tabGif[gif][1]') 
       // Fin Extension Avis
       // Extension Commentaire
       v-expand-transition
