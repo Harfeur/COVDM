@@ -86,14 +86,21 @@ window.addEventListener("DOMContentLoaded", (event) => {
             nouvelHeure:false,
             nbCom:true,
             attenteMoy:attenteMoyenne,
-            moyenne:parseInt(moy)+Math.round((moy-Math.trunc(moy))*2),
+            moyenne:parseInt(moy)+Math.round((moy-Math.trunc(moy))),
             oui:0,
             non:100,
             titre: titreBat,
+            tabGif:[["https://giphy.com/embed/6tHy8UAbv3zgs","https://giphy.com/gifs/thank-you-spongebob-squarepants-6tHy8UAbv3zgs"],["https://giphy.com/embed/14tCeoSGpXCWrQvixk","https://giphy.com/gifs/true-and-the-rainbow-kingdom-funny-netflix-14tCeoSGpXCWrQvixk"],['https://giphy.com/embed/xIJLgO6rizUJi','https://giphy.com/gifs/alice-in-wonderland-thank-you-xIJLgO6rizUJi'],["https://giphy.com/embed/xUA7aN1MTCZx97V1Ic","https://giphy.com/gifs/iliza-iliza-shlesinger-xUA7aN1MTCZx97V1Ic"],["https://giphy.com/embed/3oz8xIsloV7zOmt81G","https://giphy.com/gifs/arg-thank-you-cat-3oz8xIsloV7zOmt81G"]],
+            gif:0,
         }),
         methods: {
+            choixGif(){
+                min = Math.ceil(0);
+                max = Math.floor(this.tabGif.length-1);
+                this.gif=Math.floor(Math.random() * (max - min +1)) + min;
+            },
             tempsAttente(x){
-                this.attente = parseInt(x).toString();
+                this.attenteMoy = Math.round(x);
                 return true;
             },
             ouvreCom() {
