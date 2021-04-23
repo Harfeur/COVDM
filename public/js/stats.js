@@ -394,7 +394,7 @@ function afficherStat(id_region) {
                     for (const [key, value] of Object.entries(departement)) {
                         
                         var id_Div = "chartContainer" + nbContainer
-                        var div = '<div class="chartPlus" style="height: 300px;width: 48%;display:inline-block" id="' + id_Div + '"></div>'
+                        var div = '<div class="chartPlus"  id="' + id_Div + '"></div>'
                         nbContainer += 1
                         $("#contentchartSupp").append(div);
                         $(".chartPlus").hide();
