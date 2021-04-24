@@ -13,6 +13,8 @@ head
   script const deroulement = !{JSON.stringify(stats.bonDeroulement)}
   script const nomBat =!{JSON.stringify(rs)}
   script const addrVille = !{JSON.stringify(adresse.ville)}
+  script const web = !{JSON.stringify(web_rdv)}
+  script const num = !{JSON.stringify(tel_rdv)}
   script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")  
   script(src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js')
   script(src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js')
@@ -203,11 +205,14 @@ head
                   | #{check_rdv}
                 br
                 if tel_rdv!=""
-                  | Contacter : #{tel_rdv}
+                  |{{validTEL() ? "Contacter : " : ""}}
+                  |{{validTEL() ? numero : ""}}
                 br
                 if web_rdv!=""
-                  | Site web : 
-                  a(href='#{web_rdv}') #{web_rdv}
+                  |{{validURL() ? "Site web : " : ""}}
+                  a(href='#{web_rdv}') {{validURL() ? "#{web_rdv}" : ""}}
+
+          
       
       
 

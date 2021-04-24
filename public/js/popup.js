@@ -29,7 +29,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
     new Vue({
         el: '#app',
         vuetify: new Vuetify(),
-        
         data: () => ({
             time: horaire,
             show: false,
@@ -92,18 +91,44 @@ window.addEventListener("DOMContentLoaded", (event) => {
             titre: titreBat,
             tabGif:[["https://giphy.com/embed/6tHy8UAbv3zgs","https://giphy.com/gifs/thank-you-spongebob-squarepants-6tHy8UAbv3zgs"],["https://giphy.com/embed/14tCeoSGpXCWrQvixk","https://giphy.com/gifs/true-and-the-rainbow-kingdom-funny-netflix-14tCeoSGpXCWrQvixk"],['https://giphy.com/embed/xIJLgO6rizUJi','https://giphy.com/gifs/alice-in-wonderland-thank-you-xIJLgO6rizUJi'],["https://giphy.com/embed/xUA7aN1MTCZx97V1Ic","https://giphy.com/gifs/iliza-iliza-shlesinger-xUA7aN1MTCZx97V1Ic"],["https://giphy.com/embed/3oz8xIsloV7zOmt81G","https://giphy.com/gifs/arg-thank-you-cat-3oz8xIsloV7zOmt81G"]],
             gif:0,
+            numero:"",
         }),
         methods: {
+            validURL() {
+                var str = web
+                var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+                  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                  '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                  '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+                return !!pattern.test(str);
+            },
+            validTEL(){
+                var regex = new RegExp(/^(06|07)[0-9]{8}/gi);
+                if (regex.test(num)) {
+                    this.numero=num
+                    return(true); 
+                }
+                var regex = new RegExp(/^[0-9]{9}/gi);
+                if (regex.test(num)) {
+                    this.numero="0"+num;
+                    return(true); 
+                }
+                return(false); 
+            },
             choixGif(){
                 min = Math.ceil(0);
                 max = Math.floor(this.tabGif.length-1);
                 this.gif=Math.floor(Math.random() * (max - min +1)) + min;
+                console.log(this.gif)
             },
             tempsAttente(x){
                 this.attenteMoy = Math.round(x);
                 return true;
             },
             ouvreCom() {
+                
                 var expansion = document.getElementById('exp');
                 var nbVote = ((deroulement.oui)+(deroulement.non));
                 this.oui = Math.round((deroulement.oui*100)/nbVote);
@@ -328,6 +353,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 left: 0,
                 behavior: 'smooth'
         });
+
+        
     }
 });
 
