@@ -36,6 +36,12 @@ var dataRegion;
 let statFrance;
 
 
+    //LEGENDE
+    var info = L.control({position: 'bottomright'});
+    var legend = L.control({position: 'bottomright'});
+
+
+
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 
 
@@ -44,9 +50,7 @@ $.get("/regions").done(dataR => {
 
     dataRegion = dataR;
 
-    //LEGENDE
-    var info = L.control({position: 'bottomright'});
-
+    //legende
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
         this.update();
@@ -61,10 +65,7 @@ $.get("/regions").done(dataR => {
     };
 
     info.addTo(map);
-
-    //legend
-    var legend = L.control({position: 'bottomright'});
-
+    
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
@@ -82,8 +83,6 @@ $.get("/regions").done(dataR => {
     };
 
     legend.addTo(map);
-
-
     //Couleur
     function getColor(d) {
         return d > 100000 ? '#800026' :
@@ -359,6 +358,8 @@ function geoFindMe() {
 
                 map.addLayer(marker);
                 afficherStat(data[0].codeRegion);
+                info.remove(map);
+                legend.remove(map);
             })
         });
 
