@@ -20,7 +20,7 @@ module.exports = function (app, db, dirname) {
                 res.render('popup', documents[0]);
             })
         else
-            db.collection('sites_vaccinations').find({"_id": req.query.id}).toArray((error, documents) => {
+            db.collection('sites_vaccinations').find({"_id": parseInt(req.query.id)}).toArray((error, documents) => {
                 if (error) res.status(500).send(error);
                 res.render('popup', documents[0]);
             })

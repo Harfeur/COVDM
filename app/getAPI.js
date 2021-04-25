@@ -98,16 +98,16 @@ module.exports = function (app, db, dirname, data) {
                 if (isNaN(req.query.id)) {
                     db.collection('sites_prelevements').find({"_id": req.query.id}).toArray((error, documents) => {
                         if (error) res.status(500).send(error);
-                        console.log(`Téléchargement d'une image depuis Google Street pour le lieu ${req.body.id}`)
+                        console.log(`Téléchargement d'une image depuis Google Street pour le lieu ${req.query.id}`)
                         download(`https://maps.googleapis.com/maps/api/streetview?size=390x200&location=${documents[0].latitude},${documents[0].longitude}&key=${process.env.STREET_VIEW}`,
                             urlLocale, () => {
                                 res.sendFile(urlLocale);
                             });
                     });
                 } else {
-                    db.collection('sites_vaccinations').find({"_id": req.query.id}).toArray((error, documents) => {
+                    db.collection('sites_vaccinations').find({"_id": parseInt(req.query.id)}).toArray((error, documents) => {
                         if (error) res.status(500).send(error);
-                        console.log(`Téléchargement d'une image depuis Google Street pour le lieu ${req.body.id}`)
+                        console.log(`Téléchargement d'une image depuis Google Street pour le lieu ${req.query.id}`)
                         download(`https://maps.googleapis.com/maps/api/streetview?size=390x200&location=${documents[0].latitude},${documents[0].longitude}&key=${process.env.STREET_VIEW}`,
                             urlLocale, () => {
                                 res.sendFile(urlLocale);
