@@ -3397,7 +3397,42 @@
   "properties": {
     "code": "24",
     "nom": "Centre-Val de Loire",
-    "color": "15597"
+    "color": 11000,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 25.160108024691358,
+      "min": 23.953042328042326,
+      "max": 26.113553113553113,
+      "q1": 24.461805555555557,
+      "q3": 25.872154706790123,
+      "ecart_type": 0.8946760334604523,
+      "liste": [
+        {
+          "label": "Eure-et-Loir",
+          "value": 23.953042328042326
+        },
+        {
+          "label": "Loiret",
+          "value": 24.375
+        },
+        {
+          "label": "Indre-et-Loire",
+          "value": 24.72222222222222
+        },
+        {
+          "label": "Indre",
+          "value": 25.597993827160494
+        },
+        {
+          "label": "Cher",
+          "value": 25.963541666666668
+        },
+        {
+          "label": "Loir-et-Cher",
+          "value": 26.113553113553113
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -6458,7 +6493,38 @@
   "properties": {
     "code": "28",
     "nom": "Normandie",
-    "color": "22402"
+    "color": 15834,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 24.765199829931976,
+      "min": 23.025793650793652,
+      "max": 25.442307692307693,
+      "q1": 24.565972222222218,
+      "q3": 24.90931694887391,
+      "ecart_type": 0.9075722848933421,
+      "liste": [
+        {
+          "label": "Calvados",
+          "value": 23.025793650793652
+        },
+        {
+          "label": "Orne",
+          "value": 24.565972222222218
+        },
+        {
+          "label": "Seine-Maritime",
+          "value": 24.765199829931976
+        },
+        {
+          "label": "Eure",
+          "value": 24.90931694887391
+        },
+        {
+          "label": "Manche",
+          "value": 25.442307692307693
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -12333,7 +12399,66 @@
   "properties": {
     "code": "75",
     "nom": "Nouvelle-Aquitaine",
-    "color": "35552"
+    "color": 23006,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 25.513206845238095,
+      "min": 22.24561403508772,
+      "max": 29.07051282051282,
+      "q1": 24.954286165223667,
+      "q3": 26.314980158730158,
+      "ecart_type": 1.8245233106980125,
+      "liste": [
+        {
+          "label": "Landes",
+          "value": 22.24561403508772
+        },
+        {
+          "label": "Lot-et-Garonne",
+          "value": 22.742424242424246
+        },
+        {
+          "label": "Charente-Maritime",
+          "value": 24.66089466089466
+        },
+        {
+          "label": "Corrèze",
+          "value": 25.052083333333336
+        },
+        {
+          "label": "Dordogne",
+          "value": 25.298160173160174
+        },
+        {
+          "label": "Pyrénées-Atlantiques",
+          "value": 25.476190476190474
+        },
+        {
+          "label": "Haute-Vienne",
+          "value": 25.550223214285715
+        },
+        {
+          "label": "Creuse",
+          "value": 26.03060515873016
+        },
+        {
+          "label": "Gironde",
+          "value": 26.24404761904762
+        },
+        {
+          "label": "Vienne",
+          "value": 26.527777777777775
+        },
+        {
+          "label": "Charente",
+          "value": 27.183583959899746
+        },
+        {
+          "label": "Deux-Sèvres",
+          "value": 29.07051282051282
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -16310,7 +16435,50 @@
   "properties": {
     "code": "27",
     "nom": "Bourgogne-Franche-Comté",
-    "color": "16663"
+    "color": 10615,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 26.247176434676437,
+      "min": 19.142857142857142,
+      "max": 33.333333333333336,
+      "q1": 25.21123798076923,
+      "q3": 27.52534412202381,
+      "ecart_type": 3.949597317563822,
+      "liste": [
+        {
+          "label": "Jura",
+          "value": 19.142857142857142
+        },
+        {
+          "label": "Yonne",
+          "value": 24.673076923076923
+        },
+        {
+          "label": "Nièvre",
+          "value": 25.390625
+        },
+        {
+          "label": "Saône-et-Loire",
+          "value": 25.55952380952381
+        },
+        {
+          "label": "Doubs",
+          "value": 26.934829059829063
+        },
+        {
+          "label": "Côte-d'Or",
+          "value": 27.361111111111114
+        },
+        {
+          "label": "Haute-Saône",
+          "value": 28.0180431547619
+        },
+        {
+          "label": "Territoire de Belfort",
+          "value": 33.333333333333336
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -19765,7 +19933,38 @@
   "properties": {
     "code": "52",
     "nom": "Pays de la Loire",
-    "color": "24269"
+    "color": 16995,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 24.783963585434176,
+      "min": 21.583333333333332,
+      "max": 28.74679487179487,
+      "q1": 24.356437389770722,
+      "q3": 25.480725623582764,
+      "ecart_type": 2.5692192099188325,
+      "liste": [
+        {
+          "label": "Vendée",
+          "value": 21.583333333333332
+        },
+        {
+          "label": "Loire-Atlantique",
+          "value": 24.356437389770722
+        },
+        {
+          "label": "Maine-et-Loire",
+          "value": 24.783963585434176
+        },
+        {
+          "label": "Sarthe",
+          "value": 25.480725623582764
+        },
+        {
+          "label": "Mayenne",
+          "value": 28.74679487179487
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -24098,7 +24297,58 @@
   "properties": {
     "code": "44",
     "nom": "Grand Est",
-    "color": "42473"
+    "color": 32754,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 24.85235507246377,
+      "min": 21.805555555555554,
+      "max": 28.90277777777778,
+      "q1": 24.424165499533146,
+      "q3": 25.140652849704573,
+      "ecart_type": 1.8036100694798927,
+      "liste": [
+        {
+          "label": "Aube",
+          "value": 21.805555555555554
+        },
+        {
+          "label": "Meuse",
+          "value": 23.490476190476194
+        },
+        {
+          "label": "Bas-Rhin",
+          "value": 24.39425770308123
+        },
+        {
+          "label": "Haut-Rhin",
+          "value": 24.513888888888893
+        },
+        {
+          "label": "Ardennes",
+          "value": 24.82971014492754
+        },
+        {
+          "label": "Vosges",
+          "value": 24.875
+        },
+        {
+          "label": "Marne",
+          "value": 25.010887260887255
+        },
+        {
+          "label": "Haute-Marne",
+          "value": 25.183908045977013
+        },
+        {
+          "label": "Moselle",
+          "value": 25.990499084249084
+        },
+        {
+          "label": "Meurthe-et-Moselle",
+          "value": 28.90277777777778
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -25979,7 +26229,50 @@
   "properties": {
     "code": "11",
     "nom": "Île-de-France",
-    "color": "106464"
+    "color": 74323,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 25.269123127754078,
+      "min": 24.497976190476187,
+      "max": 27.09335075493612,
+      "q1": 24.74692802945354,
+      "q3": 25.485376278822393,
+      "ecart_type": 0.8369109379330519,
+      "liste": [
+        {
+          "label": "Seine-Saint-Denis",
+          "value": 24.497976190476187
+        },
+        {
+          "label": "Paris",
+          "value": 24.52014652014652
+        },
+        {
+          "label": "Yvelines",
+          "value": 24.82252186588921
+        },
+        {
+          "label": "Hauts-de-Seine",
+          "value": 25.138070042831945
+        },
+        {
+          "label": "Seine-et-Marne",
+          "value": 25.400176212676207
+        },
+        {
+          "label": "Val-de-Marne",
+          "value": 25.41261709601873
+        },
+        {
+          "label": "Essonne",
+          "value": 25.703653827233378
+        },
+        {
+          "label": "Val-d'Oise",
+          "value": 27.09335075493612
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -28896,7 +29189,38 @@
   "properties": {
     "code": "32",
     "nom": "Hauts-de-France",
-    "color": "43299"
+    "color": 29943,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 26.170426065162903,
+      "min": 23.916666666666668,
+      "max": 27.452821869488535,
+      "q1": 25.825637325637313,
+      "q3": 26.604761904761904,
+      "ecart_type": 1.3111042345932624,
+      "liste": [
+        {
+          "label": "Aisne",
+          "value": 23.916666666666668
+        },
+        {
+          "label": "Pas-de-Calais",
+          "value": 25.825637325637313
+        },
+        {
+          "label": "Oise",
+          "value": 26.170426065162903
+        },
+        {
+          "label": "Nord",
+          "value": 26.604761904761904
+        },
+        {
+          "label": "Somme",
+          "value": 27.452821869488535
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -33911,7 +34235,34 @@
   "properties": {
     "code": "53",
     "nom": "Bretagne",
-    "color": "18188"
+    "color": 13633,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 23.43326297422042,
+      "min": 22.502192982456137,
+      "max": 25.358974358974358,
+      "q1": 22.982889515455305,
+      "q3": 24.132296781232952,
+      "ecart_type": 1.2242401340924354,
+      "liste": [
+        {
+          "label": "Ille-et-Vilaine",
+          "value": 22.502192982456137
+        },
+        {
+          "label": "Côtes-d'Armor",
+          "value": 23.143121693121692
+        },
+        {
+          "label": "Finistère",
+          "value": 23.72340425531915
+        },
+        {
+          "label": "Morbihan",
+          "value": 25.358974358974358
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -35436,7 +35787,17 @@
   "properties": {
     "code": "02",
     "nom": "Martinique",
-    "color": "1581"
+    "color": 1326,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": null,
+      "min": null,
+      "max": null,
+      "q1": null,
+      "q3": null,
+      "ecart_type": 0,
+      "liste": []
+    }
   }
 },{
   "_id": {
@@ -36587,7 +36948,17 @@
   "properties": {
     "code": "01",
     "nom": "Guadeloupe",
-    "color": "1112"
+    "color": 1432,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": null,
+      "min": null,
+      "max": null,
+      "q1": null,
+      "q3": null,
+      "ecart_type": 0,
+      "liste": []
+    }
   }
 },{
   "_id": {
@@ -40660,7 +41031,42 @@
   "properties": {
     "code": "93",
     "nom": "Provence-Alpes-Côte d'Azur",
-    "color": "40983"
+    "color": 30609,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 24.983103123728128,
+      "min": 22.574212749615977,
+      "max": 25.745844356261014,
+      "q1": 23.64800188237688,
+      "q3": 25.402924679487178,
+      "ecart_type": 1.2825449497561585,
+      "liste": [
+        {
+          "label": "Alpes-de-Haute-Provence",
+          "value": 22.574212749615977
+        },
+        {
+          "label": "Hautes-Alpes",
+          "value": 23.3125
+        },
+        {
+          "label": "Var",
+          "value": 24.65450752950753
+        },
+        {
+          "label": "Alpes-Maritimes",
+          "value": 25.311698717948723
+        },
+        {
+          "label": "Vaucluse",
+          "value": 25.43333333333333
+        },
+        {
+          "label": "Bouches-du-Rhône",
+          "value": 25.745844356261014
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -42879,7 +43285,17 @@
   "properties": {
     "code": "03",
     "nom": "Guyane",
-    "color": "1049"
+    "color": 1271,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": null,
+      "min": null,
+      "max": null,
+      "q1": null,
+      "q3": null,
+      "ecart_type": 0,
+      "liste": []
+    }
   }
 },{
   "_id": {
@@ -44170,7 +44586,17 @@
   "properties": {
     "code": "06",
     "nom": "Mayotte",
-    "color": "524"
+    "color": 515,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": null,
+      "min": null,
+      "max": null,
+      "q1": null,
+      "q3": null,
+      "ecart_type": 0,
+      "liste": []
+    }
   }
 },{
   "_id": {
@@ -49131,7 +49557,70 @@
   "properties": {
     "code": "76",
     "nom": "Occitanie",
-    "color": "40136"
+    "color": 27946,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 25.086805555555557,
+      "min": 21.34259259259259,
+      "max": 28.75,
+      "q1": 24.771604938271608,
+      "q3": 25.871428571428574,
+      "ecart_type": 1.8514801967022738,
+      "liste": [
+        {
+          "label": "Ariège",
+          "value": 21.34259259259259
+        },
+        {
+          "label": "Lozère",
+          "value": 22.986111111111114
+        },
+        {
+          "label": "Tarn",
+          "value": 24.631904761904767
+        },
+        {
+          "label": "Tarn-et-Garonne",
+          "value": 24.771604938271608
+        },
+        {
+          "label": "Aude",
+          "value": 24.895833333333336
+        },
+        {
+          "label": "Gard",
+          "value": 24.977250489236788
+        },
+        {
+          "label": "Hautes-Pyrénées",
+          "value": 25.086805555555557
+        },
+        {
+          "label": "Pyrénées-Orientales",
+          "value": 25.726190476190478
+        },
+        {
+          "label": "Aveyron",
+          "value": 25.7906746031746
+        },
+        {
+          "label": "Haute-Garonne",
+          "value": 25.871428571428574
+        },
+        {
+          "label": "Gers",
+          "value": 25.961805555555554
+        },
+        {
+          "label": "Hérault",
+          "value": 27.75
+        },
+        {
+          "label": "Lot",
+          "value": 28.75
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -49580,7 +50069,17 @@
   "properties": {
     "code": "04",
     "nom": "La Réunion",
-    "color": "4554"
+    "color": 4292,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": null,
+      "min": null,
+      "max": null,
+      "q1": null,
+      "q3": null,
+      "ecart_type": 0,
+      "liste": []
+    }
   }
 },{
   "_id": {
@@ -55295,7 +55794,66 @@
   "properties": {
     "code": "84",
     "nom": "Auvergne-Rhône-Alpes",
-    "color": "51867"
+    "color": 32699,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 25.182896306670813,
+      "min": 21.296296296296294,
+      "max": 28.552083333333332,
+      "q1": 23.43407738095238,
+      "q3": 26.13262633005624,
+      "ecart_type": 1.9590779689845885,
+      "liste": [
+        {
+          "label": "Cantal",
+          "value": 21.296296296296294
+        },
+        {
+          "label": "Loire",
+          "value": 22.922979797979796
+        },
+        {
+          "label": "Puy-de-Dôme",
+          "value": 23.423809523809524
+        },
+        {
+          "label": "Ardèche",
+          "value": 23.4375
+        },
+        {
+          "label": "Rhône",
+          "value": 23.994118200639935
+        },
+        {
+          "label": "Allier",
+          "value": 25.171568627450977
+        },
+        {
+          "label": "Isère",
+          "value": 25.194223985890652
+        },
+        {
+          "label": "Savoie",
+          "value": 25.986263736263734
+        },
+        {
+          "label": "Haute-Savoie",
+          "value": 26.126082251082256
+        },
+        {
+          "label": "Ain",
+          "value": 26.1522585669782
+        },
+        {
+          "label": "Drôme",
+          "value": 26.460459183673475
+        },
+        {
+          "label": "Haute-Loire",
+          "value": 28.552083333333332
+        }
+      ]
+    }
   }
 },{
   "_id": {
@@ -57246,6 +57804,25 @@
   "properties": {
     "code": "94",
     "nom": "Corse",
-    "color": "2507"
+    "color": 2282,
+    "lastUpdate": "2021-04-21",
+    "dataAttente": {
+      "mediane": 23.61437074829932,
+      "min": 23.166241496598637,
+      "max": 24.0625,
+      "q1": 23.390306122448976,
+      "q3": 23.83843537414966,
+      "ecart_type": 0.63375046545121,
+      "liste": [
+        {
+          "label": "Corse-du-Sud",
+          "value": 23.166241496598637
+        },
+        {
+          "label": "Haute-Corse",
+          "value": 24.0625
+        }
+      ]
+    }
   }
 }]
