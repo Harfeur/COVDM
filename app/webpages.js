@@ -13,17 +13,23 @@ module.exports = function (app, db, dirname) {
         res.sendFile(dirname + '/html/carte.html');
     });
 
-    app.get('/batiment',(req,res) => {
-        db.collection('sites_prelevements').find({"_id": req.query.id}).toArray((error, documents) => {
-            if (error) res.status(500).send(error);
-            res.render('popup',documents[0]);
-        })
+    app.get('/batiment', (req, res) => {
+        if (isNaN(req.query.id))
+            db.collection('sites_prelevements').find({"_id": req.query.id}).toArray((error, documents) => {
+                if (error) res.status(500).send(error);
+                res.render('popup', documents[0]);
+            })
+        else
+            db.collection('sites_vaccinations').find({"_id": req.query.id}).toArray((error, documents) => {
+                if (error) res.status(500).send(error);
+                res.render('popup', documents[0]);
+            })
     });
 
-    app.get('/mini_popup',(req,res) => {
+    app.get('/mini_popup', (req, res) => {
         db.collection('sites_prelevements').find({"_id": req.query.id}).toArray((error, documents) => {
             if (error) res.status(500).send(error);
-            res.render('mini-popup',documents[0]);
+            res.render('mini-popup', documents[0]);
         })
     });
 

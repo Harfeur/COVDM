@@ -25,6 +25,12 @@ var iconPrev = L.icon({
     popupAnchor: [0, -5],
 });
 
+var iconVacc = L.icon({
+    iconUrl: '/images/localisationV.png',
+    iconSize: [38, 40],
+    popupAnchor: [0, -5],
+});
+
 var pcr = "";
 var ag = "";
 var ho = "";
@@ -36,10 +42,9 @@ var dataRegion;
 let statFrance;
 
 
-    //LEGENDE
-    var info = L.control({position: 'bottomright'});
-    var legend = L.control({position: 'bottomright'});
-
+//LEGENDE
+var info = L.control({position: 'bottomright'});
+var legend = L.control({position: 'bottomright'});
 
 
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
@@ -58,14 +63,14 @@ $.get("/regions").done(dataR => {
     };
 
     const lastUpdate = new Date(dataR[0].properties.lastUpdate);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = {year: 'numeric', month: 'long', day: 'numeric'};
     // method that we will use to update the control based on feature properties passed
     info.update = function (props) {
         this._div.innerHTML = `<h4> Nombre de test réalisé jusqu'au ${lastUpdate.toLocaleDateString('fr-FR', options)}</h4>`;
     };
 
     info.addTo(map);
-    
+
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
@@ -83,6 +88,7 @@ $.get("/regions").done(dataR => {
     };
 
     legend.addTo(map);
+
     //Couleur
     function getColor(d) {
         return d > 100000 ? '#800026' :
@@ -145,12 +151,12 @@ $.get("/regions").done(dataR => {
             onEachFeature: onEachFeature
         }).addTo(map);
 
-        if (e.sourceTarget.feature.properties.code == "06"){
+        if (e.sourceTarget.feature.properties.code == "06") {
             $("#buttonGraph").parent().hide();
-        }else{
+        } else {
             $("#buttonGraph").parent().show();
         }
-        
+
 
         //Affichage stat
         afficherStat(e.sourceTarget.feature.properties.code);
@@ -181,7 +187,7 @@ $.get("/regions").done(dataR => {
             }
             geojson.removeFrom(map);
             addRegion();
-            
+
             afficherStat(statFrance);
             info.addTo(map);
             legend.addTo(map);
@@ -205,90 +211,134 @@ $.get("/regions").done(dataR => {
     //Données
     $.get("/sitesPrelevements").done(dataP => {
 
-        var date = new Date();
-        var jour;
-        switch (date.getDay()) {
-            case 1:
-                jour = "lundi";
-                break;
-            case 2:
-                jour = "mardi";
-                break;
-            case 3:
-                jour = "mercredi";
-                break;
-            case 4:
-                jour = "jeudi";
-                break;
-            case 5:
-                jour = "vendredi";
-                break;
-            case 6:
-                jour = "samedi";
-                break;
-            case 0:
-                jour = "dimanche";
-                break;
-            default:
-                jour = "";
-                break;
-        }
+        $.get('/sitesVaccinations').done(dataV => {
 
-        dataP.forEach(obj => {
-
-
-            if (obj.do_prel) {
-                pcr = "PCR";
-            }
-            if (obj.do_antigenic) {
-                ag = "AG";
+            var date = new Date();
+            var jour;
+            switch (date.getDay()) {
+                case 1:
+                    jour = "lundi";
+                    break;
+                case 2:
+                    jour = "mardi";
+                    break;
+                case 3:
+                    jour = "mercredi";
+                    break;
+                case 4:
+                    jour = "jeudi";
+                    break;
+                case 5:
+                    jour = "vendredi";
+                    break;
+                case 6:
+                    jour = "samedi";
+                    break;
+                case 0:
+                    jour = "dimanche";
+                    break;
+                default:
+                    jour = "";
+                    break;
             }
 
-            if (obj.horaires[jour].length == 0 || obj.horaires[jour][0] == null || date.getHours() < obj.horaires[jour][0] || date.getHours() > obj.horaires[jour][1]){
-                ho = " fermé";
-                cHo = false;
-            } else {
-                ho = " ouvert";
-                cHo = true;
-            }
-            
-            // Solution : base
-            var popup = ""
-            //si c'est fermé ou ouvert
-            if (cHo) {
-                if (obj.rs.indexOf('-')!=-1)  var tab = obj.rs.split('-');
-                else var tab = obj.rs.split(obj.adresse.ville);
-                popup = '<table > '+
-                '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>'+
-                '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
-                '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>'+
-                '<tr> <td  colspan="2"> <p class="horaire-o" > Actuellement' + ho + '</p> </td> </tr> </table>';
-                
-            } else {
-                if (obj.rs.indexOf('-')!=-1)  var tab = obj.rs.split('-');
-                else var tab = obj.rs.split(obj.adresse.ville);
-                popup = '<table > '+
-                '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>'+
-                '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
-                '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>'+
-                '<tr> <td  colspan="2"> <p class="horaire-f" > Actuellement' + ho + '</p> </td> </tr> </table>';   
+            dataP.forEach(obj => {
+
+                if (obj.do_prel) {
+                    pcr = "PCR";
+                }
+                if (obj.do_antigenic) {
+                    ag = "AG";
                 }
 
-            //Création du marker et de son groupe
-            var mSP = L.marker([obj.latitude, obj.longitude], {
-                icon: iconPrev
+                if (obj.horaires[jour].length == 0 || obj.horaires[jour][0] == null || date.getHours() < obj.horaires[jour][0] || date.getHours() > obj.horaires[jour][1]) {
+                    ho = " fermé";
+                    cHo = false;
+                } else {
+                    ho = " ouvert";
+                    cHo = true;
+                }
+
+                // Solution : base
+                var popup = ""
+                //si c'est fermé ou ouvert
+                if (cHo) {
+                    if (obj.rs.indexOf('-') != -1) var tab = obj.rs.split('-');
+                    else var tab = obj.rs.split(obj.adresse.ville);
+                    popup = '<table > ' +
+                        '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>' +
+                        '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
+                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
+                        '<tr> <td  colspan="2"> <p class="horaire-o" > Actuellement' + ho + '</p> </td> </tr> </table>';
+
+                } else {
+                    if (obj.rs.indexOf('-') != -1) var tab = obj.rs.split('-');
+                    else var tab = obj.rs.split(obj.adresse.ville);
+                    popup = '<table > ' +
+                        '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>' +
+                        '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
+                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
+                        '<tr> <td  colspan="2"> <p class="horaire-f" > Actuellement' + ho + '</p> </td> </tr> </table>';
+                }
+
+                //Création du marker et de son groupe
+                var mSP = L.marker([obj.latitude, obj.longitude], {
+                    icon: iconPrev
+                });
+                mSP.bindPopup(popup);
+
+
+                (cluster[obj.adresse.codeRegion].markerCG).addLayer(mSP)
+
             });
-            mSP.bindPopup(popup);
+
+            dataV.forEach(obj => {
+
+                if (obj.horaires[jour].length == 0 || obj.horaires[jour][0] == null || date.getHours() < obj.horaires[jour][0] || date.getHours() > obj.horaires[jour][1]) {
+                    ho = " fermé";
+                    cHo = false;
+                } else {
+                    ho = " ouvert";
+                    cHo = true;
+                }
+
+                // Solution : base
+                var popup = ""
+                //si c'est fermé ou ouvert
+                if (cHo) {
+                    if (obj.c_nom.indexOf('-') != -1) var tab = obj.c_nom.split('-');
+                    else var tab = obj.c_nom.split(obj.adresse.ville);
+                    popup = '<table > ' +
+                        '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>' +
+                        '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
+                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
+                        '<tr> <td  colspan="2"> <p class="horaire-o" > Actuellement' + ho + '</p> </td> </tr> </table>';
+
+                } else {
+                    if (!obj.c_nom) console.log(obj);
+                    if (obj.c_nom.indexOf('-') != -1) var tab = obj.c_nom.split('-');
+                    else var tab = obj.c_nom.split(obj.adresse.ville);
+                    popup = '<table > ' +
+                        '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>' +
+                        '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
+                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
+                        '<tr> <td  colspan="2"> <p class="horaire-f" > Actuellement' + ho + '</p> </td> </tr> </table>';
+                }
+
+                //Création du marker et de son groupe
+                var mSV = L.marker([obj.latitude, obj.longitude], {
+                    icon: iconVacc
+                });
+                mSV.bindPopup(popup);
 
 
-            (cluster[obj.adresse.codeRegion].markerCG).addLayer(mSP)
+                (cluster[obj.adresse.codeRegion].markerCG).addLayer(mSV)
 
+
+            });
             //Chargement
             $('body').addClass('loaded');
-
         });
-
-
     });
 
 });
@@ -398,7 +448,7 @@ var localisation = (new localisation()).addTo(map);
 
 //Onglet statistique
 function openNav(i) {
-    if (i){
+    if (i) {
         //Grande ouverture avec le bouton plus de graphique
         document.getElementById("mySidenav").style.width = "100%";
         document.getElementById("main").style.marginLeft = "100%";
@@ -406,28 +456,27 @@ function openNav(i) {
         $("#graphSupp").hide();
         $("#graphMoins").show();
         $(".chartPlus").show();
-        
-    }else if (i==false){
+
+    } else if (i == false) {
         //Petite ouverture avec le bouton moins de graphique
         document.getElementById("mySidenav").style.width = "500px";
         document.getElementById("main").style.marginLeft = "500px";
-       
+
         $(".chartPlus").hide();
         $("#graphSupp").show();
         $("#graphMoins").hide();
     }
     document.body.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-  }
-  
-  function closeNav() {
+}
+
+function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("main").style.marginLeft= "0";
+    document.getElementById("main").style.marginLeft = "0";
     document.body.style.backgroundColor = "white";
 
     $("#graphSupp").show();
 
-  }
-
+}
 
 
 //Bouton onglet statistique

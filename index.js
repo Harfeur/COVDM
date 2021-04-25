@@ -10,6 +10,7 @@ const app = express();
 let data = {
     regions: null,
     sites: null,
+    vacc: null
 };
 
 // CONFIGURATION ==================================
@@ -76,6 +77,10 @@ async function init() {
         db.collection('sites_prelevements').find({}).toArray((error, documents) => {
             if (error) return;
             data.sites = documents;
+        });
+        db.collection('sites_vaccinations').find({}).toArray((error, documents) => {
+            if (error) return;
+            data.vacc = documents;
         });
     }
 
