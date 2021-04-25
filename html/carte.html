@@ -1,41 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-          crossorigin=""/>
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-            crossorigin=""></script>
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
 
     <!-- CSS -->
     <link rel="stylesheet" href="/css/loading.css">
 
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <!--- JQuery-UI-->
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <title>COVDM</title>
-    
+
     <!-- markercluster  -->
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
     <!-- icon  -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 
     <!-- Vuetify -->
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 
 
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v4.js"></script>
 
 
 
@@ -47,25 +50,53 @@
 
 <body>
 
-<div class="popup" id=popup></div>
+    <div class="popup" id=popup></div>
 
-<div id="loader-wrapper">
-    <div id="loader"></div>
+    <div id="loader-wrapper">
+        <div id="loader"></div>
 
-    <div class="loader-section section-left"></div>
-    <div class="loader-section section-right"></div>
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
 
-</div>
+    </div>
 
-<div id="content">
-
-    <div class="custom-popup" id="mapid"></div>
+    <div id="content">
 
 
-</div>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+            <div id="contentStat" style="display: block;">
+                <div class="chart" id="chartContainer1"></div>
+                <div class="chart" id="chartContainer2"></div>
+            </div>
+            <div id="contentchartSupp" style="margin-bottom: 5%;padding: 5%;"></div>
+            <button id="graphSupp" class="custom-btn btn-1" onclick="openNav(true)"><i class="fas fa-plus"></i></button>
+            <button id="graphMoins" style="display: inline-block;" class="custom-btn btn-1" onclick="openNav(false)"><i class="fas fa-minus"></i></button>
+        </div>
+
+        <div class="info" id="main">
+            <div class="custom-popup" id="mapid">
+
+            </div>
+
+        </div>
+
+
+
+
+    </div>
 
 </body>
 
+
+  
+<!-- Plugin for color scale -->
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="/js/fonction.js"></script>
+<script src="/js/stats.js"></script>
 <script src="/js/carte.js"></script>
+
 </html>

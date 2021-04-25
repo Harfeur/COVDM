@@ -1,4 +1,6 @@
 
+
+
 window.addEventListener("DOMContentLoaded", (event) => {
     var el = document.getElementById('footer');
     function majHauteur(x){
@@ -8,6 +10,21 @@ window.addEventListener("DOMContentLoaded", (event) => {
             default:el.style.setProperty("height", 295+'px');break;
         }
     }
+    var tabCom=[];
+    avis.forEach(function(e){
+        if (e.message!=""){
+            tabCom.push({
+                "nom": e.nom,
+                "email": e.email,
+                "message": e.message,
+                "note": e.note
+                });
+        }
+    })
+
+    if (nomBat.indexOf('-')!=-1)  var tab = nomBat.split('-');
+    else var tab = nomBat.split(addrVille);
+    var titreBat=tab[0];
     
     new Vue({
         el: '#app',
@@ -18,10 +35,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
             reveal: false,
             id: id,
             e1: 1,
+            e2:1,
             rating: 3,
             duree: null,
             isActive: false,
-            items: avis,
+            items:tabCom,
             jour: [{
                     title: 'Lundi'
                 },
@@ -56,18 +74,65 @@ window.addEventListener("DOMContentLoaded", (event) => {
             email: "",
             alerte: false,
             alerte2: false,
+            alerte3: false,
             placement: 0,
             heureO: 1,
             heureF: 1,
             der: null,
             pb1: true,
-            tabs: null,
             changeO:'',
             changeF:'',
+            nouvelHeure:false,
+            nbCom:true,
+            attenteMoy:attenteMoyenne,
+            moyenne:parseInt(moy)+Math.round((moy-Math.trunc(moy))),
+            oui:0,
+            non:100,
+            titre: titreBat,
+            tabGif:[["https://giphy.com/embed/6tHy8UAbv3zgs","https://giphy.com/gifs/thank-you-spongebob-squarepants-6tHy8UAbv3zgs"],["https://giphy.com/embed/14tCeoSGpXCWrQvixk","https://giphy.com/gifs/true-and-the-rainbow-kingdom-funny-netflix-14tCeoSGpXCWrQvixk"],['https://giphy.com/embed/xIJLgO6rizUJi','https://giphy.com/gifs/alice-in-wonderland-thank-you-xIJLgO6rizUJi'],["https://giphy.com/embed/xUA7aN1MTCZx97V1Ic","https://giphy.com/gifs/iliza-iliza-shlesinger-xUA7aN1MTCZx97V1Ic"],["https://giphy.com/embed/3oz8xIsloV7zOmt81G","https://giphy.com/gifs/arg-thank-you-cat-3oz8xIsloV7zOmt81G"]],
+            gif:0,
+            numero:"",
         }),
         methods: {
+            validURL() {
+                var str = web
+                var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+                  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                  '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                  '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+                return !!pattern.test(str);
+            },
+            validTEL(){
+                var regex = new RegExp(/^(06|07)[0-9]{8}/gi);
+                if (regex.test(num)) {
+                    this.numero=num
+                    return(true); 
+                }
+                var regex = new RegExp(/^[0-9]{9}/gi);
+                if (regex.test(num)) {
+                    this.numero="0"+num;
+                    return(true); 
+                }
+                return(false); 
+            },
+            choixGif(){
+                min = Math.ceil(0);
+                max = Math.floor(this.tabGif.length-1);
+                this.gif=Math.floor(Math.random() * (max - min +1)) + min;
+                console.log(this.gif)
+            },
+            tempsAttente(x){
+                this.attenteMoy = Math.round(x);
+                return true;
+            },
             ouvreCom() {
+                
                 var expansion = document.getElementById('exp');
+                var nbVote = ((deroulement.oui)+(deroulement.non));
+                this.oui = Math.round((deroulement.oui*100)/nbVote);
+                this.non = Math.round((deroulement.non*100)/nbVote);
                 this.reveal = true;
                 expansion.style.display = "none";
             },
@@ -75,14 +140,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 var expansion = document.getElementById('exp');
                 this.reveal = false;
                 expansion.style.display = "block";
-            },
-            tailleCom(){
-                switch(avis.length){
-                    case 1: majHauteur(1); break;
-                    case 2: majHauteur(2); break;
-                    default: majHauteur(3); break;
-                }
-                return true;
             },
             scrollMoiStp() {
                 this.img=!this.img;
@@ -96,15 +153,27 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 setTimeout(scroll, 400);
             },
             presenter() {
+                this.alerte=false;
+                this.alerte2=false;
+                this.alerte3=false;
                 if (this.prenom == "" || this.nom == "" || this.email == "") {
                     this.alerte = true;
                 } else {
-                    if (checkEmail(this.email)) {
+                    var ok = true;
+                    this.items.forEach(element => {
+                        if(element.nom==this.prenom+" "+this.nom){
+                            this.alerte3=true;
+                            ok=false
+                        }
+                    });
+                    if (checkEmail(this.email) && ok) {
                         this.dialog = false;
                         this.e1 = 2;
                         setTimeout(scroll, 400);
                     } else {
-                        this.alerte2 = true;
+                        if(ok){
+                           this.alerte2 = true; 
+                        }
                     }
                 }
             },
@@ -117,13 +186,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 this.e1 = 3;
                 setTimeout(scroll, 400);
             },
-            attente() {
+            dureeDonner() {
                 this.e1 = 4;
                 setTimeout(scroll, 400);
             },
             eval() {
                 this.e1 = 5;
-
+                setTimeout(scroll, 400);
                 fetch('/ajoutCommentaire', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -139,7 +208,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         'Content-Type': 'application/json'
                     }
                 })
-                window.location.reload();
+                if (this.com!=""){
+                    this.items.push({
+                    "nom": this.prenom + ' ' + this.nom,
+                    "email": this.email,
+                    "message": this.com,
+                    "note": this.rating
+                    });
+                }
             },
             getHoraireToString(x) {
                 var heure = parseInt(x).toString();
@@ -154,46 +230,59 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 var hh = parseInt(tab[0]);
                 var mm = parseInt(tab[1])/100;
                 return hh+mm;
-
             },
             majHoraire(){
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
-                    this.heureO=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0][0]);
-                    this.heureF=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0][1]);
-                    this.tabs=null;
+                    this.heureO=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][0]);
+                    this.heureF=this.getHoraireToString(this.time[(this.jour[this.placement].title).toLowerCase()][1]);
                     this.clock=true;
                     return true
                 }
-                this.tabs='one';
                 this.clock=false;
                 return false
             },
             ouvreHoraire1(){
-                this.dialog1=true;
+                var texte = document.getElementsByClassName('v-btn__content')[1].innerHTML
+                if(texte=='Fermé'){
+                    this.e2=1;
+                    this.nouvelHeure=true;
+
+                }
+                else{
+                    this.dialog1=true;
+                }
+                
             },
             ouvreHoraire2(){
-                this.dialog2=true;
+                var texte = document.getElementsByClassName('v-btn__content')[2].innerHTML
+                if(texte=='Fermé'){
+                    this.e2=1;
+                    this.nouvelHeure=true;
+
+                }
+                else{
+                    this.dialog2=true;
+                }
+                
             },
             modifHoraireOuverture() {
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
                     var heureOuverture = this.getStringToHoraire(this.changeO);
-                    if(heureOuverture<horaire[(this.jour[this.placement].title).toLowerCase()][0][1]){
-                        this.dialog1=false;
-                        console.log(heureOuverture)
-                        console.log(horaire[(this.jour[this.placement].title).toLowerCase()][0][1])
+                    if(heureOuverture<horaire[(this.jour[this.placement].title).toLowerCase()][1]){
                         fetch('/majHoraire', {
                             method: 'POST',
                             body: JSON.stringify({
                                 id: this.id,
                                 jour: (this.jour[this.placement].title).toLowerCase(),
                                 heureO: heureOuverture,
-                                heureF: horaire[(this.jour[this.placement].title).toLowerCase()][0][1]
+                                heureF: horaire[(this.jour[this.placement].title).toLowerCase()][1]
                             }),
                             headers: {
                                 'Content-Type': 'application/json'
                             }
                         })
-                        window.location.reload();
+                        this.time[(this.jour[this.placement].title).toLowerCase()][0]=heureOuverture;
+                        this.majHoraire();
                     }
                     else {
                         this.pb1=true;
@@ -205,22 +294,22 @@ window.addEventListener("DOMContentLoaded", (event) => {
             modifHoraireFermeture() {
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
                     var heureFermeture = this.getStringToHoraire(this.changeF);
-                    console.log(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0][0])
-                    if(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0][0]){
-                        this.dialog2 = false;
+                    console.log(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0])
+                    if(heureFermeture>horaire[(this.jour[this.placement].title).toLowerCase()][0]){
                         fetch('/majHoraire', {
                             method: 'POST',
                             body: JSON.stringify({
                                 id: this.id,
                                 jour: (this.jour[this.placement].title).toLowerCase(),
-                                heureO: horaire[(this.jour[this.placement].title).toLowerCase()][0][0],
+                                heureO: horaire[(this.jour[this.placement].title).toLowerCase()][0],
                                 heureF: heureFermeture
                             }),
                             headers: {
                                 'Content-Type': 'application/json'
                             }
                         })
-                        window.location.reload();
+                        this.time[(this.jour[this.placement].title).toLowerCase()][1]=heureFermeture;
+                        this.majHoraire();
                     }
                     else {
                         this.pb1=false;
@@ -228,29 +317,44 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     }
 
                 }
-            }
-        },
-        computed: {
-            activeFab () {
-              switch (this.tabs) {
-                case 'one': return { disabled: ''}
-                default: return {}
-              }
             },
-        },
+            modifHoraire(){
+                var heureOuverture = this.getStringToHoraire(this.changeO);
+                var heureFermeture = this.getStringToHoraire(this.changeF);
+                fetch('/majHoraire', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        id: this.id,
+                        jour: (this.jour[this.placement].title).toLowerCase(),
+                        heureO: heureOuverture,
+                        heureF: heureFermeture
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                this.time[(this.jour[this.placement].title).toLowerCase()][1]=heureFermeture;
+                this.time[(this.jour[this.placement].title).toLowerCase()][0]=heureOuverture;
+                this.majHoraire();
+                this.nouvelHeure=false;
+                }
+            },
+            
+        })
+        
+        function checkEmail(inputText) {
+            var expressionReguliere = /^(([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
+            return expressionReguliere.test(inputText)
+        }
 
-    })
-
-    function checkEmail(inputText) {
-        var expressionReguliere = /^(([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
-        return expressionReguliere.test(inputText)
-    }
-
-    function scroll() {
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            left: 0,
-            behavior: 'smooth'
+        function scroll() {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                left: 0,
+                behavior: 'smooth'
         });
+
+        
     }
 });
+

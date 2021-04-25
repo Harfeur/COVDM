@@ -33,6 +33,12 @@
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+
+   
+
+
 </head>
 <style>
   .chart{
@@ -40,30 +46,46 @@
     width: 48%;
     height: 300px;
   }
+
+.tooltip {
+  background-color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 15px;
+  min-width: 400px;
+  text-align: left;
+  color: white;
+}
 </style>
 
 <body>
 
-<div id="loader-wrapper">
+<!-- <div id="loader-wrapper">
     <div id="loader"></div>
 
     <div class="loader-section section-left"></div>
     <div class="loader-section section-right"></div>
 
-</div>
+</div> -->
 
 <div id="content" style="display: block;">
     <div id="test"><h5>Il n'y pas tout les sites de prélèvements car certain site ne possède aucun avis (jamais visité).</h5></div>
+    <div class="chart" id="chartContainer"  style="height: 370px; width: 100%;"></div>
     <div class="chart" id="chartContainer1"  ></div>
     <div class="chart" id="chartContainer2" ></div>
+    <div id="contentchartSupp"></div>
 
- 
+  <!-- Create a div where the graph will take place -->
+  <div id="my_dataviz"></div>
 
 </div>
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  
+    <!-- Plugin for color scale -->
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
 </body>
 

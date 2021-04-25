@@ -8,8 +8,13 @@ head
   script const avis = !{JSON.stringify(avis)}
   script const id = !{JSON.stringify(_id)}
   script const horaire = !{JSON.stringify(horaires)}
-  script const region = !{JSON.stringify(adresse.codeRegion)}
-  script const departement = !{JSON.stringify(adresse.codeDepartement)}
+  script const moy = !{JSON.stringify(stats.noteMoyenne)}
+  script const attenteMoyenne = !{JSON.stringify(stats.attenteMoyenne)}
+  script const deroulement = !{JSON.stringify(stats.bonDeroulement)}
+  script const nomBat =!{JSON.stringify(rs)}
+  script const addrVille = !{JSON.stringify(adresse.ville)}
+  script const web = !{JSON.stringify(web_rdv)}
+  script const num = !{JSON.stringify(tel_rdv)}
   script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")  
   script(src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js')
   script(src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js')
@@ -17,56 +22,81 @@ head
 #app
   v-app#inspire
     // Création popup
-    v-card(width='550' heigth='550' )
+    v-card(width='550' heigth='550' color='#F8F9F9')
       // Titre
       v-img.white--text.align-end(src='/image?id='+_id height='200px')
         v-row(style='height: 60px;')
           v-col.mr-auto(cols='auto')
             v-card.pa-2(color='#5B5959')
-              p.font-italic(style='color:white;') #{rs}
+              p.font-italic(style='color:white;')
+               | {{titre}}
+      // Adresse + Moyenne du site
       v-card-text
         v-row.mb-n6
           div
             p
               | #{adresse.adresse}, #{adresse.ville} 
           v-spacer 
-          v-rating.mr-6( :value="4.5" color="amber" dense readonly size="14")
+          v-rating.mr-6( v-if="moyenne!=0" :value="moyenne" empty-icon="mdi-star-outline" full-icon="mdi-star"  background-color="gray" color="amber" dense readonly size="14")
+        // Ajout phrase selon stat
         v-row
-          v-spacer
-          div
-            p(style="color:#4FE15B;")
-              |L'un des mieux notés !
-         
+          if stats.region.best
+            v-spacer
+            div
+              p(style="color:#4FE15B;")
+                |L'un des mieux notés de la région !
+          else
+            if stats.departement.best
+              v-spacer
+              div
+                p(style="color:#4FE15B;")
+                  |L'un des mieux notés du département !
+            else 
+              v-spacer
+              div
+                p.mb-10(style="color:#4FE15B;")
+          
       // Début formulaire
       // Horaire
       v-card-subtitle
         v-row
-          .my-4.subtitle-1
-            template
-              .text-center
-                v-menu
-                  template(v-slot:activator='{ on: menu, attrs }')
-                    v-tooltip(bottom='')
-                      template(v-slot:activator='{ on: tooltip }')
-                        v-btn.ml-12(rounded='' v-on='{ ...tooltip, ...menu }')
-                          | {{jour[placement].title}}
-                      span Cliquez pour changer le jour
-                  v-list
-                    v-list-item-group(v-model='model' color='indigo')
-                      v-list-item(v-for='(item, index) in jour' :key='index' @click='liste(index)')
-                        v-list-item-title {{ item.title }}
-        
-          v-btn.ml-12( :disabled="activeFab.disabled" id='horaire' style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire1')
-            | {{majHoraire() ? heureO : "Fermé"}}
-        
-          v-btn.ml-12( :disabled="activeFab.disabled" style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire2')
-            | {{majHoraire() ? heureF : "Fermé" }}
-        
-          v-tooltip(bottom='' )
-            template(v-slot:activator='{ on, attrs }')
-              v-icon.ml-6(color='#1EE2F7' v-show='clock' dark='' v-bind='attrs' v-on='on')
-                | mdi-clock-fast
-            span Attente rapide !
+          table#heure
+            tbody
+              tr
+                td
+                  .my-4.subtitle-1
+                    template
+                      .text-center
+                        v-menu
+                          template(v-slot:activator='{ on: menu, attrs }')
+                            v-tooltip(bottom='')
+                              template(v-slot:activator='{ on: tooltip }')
+                                v-btn.ml-12(rounded='' v-on='{ ...tooltip, ...menu }')
+                                  | {{jour[placement].title}}
+                              span Cliquez pour changer le jour
+                          v-list
+                            v-list-item-group(v-model='model' color='indigo')
+                              v-list-item(v-for='(item, index) in jour' :key='index' @click='liste(index)')
+                                v-list-item-title {{ item.title }}
+                td
+                  v-btn.ml-12( id='horaire' style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire1')
+                   | {{majHoraire() ? heureO : "Fermé"}}
+                td
+                  v-btn.ml-12( style='height: 60px;' outlined='' rounded='' text='' @click='ouvreHoraire2')
+                    | {{majHoraire() ? heureF : "Fermé" }}
+                td
+                  if stats.attenteRapide
+                    v-tooltip(bottom='' )
+                      template(v-slot:activator='{ on, attrs }')
+                        v-icon.ml-6(color='#1EE2F7' v-show='clock' dark='' v-bind='attrs' v-on='on')
+                          | mdi-clock-fast
+                      span Prise en charge rapide !
+                  else 
+                    v-tooltip(bottom='' )
+                      template(v-slot:activator='{ on, attrs }')
+                        v-icon.ml-6(color='#E72525' v-if="attenteMoy!=0" v-show='clock' dark='' v-bind='attrs' v-on='on')
+                          | mdi-account-clock
+                      span {{tempsAttente(#{stats.attenteMoyenne}) ? "Temps d'attente : "+attenteMoy+" min": "error"}} 
 
          
           template
@@ -101,30 +131,66 @@ head
                     | Fermer
                   .my-3
                     |{{pb1 ? "Il est impossible que l'heure d'ouverture soit plus tard que l'heure de fermeture. Veuillez modifier dans un premier temps l'heure de fermeture." : " Il est impossible que l'heure de fermeture soit plus tôt que l'heure d'ouverture. Veuillez modifier dans un premier temps l'heure d'ouverture." }}
-        
-        
-
+          
+       
+        template
+          .text-center
+            v-dialog(v-model='nouvelHeure' width='500' height='600')
+              v-divider
+              v-card-text
+                v-stepper(v-model='e2')
+                  v-stepper-items
+                    v-stepper-content(step='1')
+                      v-card.mt-n8
+                        template
+                          .text-center
+                            v-card-text
+                              v-time-picker(v-model='changeO' full-width='' color='red' format='24hr'  scrollable='')
+                            v-card-actions
+                              v-btn(color='dark' text='' @click='nouvelHeure = false')
+                                | Fermer
+                              v-spacer
+                              p Heure d'ouverture 
+                              v-spacer
+                              v-btn(color='primary' text='' @click='e2=2')
+                                | Modifier
+                    v-stepper-content(step='2')
+                      v-card.mt-n8
+                        template
+                          .text-center
+                            v-card-text
+                              v-time-picker(v-model='changeF' full-width='' color='red' format='24hr'  scrollable='')
+                            v-card-actions
+                              v-btn(color='dark' text='' @click='nouvelHeure = false')
+                                | Fermer
+                              v-spacer
+                              p Heure de fermeture
+                              v-spacer
+                              v-btn(color='primary' text='' @click='modifHoraire')
+                                | Modifier
+                        
+                   
         v-row
           v-spacer
           if do_prel 
-            v-alert.mt-4(dense='' text='' type='success')
+            v-alert.mt-8(dense='' text='' type='success')
               | PCR
           else
-            v-alert.mt-4(dense='' outlined='' type='error')
+            v-alert.mt-8(dense='' outlined='' type='error')
               .text-decoration-line-through
-                | PCR
+              | PCR
           v-spacer
           if do_antigenic 
-            v-alert.mt-4(dense='' text='' type='success')
+            v-alert.mt-8(dense='' text='' type='success')
               | Antig&eacute;nique
           else
-            v-alert.mt-4(dense='' outlined='' type='error')
+            v-alert.mt-8(dense='' outlined='' type='error')
               .text-decoration-line-through
                 | Antig&eacute;nique
           v-spacer
         #exp
           v-expansion-panels(flat='' )
-            v-expansion-panel(@click='scrollMoiStp' )
+            v-expansion-panel(@click='scrollMoiStp' style='background-color:#F8F9F9;')
               v-expansion-panel-header.mt-5(color='#A6E4D3')
                 | Plus d&apos;informations
               v-expansion-panel-content(color="#CCECE3")
@@ -139,134 +205,142 @@ head
                   | #{check_rdv}
                 br
                 if tel_rdv!=""
-                  | Contacter : #{tel_rdv}
+                  |{{validTEL() ? "Contacter : " : ""}}
+                  |{{validTEL() ? numero : ""}}
                 br
                 if web_rdv!=""
-                  | Site web : 
-                  a(href='#{web_rdv}') #{web_rdv}
+                  |{{validURL() ? "Site web : " : ""}}
+                  a(href='#{web_rdv}') {{validURL() ? "#{web_rdv}" : ""}}
+
+          
       
       
-      
-      // Fin Horaire
-      // Button Formulaire Avis + Commentaire
+
       v-card-actions.mt-2
-        v-btn(color='orange lighten-2' text='' @click='partageExp' onClick='scroll')
+        v-btn(color='orange lighten-2' v-if="items.length!=0 && show==false" text='' @click='partageExp')
           | Partager mon exp&eacute;rience
+        v-tooltip(bottom='' )
+          template(v-slot:activator='{ on, attrs }')
+            v-btn(color='orange lighten-2'  v-if="items.length==0 && show==false" text='' @click='partageExp' v-bind="attrs" v-on="on")
+              | Partager mon exp&eacute;rience
+          span Soyez le premier a mettre un commentaire !
+        v-btn(color='orange lighten-2' v-if="show==true" text='' @click='partageExp')
+          | Fermer
         v-spacer
-        if avis.length>0
-          v-btn(color='green lighten-2' text='' @click='ouvreCom')
-            | {{ tailleCom() ? "Commentaires" : "error" }}
-        else
-          v-btn(disabled color='green lighten-2' text='' @click='ouvreCom')
-            | Commentaires
+        v-btn(:disabled="items.length==0 || show==true" color='green lighten-2' text='' @click='ouvreCom')
+          | Commentaires
       // Fin Button Formulaire Avis + Commentaire
       // Extension Avis
       v-expand-transition
         div(v-show='show')
-          v-divider
-          v-card-text
-            v-stepper(v-model='e1')
-              v-stepper-header
-                v-stepper-step(:complete='e1 > 1' step='1')
-                  | Pr&eacute;sentation
-                v-divider
-                v-stepper-step(:complete='e1 > 2' step='2')
-                  | Satisfaction
-                v-divider
-                v-stepper-step(:complete='e1 > 3' step='3')
-                  | Temps d&apos;attente
-                v-divider
-                v-stepper-step(:complete='e1 > 4' step='4')
-                  | Evaluation
-              v-stepper-items
-                v-stepper-content(step='1')
-                  v-card
-                    template
-                      v-row(justify='center')
-                        v-dialog(v-model='dialog' persistent='' max-width='600px')
-                          template(v-slot:activator='{ on, attrs }')
-                            v-btn(color='primary' dark='' v-bind='attrs' v-on='on' x-large='')
-                              | Pr&eacute;sentez-vous
-                          v-card
-                            v-card-title
-                              span.headline Profil
-                            v-card-text
-                              v-alert(v-show='alerte' color='red' type='error') Tout les champs * sont obligatoires
-                              v-alert(v-show='alerte2' color='red' type='error') L&apos;email n&apos;est pas valide
-                              v-container
-                                v-row
-                                  v-col(cols='12' sm='6' md='4')
-                                    v-text-field(label='Prénom*' v-model='prenom' required='')
-                                  v-col(cols='12' sm='6' md='4')
-                                    v-text-field(label='Nom*' v-model='nom' required='')
-                                  v-col(cols='12')
-                                    v-text-field(label='Email*' v-model='email' required='')
-                              small *obligatoire
-                            v-card-actions
-                              v-spacer
-                              v-btn(color='blue darken-1' text='' @click='dialog = false')
-                                | Fermer
-                              v-btn(color='blue darken-1' text='' @click='presenter')
-                                | Ok
-                v-stepper-content(step='2')
-                  v-card
-                    v-row
-                      v-card-title Est-ce que le test s&apos;est bien d&eacute;roul&eacute; ?
-                    v-card-subtitle
-                      v-card-actions
-                        v-row
-                          v-spacer
-                          v-btn.mx-2(fab='' dark='' small='' color='green' @click='deroulement(1)')
-                            | Oui
-                          v-spacer
-                          v-btn.mx-2(fab='' dark='' small='' color='red' @click='deroulement(2)')
-                            | Non
-                          v-spacer
-                    v-btn(@click='e1 = 3')
-                      | Ne pas r&eacute;pondre
-                v-stepper-content(step='3')
-                  v-card
-                    v-card-title
-                      | Combien de minutes avez-vous attendu ?
-                    v-card-subtitle
-                      v-col(cols='12')
-                        v-slider(max='60' min='0' step='5' v-model='duree' thumb-label='' ticks='')
-                    v-btn(color='blue' @click='attente')
+          v-stepper(v-model='e1')
+            v-stepper-header
+              v-stepper-step(:complete='e1 > 1' step='1')
+                | Pr&eacute;sentation
+              v-divider
+              v-stepper-step(:complete='e1 > 2' step='2')
+                | Satisfaction
+              v-divider
+              v-stepper-step(:complete='e1 > 3' step='3')
+                | Temps d&apos;attente
+              v-divider
+              v-stepper-step(:complete='e1 > 4' step='4')
+                | Evaluation
+            v-stepper-items
+              v-stepper-content(step='1')
+                v-card
+                  template
+                    v-row(justify='center')
+                      v-dialog(v-model='dialog' persistent='' max-width='600px')
+                        template(v-slot:activator='{ on, attrs }')
+                          v-btn(color='primary' dark='' v-bind='attrs' v-on='on' x-large='')
+                            | Pr&eacute;sentez-vous
+                        v-card
+                          v-card-title
+                            span.headline Profil
+                          v-card-text
+                            v-alert(v-show='alerte' color='red' type='error') Tout les champs * sont obligatoires
+                            v-alert(v-show='alerte2' color='red' type='error') L&apos;email n&apos;est pas valide
+                            v-alert(v-show='alerte3' border="left" color="indigo" dark) Vous avez déjà laissé un avis sur ce site.
+
+                            v-container
+                              v-row
+                                v-col(cols='12' sm='6' md='4')
+                                  v-text-field(label='Prénom*' v-model='prenom' required='')
+                                v-col(cols='12' sm='6' md='4')
+                                  v-text-field(label='Nom*' v-model='nom' required='')
+                                v-col(cols='12')
+                                  v-text-field(label='Email*' v-model='email' required='')
+                            small *obligatoire
+                          v-card-actions
+                            v-spacer
+                            v-btn(color='blue darken-1' text='' @click='dialog = false')
+                              | Fermer
+                            v-btn(color='blue darken-1' text='' @click='presenter')
+                              | Ok
+              v-stepper-content(step='2')
+                v-card
+                  v-row
+                    v-card-title Est-ce que le test s&apos;est bien d&eacute;roul&eacute; ?
+                  v-card-subtitle
+                    v-card-actions
+                      v-row
+                        v-spacer
+                        v-btn.mx-2(fab='' dark='' small='' color='green' @click='deroulement(1)')
+                          | Oui
+                        v-spacer
+                        v-btn.mx-2(fab='' dark='' small='' color='red' @click='deroulement(2)')
+                          | Non
+                        v-spacer
+                  v-btn(@click='e1 = 3')
+                    | Ne pas r&eacute;pondre
+              v-stepper-content(step='3')
+                v-card
+                  v-card-title
+                    | Combien de minutes avez-vous attendu ?
+                  v-card-subtitle
+                    v-col(cols='12')
+                      v-slider(max='60' min='0' step='5' v-model='duree' thumb-label='' ticks='')
+                  v-card-actions
+                    v-btn(color='blue' @click='dureeDonner')
                       | Continuer
+                    v-spacer
                     v-btn(@click='e1 = 4')
                       | Ne pas r&eacute;pondre
-                v-stepper-content(step='4')
-                  v-card
-                    v-row
-                      v-card-title
-                        | Evaluez votre exp&eacute;rience
-                      v-rating(v-model='rating' color='yellow darken-3' background-color='grey darken-1' empty-icon='$ratingFull' hover='' large='')
-                    v-card-subtitle
-                      v-textarea(v-model='com' label='Commentaire' auto-grow='' outlined='' rows='3' row-height='15' shaped='')
+              v-stepper-content(step='4')
+                v-card
+                  v-row
+                    v-card-title
+                      | Evaluez votre exp&eacute;rience
+                    v-rating(v-model='rating' color='yellow darken-3' background-color='grey darken-1' empty-icon='$ratingFull' hover='' large='')
+                  v-card-subtitle
+                    v-textarea(v-model='com' label='Commentaire' auto-grow='' outlined='' rows='3' row-height='15' shaped='')
+                  v-card-actions
                     v-btn(color='blue' @click='eval')
                       | Continuer
-                    v-btn(@click='e1 = 5')
+                    v-spacer
+                    v-btn(@click='e1 = 5; choixGif();')
                       | Ne pas r&eacute;pondre
-                v-stepper-content(step='5')
-                  v-card
+              v-stepper-content(step='5')
+                v-card
+                  v-row
                     v-card-title
                       | Merci pour vos r&eacute;ponses
-                      v-icon(x-large='' color='orange darken-2')
-                        | mdi-emoticon-excited
-                    v-btn(@click='show = !show')
-                      | Fermer
+                    iframe.giphy-embed.pl-6(:src='tabGif[gif][0]' width='250' height='246' frameborder='0')
+                      p
+                        a(:href='tabGif[gif][1]') 
       // Fin Extension Avis
       // Extension Commentaire
       v-expand-transition
-        v-card.transition-fast-in-fast-out.v-card--reveal(v-if='reveal' flat=''  id='footer')
+        v-card.mb-n16.transition-fast-in-fast-out.v-card--reveal(v-if='reveal' flat=''  id='footer')
           div(v-show='reveal')
             template
-              v-responsive.overflow-y-auto(max-height='300')
+              v-responsive.overflow-y-auto.pt-12(max-height='300')
                 .pa-6
                   template
                     v-row
                       v-col
-                        v-card(flat='' class='mx-auto' max-width="500")
+                        v-card.mt-n12(flat='' class='mx-auto' max-width="500")
                           v-list(three-line='')
                             v-list-item-group
                               template(v-for='(item, index) in items')
@@ -278,8 +352,23 @@ head
                                     v-list-item-action-text
                                       v-rating(:value='item.note', color='amber', dense='', half-increments='', readonly='', size='14')
 
-          v-card-actions.pt-0
-            v-btn(text='' color='teal accent-4' @click='fermeCom')
-              | Fermer
+          v-card-actions
+            v-row 
+              v-col 
+                v-btn(text='' color='#BCB8AE' @click='fermeCom')
+                  | Fermer
+              v-col#graphe
+                v-card-text
+                  v-row
+                    span.pr-3.mt-1.caption % de satisfaction : 
+                    v-tooltip(bottom='' )
+                      template(v-slot:activator='{ on, attrs }')
+                        v-sheet#oui.mb-1(color="#6DF0A0" height="25" :width="oui" v-bind="attrs" v-on="on")
+                      span {{oui + "% ont eu une bonne expérience."}}
+                    v-tooltip(bottom='' )
+                      template(v-slot:activator='{ on, attrs }')
+                        v-sheet.mb-1#non(color="#F0716D" height="25" :width="non" v-bind="attrs" v-on="on")
+                      span {{non + "% ont eu une mauvaise expérience."}}
+              
       // Fin Extension Commentaire
 

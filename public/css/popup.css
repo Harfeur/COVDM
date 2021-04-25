@@ -33,6 +33,13 @@ html, body {
 }
 
 #footer {
+    background-color:#FFF6E0;
     position: absolute;
     bottom: 0;
 }
+
+#heure{
+    table-layout: fixed;
+    width: 500px;
+}
+
