@@ -315,7 +315,6 @@ $.get("/regions").done(dataR => {
                         '<tr> <td  colspan="2"> <p class="horaire-o" > Actuellement' + ho + '</p> </td> </tr> </table>';
 
                 } else {
-                    if (!obj.c_nom) console.log(obj);
                     if (obj.c_nom.indexOf('-') != -1) var tab = obj.c_nom.split('-');
                     else var tab = obj.c_nom.split(obj.adresse.ville);
                     popup = '<table > ' +
