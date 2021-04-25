@@ -35,32 +35,60 @@ const median = arr => q50(arr);
 
 const updateSite = (db, site) => {
     const filter = {"_id": site};
+    const ATTENTE_MAXIMALE = 15;
     return new Promise((resolve, reject) => {
-        db.collection('sites_prelevements').findOne(filter).then(document => {
-            if (!document) {
-                console.log(site);
-                reject();
-            }
-            // Calcul de l'attente moyenne
-            let attenteMoyenne = document.stats.attente.length === 0 ? 9999 : document.stats.attente.reduce((a, b) => a + b, 0) / document.stats.attente.length;
-            db.collection('sites_prelevements').updateOne(filter, {$set: {"stats.attenteMoyenne": attenteMoyenne}})
-                .catch(console.error);
+        if (isNaN(site)) {
+            db.collection('sites_prelevements').findOne(filter).then(document => {
+                if (!document) {
+                    console.log(site);
+                    reject();
+                }
+                // Calcul de l'attente moyenne
+                let attenteMoyenne = document.stats.attente.length === 0 ? 30 : document.stats.attente.reduce((a, b) => a + b, 0) / document.stats.attente.length;
+                db.collection('sites_prelevements').updateOne(filter, {$set: {"stats.attenteMoyenne": attenteMoyenne}})
+                    .catch(console.error);
 
-            // Calcul de l'attente rapide
-            const ATTENTE_MAXIMALE = 15;
-            let attenteRapide = attenteMoyenne < ATTENTE_MAXIMALE
-            db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.attenteRapide": attenteRapide}})
-                .catch(console.error);
+                // Calcul de l'attente rapide
+                let attenteRapide = attenteMoyenne < ATTENTE_MAXIMALE
+                db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.attenteRapide": attenteRapide}})
+                    .catch(console.error);
 
-            // Calcul de la moyenne des notes
-            let moyenne = document.avis.length === 0 ? 0 : document.avis.reduce((nb, avis) => nb + avis.note, 0) / document.avis.length;
+                // Calcul de la moyenne des notes
+                let moyenne = document.avis.length === 0 ? 0 : document.avis.reduce((nb, avis) => nb + avis.note, 0) / document.avis.length;
 
-            db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.noteMoyenne": moyenne}})
-                .catch(console.error);
+                db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.noteMoyenne": moyenne}})
+                    .catch(console.error);
 
-            console.log(`Site ${site} mis à jour`);
-            resolve([document.adresse.codeRegion, document.adresse.codeDepartement]);
-        })
+                console.log(`Site ${site} mis à jour`);
+                resolve([document.adresse.codeRegion, document.adresse.codeDepartement]);
+            })
+        } else {
+            db.collection('sites_vaccinations').findOne(filter).then(document => {
+                if (!document) {
+                    console.log(site);
+                    reject();
+                }
+                // Calcul de l'attente moyenne
+                let attenteMoyenne = document.stats.attente.length === 0 ? 30 : document.stats.attente.reduce((a, b) => a + b, 0) / document.stats.attente.length;
+                db.collection('sites_vaccinations').updateOne(filter, {$set: {"stats.attenteMoyenne": attenteMoyenne}})
+                    .catch(console.error);
+
+                // Calcul de l'attente rapide
+                let attenteRapide = attenteMoyenne < ATTENTE_MAXIMALE
+                db.collection('sites_vaccinations').updateMany(filter, {$set: {"stats.attenteRapide": attenteRapide}})
+                    .catch(console.error);
+
+                // Calcul de la moyenne des notes
+                let moyenne = document.avis.length === 0 ? 0 : document.avis.reduce((nb, avis) => nb + avis.note, 0) / document.avis.length;
+
+                db.collection('sites_vaccinations').updateMany(filter, {$set: {"stats.noteMoyenne": moyenne}})
+                    .catch(console.error);
+
+                console.log(`Site ${site} mis à jour`);
+                resolve([document.adresse.codeRegion, document.adresse.codeDepartement]);
+            })
+        }
+
     });
 }
 
@@ -123,8 +151,45 @@ const updateDepartement = (db, departement) => {
 
             db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.departement.best": false}})
                 .then(() => {
-                    console.log(`Département ${departement} mis à jour`);
                     return db.collection('sites_prelevements').updateOne({_id: {$in: meilleursSites}}, {$set: {"stats.departement.best": true}});
+                })
+                .catch(console.error);
+        });
+        db.collection('sites_vaccinations').find(filter).toArray((error, documents) => {
+            if (error) {
+                console.error(error);
+                return;
+            }
+
+            // Calcul du nombre de sites
+            db.collection('sites_vaccinations').updateMany(filter, {$set: {"stats.departement.nb": documents.length}})
+                .catch(console.error);
+
+            let meilleursSites = calculData(documents);
+
+            // Calcul des délais d'attente
+            let attente = documents.map(site => site.stats.attente.length === 0 ? 15 : site.stats.attente.reduce((sum, nb) => sum + nb, 0) / site.stats.attente.length);
+            let dataAttente = {
+                mediane: median(attente),
+                min: Math.min(...attente),
+                max: Math.max(...attente),
+                q1: q25(attente),
+                q3: q75(attente),
+                ecart_type: std(attente),
+                liste: attente.map((moy, index) => {
+                    return {
+                        label: documents[index].c_nom,
+                        value: moy
+                    }
+                })
+            };
+
+            db.collection('departement').updateOne({"properties.code": departement}, {$set: {"properties.dataAttenteVaccinations": dataAttente}});
+
+            db.collection('sites_vaccinations').updateMany(filter, {$set: {"stats.departement.best": false}})
+                .then(() => {
+                    console.log(`Département ${departement} mis à jour`);
+                    return db.collection('sites_vaccinations').updateOne({_id: {$in: meilleursSites}}, {$set: {"stats.departement.best": true}});
                 })
                 .then(resolve)
                 .catch(reject);
@@ -176,13 +241,53 @@ const updateRegion = (db, region) => {
 
                 db.collection('sites_prelevements').updateMany(filter, {$set: {"stats.region.best": false}})
                     .then(() => {
-                        console.log(`Région ${region} mise à jour`);
                         return db.collection('sites_prelevements').updateOne({_id: {$in: meilleursSites}}, {$set: {"stats.region.best": true}})
+                    })
+                    .catch(console.error);
+            })
+
+        });
+        db.collection('sites_vaccinations').find(filter).toArray((error, documents) => {
+            if (error) {
+                console.error(error);
+                return;
+            }
+
+            // Calcul du nombre de sites
+            db.collection('sites_vaccinations').updateMany(filter, {$set: {"stats.region.nb": documents.length}})
+                .catch(console.error);
+
+            let meilleursSites = calculData(documents);
+
+
+            db.collection('departement').find({"properties.codeRegion": region}).toArray((err, docs) => {
+                // Calcul des délais d'attente
+                let attente = docs.map(dpt => dpt.properties.dataAttenteVaccinations.liste.reduce((sum, nb) => sum + nb.value, 0) / dpt.properties.dataAttenteVaccinations.liste.length);
+                let dataAttente = {
+                    mediane: median(attente),
+                    min: Math.min(...attente),
+                    max: Math.max(...attente),
+                    q1: q25(attente),
+                    q3: q75(attente),
+                    ecart_type: std(attente),
+                    liste: attente.map((moy, index) => {
+                        return {
+                            label: docs[index].properties.nom,
+                            value: moy
+                        }
+                    })
+                };
+
+                db.collection('region').updateOne({"properties.code": region}, {$set: {"properties.dataAttenteVaccinations": dataAttente}});
+
+                db.collection('sites_vaccinations').updateMany(filter, {$set: {"stats.region.best": false}})
+                    .then(() => {
+                        console.log(`Région ${region} mise à jour`);
+                        return db.collection('sites_vaccinations').updateOne({_id: {$in: meilleursSites}}, {$set: {"stats.region.best": true}})
                     })
                     .then(resolve)
                     .catch(reject);
             })
-
         });
     });
 
@@ -232,6 +337,17 @@ const updateAll = (db) => {
             console.log("Initialisation des stats départements finis")
         });
 
+        await db.collection('sites_vaccinations').find({}).toArray(async (err, documents) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            for (const site of documents) {
+                await updateSite(db, site._id);
+            }
+            console.log("Initialisation des stats des sites de vaccination finis");
+        });
+
         db.collection('sites_prelevements').find({}).toArray(async (err, documents) => {
             if (err) {
                 console.error(err);
@@ -241,7 +357,7 @@ const updateAll = (db) => {
                 await updateSite(db, site._id);
             }
             resolve();
-            console.log("Initialisation des stats des sites finis");
+            console.log("Initialisation des stats des sites de prélévements finis");
         });
     });
 };
