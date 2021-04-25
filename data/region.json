@@ -3432,6 +3432,40 @@
           "value": 26.113553113553113
         }
       ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 26.213339793281655,
+      "min": 25.356972789115652,
+      "max": 29.041005291005295,
+      "q1": 25.791170634920633,
+      "q3": 27.14597545219638,
+      "ecart_type": 1.3678695572468933,
+      "liste": [
+        {
+          "label": "Eure-et-Loir",
+          "value": 25.356972789115652
+        },
+        {
+          "label": "Loiret",
+          "value": 25.67063492063492
+        },
+        {
+          "label": "Indre-et-Loire",
+          "value": 26.152777777777775
+        },
+        {
+          "label": "Indre",
+          "value": 26.27390180878553
+        },
+        {
+          "label": "Cher",
+          "value": 27.436666666666664
+        },
+        {
+          "label": "Loir-et-Cher",
+          "value": 29.041005291005295
+        }
+      ]
     }
   }
 },{
@@ -6522,6 +6556,36 @@
         {
           "label": "Manche",
           "value": 25.442307692307693
+        }
+      ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 26.771825396825395,
+      "min": 24.77833333333333,
+      "max": 27.915674603174605,
+      "q1": 26.506944444444446,
+      "q3": 26.962121212121215,
+      "ecart_type": 1.1421401570365581,
+      "liste": [
+        {
+          "label": "Calvados",
+          "value": 24.77833333333333
+        },
+        {
+          "label": "Orne",
+          "value": 26.506944444444446
+        },
+        {
+          "label": "Seine-Maritime",
+          "value": 26.771825396825395
+        },
+        {
+          "label": "Eure",
+          "value": 26.962121212121215
+        },
+        {
+          "label": "Manche",
+          "value": 27.915674603174605
         }
       ]
     }
@@ -12458,6 +12522,64 @@
           "value": 29.07051282051282
         }
       ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 26.103273809523813,
+      "min": 22.254629629629633,
+      "max": 28.541666666666668,
+      "q1": 24.91924894957983,
+      "q3": 26.893632987382993,
+      "ecart_type": 1.6662688604217308,
+      "liste": [
+        {
+          "label": "Landes",
+          "value": 22.254629629629633
+        },
+        {
+          "label": "Lot-et-Garonne",
+          "value": 24.114795918367346
+        },
+        {
+          "label": "Charente-Maritime",
+          "value": 24.669642857142854
+        },
+        {
+          "label": "Corrèze",
+          "value": 25.002450980392155
+        },
+        {
+          "label": "Dordogne",
+          "value": 25.277777777777775
+        },
+        {
+          "label": "Pyrénées-Atlantiques",
+          "value": 25.87916666666667
+        },
+        {
+          "label": "Haute-Vienne",
+          "value": 26.327380952380953
+        },
+        {
+          "label": "Creuse",
+          "value": 26.515066964285715
+        },
+        {
+          "label": "Gironde",
+          "value": 26.86126373626374
+        },
+        {
+          "label": "Vienne",
+          "value": 26.990740740740744
+        },
+        {
+          "label": "Charente",
+          "value": 27.24527914614122
+        },
+        {
+          "label": "Deux-Sèvres",
+          "value": 28.541666666666668
+        }
+      ]
     }
   }
 },{
@@ -16478,6 +16600,48 @@
           "value": 33.333333333333336
         }
       ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 25.287231384307844,
+      "min": 21.326190476190476,
+      "max": 29.32222222222222,
+      "q1": 24.253314393939398,
+      "q3": 26.267270923520925,
+      "ecart_type": 2.403065099999321,
+      "liste": [
+        {
+          "label": "Jura",
+          "value": 21.326190476190476
+        },
+        {
+          "label": "Yonne",
+          "value": 22.820075757575758
+        },
+        {
+          "label": "Nièvre",
+          "value": 24.73106060606061
+        },
+        {
+          "label": "Saône-et-Loire",
+          "value": 25.27606732348112
+        },
+        {
+          "label": "Doubs",
+          "value": 25.298395445134574
+        },
+        {
+          "label": "Côte-d'Or",
+          "value": 26.214947089947092
+        },
+        {
+          "label": "Haute-Saône",
+          "value": 26.424242424242422
+        },
+        {
+          "label": "Territoire de Belfort",
+          "value": 29.32222222222222
+        }
+      ]
     }
   }
 },{
@@ -19962,6 +20126,36 @@
         {
           "label": "Mayenne",
           "value": 28.74679487179487
+        }
+      ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 25.17216117216117,
+      "min": 20.841666666666665,
+      "max": 25.898071625344347,
+      "q1": 23.827798663324977,
+      "q3": 25.562925170068027,
+      "ecart_type": 2.0666839410887765,
+      "liste": [
+        {
+          "label": "Vendée",
+          "value": 20.841666666666665
+        },
+        {
+          "label": "Loire-Atlantique",
+          "value": 23.827798663324977
+        },
+        {
+          "label": "Maine-et-Loire",
+          "value": 25.17216117216117
+        },
+        {
+          "label": "Sarthe",
+          "value": 25.562925170068027
+        },
+        {
+          "label": "Mayenne",
+          "value": 25.898071625344347
         }
       ]
     }
@@ -24348,6 +24542,56 @@
           "value": 28.90277777777778
         }
       ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 25.57173520923521,
+      "min": 23.983766233766232,
+      "max": 28.757936507936506,
+      "q1": 24.67602564102564,
+      "q3": 26.595477804359383,
+      "ecart_type": 1.5363360268814517,
+      "liste": [
+        {
+          "label": "Aube",
+          "value": 23.983766233766232
+        },
+        {
+          "label": "Meuse",
+          "value": 24.060846560846564
+        },
+        {
+          "label": "Bas-Rhin",
+          "value": 24.63
+        },
+        {
+          "label": "Haut-Rhin",
+          "value": 24.814102564102562
+        },
+        {
+          "label": "Ardennes",
+          "value": 25.038492063492065
+        },
+        {
+          "label": "Vosges",
+          "value": 26.104978354978357
+        },
+        {
+          "label": "Marne",
+          "value": 26.210858585858585
+        },
+        {
+          "label": "Haute-Marne",
+          "value": 26.72368421052632
+        },
+        {
+          "label": "Moselle",
+          "value": 27.26666666666667
+        },
+        {
+          "label": "Meurthe-et-Moselle",
+          "value": 28.757936507936506
+        }
+      ]
     }
   }
 },{
@@ -26270,6 +26514,48 @@
         {
           "label": "Val-d'Oise",
           "value": 27.09335075493612
+        }
+      ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 25.663967949887493,
+      "min": 24.05419799498747,
+      "max": 28.097132034632033,
+      "q1": 24.91150638640873,
+      "q3": 26.306240842490844,
+      "ecart_type": 1.2921137184923643,
+      "liste": [
+        {
+          "label": "Seine-Saint-Denis",
+          "value": 24.05419799498747
+        },
+        {
+          "label": "Paris",
+          "value": 24.727777777777774
+        },
+        {
+          "label": "Yvelines",
+          "value": 24.97274925595238
+        },
+        {
+          "label": "Hauts-de-Seine",
+          "value": 25.1657848324515
+        },
+        {
+          "label": "Seine-et-Marne",
+          "value": 26.162151067323485
+        },
+        {
+          "label": "Val-de-Marne",
+          "value": 26.163003663003664
+        },
+        {
+          "label": "Essonne",
+          "value": 26.735952380952384
+        },
+        {
+          "label": "Val-d'Oise",
+          "value": 28.097132034632033
         }
       ]
     }
@@ -29218,6 +29504,36 @@
         {
           "label": "Somme",
           "value": 27.452821869488535
+        }
+      ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 26.10326086956521,
+      "min": 24.211412151067325,
+      "max": 26.832234432234433,
+      "q1": 25.444444444444446,
+      "q3": 26.22008547008547,
+      "ecart_type": 0.9971041587839303,
+      "liste": [
+        {
+          "label": "Aisne",
+          "value": 24.211412151067325
+        },
+        {
+          "label": "Pas-de-Calais",
+          "value": 25.444444444444446
+        },
+        {
+          "label": "Oise",
+          "value": 26.10326086956521
+        },
+        {
+          "label": "Nord",
+          "value": 26.22008547008547
+        },
+        {
+          "label": "Somme",
+          "value": 26.832234432234433
         }
       ]
     }
@@ -34262,6 +34578,32 @@
           "value": 25.358974358974358
         }
       ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 25.403731361231358,
+      "min": 23.857832988267774,
+      "max": 25.636904761904763,
+      "q1": 24.971402691511386,
+      "q3": 25.507878787878784,
+      "ecart_type": 0.8207386508822047,
+      "liste": [
+        {
+          "label": "Ille-et-Vilaine",
+          "value": 23.857832988267774
+        },
+        {
+          "label": "Côtes-d'Armor",
+          "value": 25.34259259259259
+        },
+        {
+          "label": "Finistère",
+          "value": 25.464870129870125
+        },
+        {
+          "label": "Morbihan",
+          "value": 25.636904761904763
+        }
+      ]
     }
   }
 },{
@@ -35797,6 +36139,15 @@
       "q3": null,
       "ecart_type": 0,
       "liste": []
+    },
+    "dataAttenteVaccinations": {
+      "mediane": null,
+      "min": null,
+      "max": null,
+      "q1": null,
+      "q3": null,
+      "ecart_type": 0,
+      "liste": []
     }
   }
 },{
@@ -36951,6 +37302,15 @@
     "color": 1432,
     "lastUpdate": "2021-04-21",
     "dataAttente": {
+      "mediane": null,
+      "min": null,
+      "max": null,
+      "q1": null,
+      "q3": null,
+      "ecart_type": 0,
+      "liste": []
+    },
+    "dataAttenteVaccinations": {
       "mediane": null,
       "min": null,
       "max": null,
@@ -41066,6 +41426,40 @@
           "value": 25.745844356261014
         }
       ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 24.86913265306123,
+      "min": 23.617216117216117,
+      "max": 27.879629629629633,
+      "q1": 24.475646258503406,
+      "q3": 25.252216958211854,
+      "ecart_type": 1.4564168044329686,
+      "liste": [
+        {
+          "label": "Alpes-de-Haute-Provence",
+          "value": 23.617216117216117
+        },
+        {
+          "label": "Hautes-Alpes",
+          "value": 24.39349206349207
+        },
+        {
+          "label": "Var",
+          "value": 24.722108843537416
+        },
+        {
+          "label": "Alpes-Maritimes",
+          "value": 25.016156462585037
+        },
+        {
+          "label": "Vaucluse",
+          "value": 25.33090379008746
+        },
+        {
+          "label": "Bouches-du-Rhône",
+          "value": 27.879629629629633
+        }
+      ]
     }
   }
 },{
@@ -43295,6 +43689,15 @@
       "q3": null,
       "ecart_type": 0,
       "liste": []
+    },
+    "dataAttenteVaccinations": {
+      "mediane": null,
+      "min": null,
+      "max": null,
+      "q1": null,
+      "q3": null,
+      "ecart_type": 0,
+      "liste": []
     }
   }
 },{
@@ -44589,6 +44992,15 @@
     "color": 515,
     "lastUpdate": "2021-04-21",
     "dataAttente": {
+      "mediane": null,
+      "min": null,
+      "max": null,
+      "q1": null,
+      "q3": null,
+      "ecart_type": 0,
+      "liste": []
+    },
+    "dataAttenteVaccinations": {
       "mediane": null,
       "min": null,
       "max": null,
@@ -49620,6 +50032,68 @@
           "value": 28.75
         }
       ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 25.961672473867594,
+      "min": 22.87840136054422,
+      "max": 28.802083333333336,
+      "q1": 24.279761904761905,
+      "q3": 27.385416666666664,
+      "ecart_type": 1.8706502490175843,
+      "liste": [
+        {
+          "label": "Ariège",
+          "value": 22.87840136054422
+        },
+        {
+          "label": "Lozère",
+          "value": 23.027173913043477
+        },
+        {
+          "label": "Tarn",
+          "value": 24.027777777777775
+        },
+        {
+          "label": "Tarn-et-Garonne",
+          "value": 24.279761904761905
+        },
+        {
+          "label": "Aude",
+          "value": 25.5
+        },
+        {
+          "label": "Gard",
+          "value": 25.523809523809526
+        },
+        {
+          "label": "Hautes-Pyrénées",
+          "value": 25.961672473867594
+        },
+        {
+          "label": "Pyrénées-Orientales",
+          "value": 26.412698412698415
+        },
+        {
+          "label": "Aveyron",
+          "value": 27.1343537414966
+        },
+        {
+          "label": "Haute-Garonne",
+          "value": 27.385416666666664
+        },
+        {
+          "label": "Gers",
+          "value": 27.401689708141323
+        },
+        {
+          "label": "Hérault",
+          "value": 27.778679653679657
+        },
+        {
+          "label": "Lot",
+          "value": 28.802083333333336
+        }
+      ]
     }
   }
 },{
@@ -50072,6 +50546,15 @@
     "color": 4292,
     "lastUpdate": "2021-04-21",
     "dataAttente": {
+      "mediane": null,
+      "min": null,
+      "max": null,
+      "q1": null,
+      "q3": null,
+      "ecart_type": 0,
+      "liste": []
+    },
+    "dataAttenteVaccinations": {
       "mediane": null,
       "min": null,
       "max": null,
@@ -55853,6 +56336,64 @@
           "value": 28.552083333333332
         }
       ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 25.81746031746032,
+      "min": 22.767857142857142,
+      "max": 28.537414965986393,
+      "q1": 25.343589519140988,
+      "q3": 27.394108495670995,
+      "ecart_type": 1.8411487639005004,
+      "liste": [
+        {
+          "label": "Cantal",
+          "value": 22.767857142857142
+        },
+        {
+          "label": "Loire",
+          "value": 23.174603174603178
+        },
+        {
+          "label": "Puy-de-Dôme",
+          "value": 25.15376984126984
+        },
+        {
+          "label": "Ardèche",
+          "value": 25.40686274509804
+        },
+        {
+          "label": "Rhône",
+          "value": 25.530219780219777
+        },
+        {
+          "label": "Allier",
+          "value": 25.777777777777782
+        },
+        {
+          "label": "Isère",
+          "value": 25.857142857142858
+        },
+        {
+          "label": "Savoie",
+          "value": 27.01904761904762
+        },
+        {
+          "label": "Haute-Savoie",
+          "value": 27.383116883116884
+        },
+        {
+          "label": "Ain",
+          "value": 27.427083333333332
+        },
+        {
+          "label": "Drôme",
+          "value": 28.46875
+        },
+        {
+          "label": "Haute-Loire",
+          "value": 28.537414965986393
+        }
+      ]
     }
   }
 },{
@@ -57821,6 +58362,24 @@
         {
           "label": "Haute-Corse",
           "value": 24.0625
+        }
+      ]
+    },
+    "dataAttenteVaccinations": {
+      "mediane": 24.10792448292448,
+      "min": 23.24074074074074,
+      "max": 24.975108225108226,
+      "q1": 23.67433261183261,
+      "q3": 24.541516354016355,
+      "ecart_type": 1.2263830092657024,
+      "liste": [
+        {
+          "label": "Corse-du-Sud",
+          "value": 23.24074074074074
+        },
+        {
+          "label": "Haute-Corse",
+          "value": 24.975108225108226
         }
       ]
     }
