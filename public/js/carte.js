@@ -160,7 +160,7 @@ $.get("/regions").done(dataR => {
 
         //Affichage stat
         afficherStatPrelev(e.sourceTarget.feature.properties.code);
-        afficherStatVaccin(e.sourceTarget.feature.properties.code)
+        afficherStatVaccin(e.sourceTarget.feature.properties.code);
     }
 
     //ajout des events

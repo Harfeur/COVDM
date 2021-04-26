@@ -388,9 +388,9 @@ function afficherStatVaccin(id_region) {
                 //affichage chart pie
                 if (!id_region && !id_departement) {
                     //nb site par region 
-                    $('#chartContainer1').show();
-                    $('#chartContainer2').hide();
-                    var chart = new CanvasJS.Chart("chartContainer1", {
+                    $('#chartContainerVaccin1').show();
+                    $('#chartContainerVaccin2').hide();
+                    var chart = new CanvasJS.Chart("chartContainerVaccin1", {
                         exportEnabled: true,
                         animationEnabled: true,
                         width: 500,
@@ -417,9 +417,9 @@ function afficherStatVaccin(id_region) {
                     console.log(unDepartement);
                 } else {
                     //nb site par département pour une région donnée
-                    $("#chartContainer2").show();
-                    $("#chartContainer1").hide();
-                    var chart = new CanvasJS.Chart("chartContainer2", {
+                    $("#chartContainerVaccin2").show();
+                    $("#chartContainerVaccin1").hide();
+                    var chart = new CanvasJS.Chart("chartContainerVaccin2", {
                         exportEnabled: true,
                         animationEnabled: true,
                         width: 500,
