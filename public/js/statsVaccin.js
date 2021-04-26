@@ -3,13 +3,12 @@
 
 
 
-const urlParams = new URLSearchParams(window.location.search);
-let id_region = urlParams.get('id_region');
-let id_departement = urlParams.get('id_departement');
+// let id_region = urlParams.get('id_region');
+// let id_departement = urlParams.get('id_departement');
 
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 
-function attenteMoyennePrelev(id_region){
+function attenteMoyenneVaccin(id_region){
     var div = '<div class="chartPlus" style="height: 300px;width: 48%;display:inline-block" id="my_dataviz"></div>'
 
     $("#contentchartSupp").append(div);
@@ -45,12 +44,12 @@ function attenteMoyennePrelev(id_region){
                 sumstat.push({
                     "key":elt.properties.nom,
                     "value":{
-                        "interQuantileRange":elt.properties.dataAttente.ecart_type,
-                        "median":elt.properties.dataAttente.mediane,
-                        "min":elt.properties.dataAttente.min,
-                        "max":elt.properties.dataAttente.max,
-                        "q1":elt.properties.dataAttente.q1,
-                        "q3":elt.properties.dataAttente.q3
+                        "interQuantileRange":elt.properties.dataAttenteVaccinations.ecart_type,
+                        "median":elt.properties.dataAttenteVaccinations.mediane,
+                        "min":elt.properties.dataAttenteVaccinations.min,
+                        "max":elt.properties.dataAttenteVaccinations.max,
+                        "q1":elt.properties.dataAttenteVaccinations.q1,
+                        "q3":elt.properties.dataAttenteVaccinations.q3
                     }
                 });
 
@@ -69,12 +68,12 @@ function attenteMoyennePrelev(id_region){
                             sumstat.push({
                                 "key":obj.properties.nom,
                                 "value":{
-                                    "interQuantileRange":obj.properties.dataAttente.ecart_type,
-                                    "median":obj.properties.dataAttente.mediane,
-                                    "min":obj.properties.dataAttente.min,
-                                    "max":obj.properties.dataAttente.max,
-                                    "q1":obj.properties.dataAttente.q1,
-                                    "q3":obj.properties.dataAttente.q3
+                                    "interQuantileRange":obj.properties.dataAttenteVaccinations.ecart_type,
+                                    "median":obj.properties.dataAttenteVaccinations.mediane,
+                                    "min":obj.properties.dataAttenteVaccinations.min,
+                                    "max":obj.properties.dataAttenteVaccinations.max,
+                                    "q1":obj.properties.dataAttenteVaccinations.q1,
+                                    "q3":obj.properties.dataAttenteVaccinations.q3
                                 }
                             });
                             
@@ -83,14 +82,14 @@ function attenteMoyennePrelev(id_region){
                             domain.push(obj.properties.nom)
                         }else{
                             point.push(
-                                {"attente":obj.properties.dataAttente.mediane, 
+                                {"attente":obj.properties.dataAttenteVaccinations.mediane, 
                                     "nomRegion":reg[obj.properties.codeRegion].nom,
                                 "nom":obj.properties.nom})
                         }
                     });
                 
             
-            $.get("/sitesPrelevements").done(dataP =>{
+            $.get("/sitesVaccinations").done(dataP =>{
                 if (id_region) {
 
                     dataP.forEach(oel => {
@@ -229,7 +228,7 @@ function attenteMoyennePrelev(id_region){
                     .style("font-size", "17px") 
                     .style("text-decoration", "underline")  
                     .style("font-weight", "bold")  
-                    .text("Temps d'attente en France dans chaque région pour les sites de prélèvement");
+                    .text("Temps d'attente en France dans chaque région pour les sites de vaccination");
                 }else{            
                     //pour une région
                     svg.append("text")
@@ -239,7 +238,7 @@ function attenteMoyennePrelev(id_region){
                     .style("font-size", "17px") 
                     .style("text-decoration", "underline")  
                     .style("font-weight", "bold")  
-                    .text("Temps d'attente en "+ reg[id_region].nom +" dans chaque département pour les sites de prélèvement");
+                    .text("Temps d'attente en "+ reg[id_region].nom +" dans chaque département pour les sites de vaccination");
                 }
             });
         });      
@@ -248,9 +247,9 @@ function attenteMoyennePrelev(id_region){
 
 }
 
-// attenteMoyennePrelev();
+// attenteMoyenneVaccin();
 
-function afficherStatPrelev(id_region) {
+function afficherStatVaccin(id_region) {
     var region = {};
     var departement = {};
     var nbSiteReg = [];
@@ -307,7 +306,7 @@ function afficherStatPrelev(id_region) {
             })
 
             //Données
-            $.get("/sitesPrelevements", {
+            $.get("/sitesVaccinations", {
                 id_region: id_region,
                 id_departement: id_departement
             }).done(dataP => {
@@ -333,7 +332,7 @@ function afficherStatPrelev(id_region) {
                                 var totalA = nbA / obj.avis.length
                                 var siteAvis = {
                                     "y": totalA,
-                                    "label": obj.rs,
+                                    "label": obj.c_nom,
                                     "ville": obj.adresse.ville,
                                     "departement": depBestSite[obj.adresse.codeDepartement].name
                                 }
@@ -355,7 +354,7 @@ function afficherStatPrelev(id_region) {
                                 var totalA = nbA / obj.avis.length
                                 var siteAvis = {
                                     "y": totalA, //moyenne
-                                    "label": obj.rs,
+                                    "label": obj.c_nom,
                                     "ville": obj.adresse.ville
                                 }
 
@@ -396,7 +395,7 @@ function afficherStatPrelev(id_region) {
                         animationEnabled: true,
                         width: 500,
                         title: {
-                            text: "Nombre de sites de prélèvements par région",
+                            text: "Nombre de sites de vaccination par région",
                             fontSize: 20,
                         },
                         legend: {
@@ -405,14 +404,14 @@ function afficherStatPrelev(id_region) {
                         data: [{
                             type: "pie",
                             showInLegend: false,
-                            toolTipContent: "{name}: <strong>{y}%</strong> <br>Nombre de site de prélèvement : {nbSite}",
+                            toolTipContent: "{name}: <strong>{y}%</strong> <br>Nombre de site de vaccination : {nbSite}",
                             indexLabel: "{name} - {y}%",
                             dataPoints: nbSiteReg
                         }]
                     });
 
                     chart.render();
-                    attenteMoyennePrelev();
+                    attenteMoyenneVaccin();
 
                 } else if (id_departement) {
                     console.log(unDepartement);
@@ -425,7 +424,7 @@ function afficherStatPrelev(id_region) {
                         animationEnabled: true,
                         width: 500,
                         title: {
-                            text: "Nombre de sites de prélèvements par département de la région " + region[id_region].name,
+                            text: "Nombre de sites de vaccination par département de la région " + region[id_region].name,
                             fontSize: 20,
                         },
                         legend: {
@@ -434,13 +433,13 @@ function afficherStatPrelev(id_region) {
                         data: [{
                             type: "pie",
                             showInLegend: false,
-                            toolTipContent: "{name}: <strong>{y}%</strong> <br>Nombre de site de prélèvement : {nbSite}",
+                            toolTipContent: "{name}: <strong>{y}%</strong> <br>Nombre de site de vaccination : {nbSite}",
                             indexLabel: "{name} - {y}%",
                             dataPoints: nbSiteDep
                         }]
                     });
                     chart.render();
-                    attenteMoyennePrelev(id_region);
+                    attenteMoyenneVaccin(id_region);
                     //meilleure site par département pour une région donnée
                     for (const [key, value] of Object.entries(departement)) {
                         
@@ -455,7 +454,7 @@ function afficherStatPrelev(id_region) {
                             theme: "light1", // "light1", "light2", "dark1", "dark2"
                             width: 500,
                             title: {
-                                text: "Moyenne des notes de chaque site de prélèvement en " + depBestSite[key].name,
+                                text: "Moyenne des notes de chaque site de vaccination en " + depBestSite[key].name,
                             fontSize: 20,
                             },
                             axisY: {
@@ -485,5 +484,5 @@ function afficherStatPrelev(id_region) {
 
     });
 }
-//afficherStatPrelev(76);
+//afficherStatVaccin(76);
 
