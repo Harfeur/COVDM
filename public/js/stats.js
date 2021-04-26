@@ -1,8 +1,3 @@
-
-
-
-
-
 const urlParams = new URLSearchParams(window.location.search);
 let id_region = urlParams.get('id_region');
 let id_departement = urlParams.get('id_departement');
@@ -10,10 +5,6 @@ let id_departement = urlParams.get('id_departement');
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 
 function attenteMoyennePrelev(id_region){
-    var div = '<div class="chartPlus" style="height: 300px;width: 48%;display:inline-block" id="my_dataviz"></div>'
-
-    $("#contentchartSupp").append(div);
-    $(".chartPlus").hide();
 
     // set the dimensions and margins of the graph
     var margin = {top: 100, right: 100, bottom: 100, left: 100},
@@ -412,6 +403,19 @@ function afficherStatPrelev(id_region) {
                     });
 
                     chart.render();
+                    
+                    $("#contentchartSupp").append("<div id='accordion'></div>");
+
+                    $( function() {
+                        $( "#accordion" ).accordion({
+                          heightStyle: "content",
+                          collapsible: true
+                        });
+                      } );
+
+                    //Graphique temps attente
+                    var divAttenteMoyenne = '<h3>Dans toute la France</h3><div><div id="my_dataviz"></div><div id="my_datavizVaccin"></div></div>'                      
+                    $(divAttenteMoyenne).appendTo("#accordion");
                     attenteMoyennePrelev();
 
                 } else if (id_departement) {
@@ -440,15 +444,36 @@ function afficherStatPrelev(id_region) {
                         }]
                     });
                     chart.render();
+
+
+                    
+                    $("#contentchartSupp").append("<div id='accordion'></div>");
+
+                    $( function() {
+                        $( "#accordion" ).accordion({
+                          heightStyle: "content",
+                          collapsible: true
+                        });
+                      } );
+
+                    //Appel graphique temps d'attente
+                    var divAttenteMoyenne = '<h3>Dans toute la région</h3><div><div id="my_dataviz"></div><div id="my_datavizVaccin"></div></div>'
+                    $(divAttenteMoyenne).appendTo("#accordion");
                     attenteMoyennePrelev(id_region);
+
                     //meilleure site par département pour une région donnée
                     for (const [key, value] of Object.entries(departement)) {
                         
                         var id_Div = "chartContainer" + nbContainer
                         var div = '<div class="chartPlus"  id="' + id_Div + '"></div>'
                         nbContainer += 1
-                        $("#contentchartSupp").append(div);
-                        $(".chartPlus").hide();
+
+                        var title = "<h3>"+depBestSite[key].name+"</h3><div id="+depBestSite[key].name+"></div>"
+                        $(title).appendTo("#accordion");
+
+                        $("#"+depBestSite[key].name).append(div);
+
+
                         var chart = new CanvasJS.Chart(id_Div, {
                             animationEnabled: true,
                             exportEnabled: true,

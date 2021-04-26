@@ -467,14 +467,14 @@ function openNav(i) {
 
         $("#graphSupp").hide();
         $("#graphMoins").show();
-        $(".chartPlus").show();
+        $("#contentchartSupp").show();
 
     } else if (i == false) {
         //Petite ouverture avec le bouton moins de graphique
         document.getElementById("mySidenav").style.width = "500px";
         document.getElementById("main").style.marginLeft = "500px";
 
-        $(".chartPlus").hide();
+        $("#contentchartSupp").hide();
         $("#graphSupp").show();
         $("#graphMoins").hide();
     }

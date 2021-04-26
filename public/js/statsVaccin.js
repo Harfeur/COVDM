@@ -9,10 +9,7 @@
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 
 function attenteMoyenneVaccin(id_region){
-    var div = '<div class="chartPlus" style="height: 300px;width: 48%;display:inline-block" id="my_dataviz"></div>'
 
-    $("#contentchartSupp").append(div);
-    $(".chartPlus").hide();
 
     // set the dimensions and margins of the graph
     var margin = {top: 100, right: 100, bottom: 100, left: 100},
@@ -21,7 +18,7 @@ function attenteMoyenneVaccin(id_region){
     
 
     // append the svg object to the body of the page
-    var svg = d3.select("#my_dataviz")
+    var svg = d3.select("#my_datavizVaccin")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -174,7 +171,7 @@ function attenteMoyenneVaccin(id_region){
                 .style("width", 80)
 
                 // create a tooltip
-                var tooltip = d3.select("#my_dataviz")
+                var tooltip = d3.select("#my_datavizVaccin")
                 .append("div")
                 .style("opacity", 0)
                 .attr("class", "tooltip")
@@ -411,6 +408,7 @@ function afficherStatVaccin(id_region) {
                     });
 
                     chart.render();
+                    
                     attenteMoyenneVaccin();
 
                 } else if (id_departement) {
@@ -439,15 +437,18 @@ function afficherStatVaccin(id_region) {
                         }]
                     });
                     chart.render();
+                    
                     attenteMoyenneVaccin(id_region);
+                    
                     //meilleure site par département pour une région donnée
                     for (const [key, value] of Object.entries(departement)) {
                         
-                        var id_Div = "chartContainer" + nbContainer
+                        var id_Div = "chartContainerVaccin" + nbContainer
                         var div = '<div class="chartPlus"  id="' + id_Div + '"></div>'
                         nbContainer += 1
-                        $("#contentchartSupp").append(div);
-                        $(".chartPlus").hide();
+                        
+                        $("#"+depBestSite[key].name).append(div);
+                        //$(".chartPlus").hide();
                         var chart = new CanvasJS.Chart(id_Div, {
                             animationEnabled: true,
                             exportEnabled: true,

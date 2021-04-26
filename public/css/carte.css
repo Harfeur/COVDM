@@ -326,9 +326,9 @@ iframe {
   color: white;
 }
 
-.chartPlus {
-  height: 280px;
-  width: 48%;
+.chartPlus  {
+  height: 300px;
+  width: 45%;
   display: inline-block;
   /* margin: 5%; */
   padding: 5%;
