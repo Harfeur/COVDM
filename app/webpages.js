@@ -21,7 +21,7 @@ module.exports = function (app, db, dirname) {
     });
 
     app.get('/vaccin', (req, res) => {
-        db.collection('sites_vaccinations').find({"_id": req.query.id}).toArray((error, documents) => {
+        db.collection('sites_vaccinations').find({"_id": parseInt(req.query.id)}).toArray((error, documents) => {
             if (error) res.status(500).send(error);
             res.render('popupVaccin', documents[0]);
         })
