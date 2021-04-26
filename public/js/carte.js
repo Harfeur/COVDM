@@ -268,7 +268,7 @@ $.get("/regions").done(dataR => {
                     popup = '<table > ' +
                         '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>' +
                         '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
-                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
+                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id,true)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
                         '<tr> <td  colspan="2"> <p class="horaire-o" > Actuellement' + ho + '</p> </td> </tr> </table>';
 
                 } else {
@@ -277,7 +277,7 @@ $.get("/regions").done(dataR => {
                     popup = '<table > ' +
                         '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>' +
                         '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
-                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
+                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id,true)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
                         '<tr> <td  colspan="2"> <p class="horaire-f" > Actuellement' + ho + '</p> </td> </tr> </table>';
                 }
 
@@ -311,7 +311,7 @@ $.get("/regions").done(dataR => {
                     popup = '<table > ' +
                         '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>' +
                         '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
-                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
+                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id,false)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
                         '<tr> <td  colspan="2"> <p class="horaire-o" > Actuellement' + ho + '</p> </td> </tr> </table>';
 
                 } else {
@@ -320,7 +320,7 @@ $.get("/regions").done(dataR => {
                     popup = '<table > ' +
                         '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>' +
                         '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
-                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
+                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id,false)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
                         '<tr> <td  colspan="2"> <p class="horaire-f" > Actuellement' + ho + '</p> </td> </tr> </table>';
                 }
 
@@ -344,10 +344,18 @@ $.get("/regions").done(dataR => {
 
 let popupOpen = false;
 
-function maFonction(e) {
-    var i = "<iframe width='550' height='550' src='./batiment?id=" + e + "'></iframe>" + "<a href=\"#\" onclick=\"hide(this.id)\">Ok!</a>";
-    //$( "#popup" ).dialog({with:800,maxHeight:1000});
-    $("#popup").html(i).css('display', 'block');
+function maFonction(e,b) {
+    if (b) {
+        //prelevement
+        var i = "<iframe width='550' height='550' src='./batiment?id=" + e + "'></iframe>" + "<a href=\"#\" onclick=\"hide(this.id)\">Ok!</a>";
+        //$( "#popup" ).dialog({with:800,maxHeight:1000});
+        $("#popup").html(i).css('display', 'block');
+    } else {
+        //vaccin
+        var i = "<iframe width='550' height='550' src='./vaccin?id=" + e + "'></iframe>" + "<a href=\"#\" onclick=\"hide(this.id)\">Ok!</a>";
+        //$( "#popup" ).dialog({with:800,maxHeight:1000});
+        $("#popup").html(i).css('display', 'block');
+    }
 
     setTimeout(() => {
         popupOpen = true;
