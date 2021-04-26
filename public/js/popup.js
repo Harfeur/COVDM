@@ -97,43 +97,55 @@ window.addEventListener("DOMContentLoaded", (event) => {
             tabGif: [["https://giphy.com/embed/6tHy8UAbv3zgs", "https://giphy.com/gifs/thank-you-spongebob-squarepants-6tHy8UAbv3zgs"], ["https://giphy.com/embed/14tCeoSGpXCWrQvixk", "https://giphy.com/gifs/true-and-the-rainbow-kingdom-funny-netflix-14tCeoSGpXCWrQvixk"], ['https://giphy.com/embed/xIJLgO6rizUJi', 'https://giphy.com/gifs/alice-in-wonderland-thank-you-xIJLgO6rizUJi'], ["https://giphy.com/embed/xUA7aN1MTCZx97V1Ic", "https://giphy.com/gifs/iliza-iliza-shlesinger-xUA7aN1MTCZx97V1Ic"], ["https://giphy.com/embed/3oz8xIsloV7zOmt81G", "https://giphy.com/gifs/arg-thank-you-cat-3oz8xIsloV7zOmt81G"]],
             gif: 0,
             numero: num,
-            emailBat: web,
+            numeroC:"",
+            urlBat: web,
+            urlC:"",
+            changeTel:false,
+            changeUrl:false,
         }),
         methods: {
             validURL() {
-                var str = this.emailBat
-                var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-                    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-                    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-                    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-                    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-                    '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
-                this.emailBat=str
+                var str = this.urlBat
+                var pattern = new RegExp('^(https?:\\/\\/)?' + 
+                    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + 
+                    '((\\d{1,3}\\.){3}\\d{1,3}))' + 
+                    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + 
+                    '(\\?[;&a-z\\d%_.~+=-]*)?' + 
+                    '(\\#[-a-z\\d_]*)?$', 'i'); 
+                this.urlBat=str
                 return !!pattern.test(str);
             },
             validTEL() {
                 var regex = new RegExp(/^(0|\+33)[0-9]{9}/gi);
-                if (regex.test(num)) {
+                if (regex.test(this.numero)) {
                     return (true);
                 }
                 var regex = new RegExp(/^[0-9]{9}/gi);
-                if (regex.test(num)) {
-                    this.numero = "0" + num;
+                if (regex.test(this.numero)) {
+                    this.numero = "0" + this.numero;
                     return (true);
                 }
                 var regex = new RegExp(/^\+33[0-9]{9}/gi);
-                if (regex.test(num)) {
+                if (regex.test(this.numero)) {
                     return (true);
                 }
                 return (false);
             },
-            majTEL(){
-                if(this.validTEL){
-                    console.log('ok')
+            changementTEL(){
+                var base=this.numero;
+                this.numero=this.numeroC;
+                if(!this.validTEL()){
+                    this.numero=base
                 }
-                else{
-
+                this.changeTel=false;
+            },
+            changementURL(){
+                var base=this.urlBat;
+                this.urlBat=this.urlC;
+                if(!this.validURL()){
+                    this.urlBat=base
                 }
+                this.changeUrl=false;
             },
             choixGif() {
                 min = Math.ceil(0);
@@ -160,6 +172,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 expansion.style.display = "block";
             },
             scrollMoiStp() {
+                this.changeTel=false;
+                this.changeUrl=false;
                 this.img = !this.img;
                 setTimeout(scroll, 200);
             },
