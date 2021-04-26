@@ -120,6 +120,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     this.numero = "0" + num;
                     return (true);
                 }
+                var regex = new RegExp(/^\+33[0-9]{9}/gi);
+                if (regex.test(num)) {
+                    this.numero = num;
+                    return (true);
+                }
                 return (false);
             },
             choixGif() {

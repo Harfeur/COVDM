@@ -11,10 +11,10 @@ head
   script const moy = !{JSON.stringify(stats.noteMoyenne)}
   script const attenteMoyenne = !{JSON.stringify(stats.attenteMoyenne)}
   script const deroulement = !{JSON.stringify(stats.bonDeroulement)}
-  script const nomBat = !{JSON.stringify(rs || c_nom)}
+  script const nomBat = !{JSON.stringify(c_nom)}
   script const addrVille = !{JSON.stringify(adresse.ville)}
-  script const web = !{JSON.stringify(web_rdv || c_rdv_site_web)}
-  script const num = !{JSON.stringify(tel_rdv || c_rdv_tel)}
+  script const web = !{JSON.stringify(c_rdv_site_web)}
+  script const num = !{JSON.stringify(c_rdv_tel)}
   script(src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous")
   script(src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js')
   script(src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js')
@@ -131,8 +131,6 @@ head
                     | Fermer
                   .my-3
                     | {{pb1 ? "Il est impossible que l'heure d'ouverture soit plus tard que l'heure de fermeture. Veuillez modifier dans un premier temps l'heure de fermeture." : " Il est impossible que l'heure de fermeture soit plus tôt que l'heure d'ouverture. Veuillez modifier dans un premier temps l'heure d'ouverture." }}
-
-
         template
           .text-center
             v-dialog(v-model='nouvelHeure' width='500' height='600')
@@ -168,26 +166,25 @@ head
                               v-spacer
                               v-btn(color='primary' text='' @click='modifHoraire')
                                 | Modifier
-
-
         v-row
-          v-spacer
-          if do_prel
-            v-alert.mt-8(dense='' text='' type='success')
-              | PCR
+          if c_reserve_professionels_sante
+            v-spacer
+            v-alert.mt-8(class='center' dense='' outlined='' type='error')
+              | Non ouvert au public
+            v-spacer
           else
-            v-alert.mt-8(dense='' outlined='' type='error')
-              .text-decoration-line-through
-              | PCR
-          v-spacer
-          if do_antigenic
+            v-spacer
+            if c_rdv_consultation_prevaccination
+              v-alert.mt-8(dense='' text='' type='success')
+                | RDV prevaccination 
+            else
+              v-alert.mt-8(dense='' outlined='' type='error')
+                .text-decoration-line-through
+                | RDV prevaccination
+            v-spacer
             v-alert.mt-8(dense='' text='' type='success')
-              | Antig&eacute;nique
-          else
-            v-alert.mt-8(dense='' outlined='' type='error')
-              .text-decoration-line-through
-                | Antig&eacute;nique
-          v-spacer
+              | Ouvert au public
+            v-spacer
         #exp
           v-expansion-panels(flat='' )
             v-expansion-panel(@click='scrollMoiStp' style='background-color:#F8F9F9;')
@@ -195,33 +192,24 @@ head
                 | Plus d&apos;informations
               v-expansion-panel-content(color="#CCECE3")
                 p.mt-1
-                if mod_prel != ""
-                  | #{mod_prel}
-                br
-                if public != ""
-                  | #{public}
-                br
-                if check_rdv != ""
-                  | #{check_rdv}
-                br
-                if tel_rdv && tel_rdv != ""
-                  | {{validTEL() ? "Contacter : " : ""}}
-                  | {{validTEL() ? numero : ""}}
+                if c_rdv_modalites 
+                  | #{c_rdv_modalites}
+                  br
+                if c_rdv
+                  | Sur rendez-vous 
+                else 
+                  | Aucun rendez-vous
+                if c_centre_type && c_centre_type != []
+                  | #{c_centre_type}
+                  br
+                v-divider
                 if c_rdv_tel && c_rdv_tel != ""
-                | {{validTEL() ? "Contacter : " : ""}}
-                | {{validTEL() ? numero : ""}}
+                  | {{validTEL() ? "Numéro de téléphone : " : "Numéro de téléphone: inconnu"}}
+                  | {{validTEL() ? numero : ""}}
                 br
-                if web_rdv && web_rdv != ""
-                  | {{validURL() ? "Site web : " : ""}}
-                  a(href='#{web_rdv}') {{validURL() ? "#{web_rdv}" : ""}}
                 if c_rdv_site_web && c_rdv_site_web != ""
-                  | {{validURL() ? "Site web : " : ""}}
+                  | {{validURL() ? "Site web : " : "Site web: inconnu"}}
                   a(href='#{web_rdv}') {{validURL() ? "#{c_rdv_site_web}" : ""}}
-
-
-
-
-
       v-card-actions.mt-2
         v-btn(color='orange lighten-2' v-if="items.length!=0 && show==false" text='' @click='partageExp')
           | Partager mon exp&eacute;rience
@@ -357,7 +345,6 @@ head
                                   v-list-item-action
                                     v-list-item-action-text
                                       v-rating(:value='item.note', color='amber', dense='', half-increments='', readonly='', size='14')
-
           v-card-actions
             v-row
               v-col
