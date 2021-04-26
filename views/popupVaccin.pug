@@ -201,15 +201,14 @@ head
                   | Aucun rendez-vous
                 if c_centre_type && c_centre_type != []
                   | #{c_centre_type}
-                  br
                 v-divider
                 if c_rdv_tel && c_rdv_tel != ""
-                  | {{validTEL() ? "Numéro de téléphone : " : "Numéro de téléphone: inconnu"}}
+                  | {{validTEL() ? "Numéro de téléphone : " : "Numéro de téléphone : inconnu"}}
                   | {{validTEL() ? numero : ""}}
                 br
                 if c_rdv_site_web && c_rdv_site_web != ""
-                  | {{validURL() ? "Site web : " : "Site web: inconnu"}}
-                  a(href='#{web_rdv}') {{validURL() ? "#{c_rdv_site_web}" : ""}}
+                  | {{validURL() ? "Site web : " : "Site web : inconnu"}}
+                  a(href='#{c_rdv_site_web}') {{validURL() ? "#{c_rdv_site_web}" : ""}}
       v-card-actions.mt-2
         v-btn(color='orange lighten-2' v-if="items.length!=0 && show==false" text='' @click='partageExp')
           | Partager mon exp&eacute;rience

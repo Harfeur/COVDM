@@ -203,23 +203,14 @@ head
                 br
                 if check_rdv != ""
                   | #{check_rdv}
-                br
+                v-divider
                 if tel_rdv && tel_rdv != ""
-                  | {{validTEL() ? "Contacter : " : ""}}
+                  | {{validTEL() ? "Numéro de téléphone : " : "Numéro de téléphone : inconnu"}}
                   | {{validTEL() ? numero : ""}}
-                if c_rdv_tel && c_rdv_tel != ""
-                | {{validTEL() ? "Contacter : " : ""}}
-                | {{validTEL() ? numero : ""}}
                 br
                 if web_rdv && web_rdv != ""
-                  | {{validURL() ? "Site web : " : ""}}
+                  | {{validURL() ? "Site web : " : "Site web : inconnu"}}
                   a(href='#{web_rdv}') {{validURL() ? "#{web_rdv}" : ""}}
-                if c_rdv_site_web && c_rdv_site_web != ""
-                  | {{validURL() ? "Site web : " : ""}}
-                  a(href='#{web_rdv}') {{validURL() ? "#{c_rdv_site_web}" : ""}}
-
-
-
 
 
       v-card-actions.mt-2
