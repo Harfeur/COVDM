@@ -14,22 +14,16 @@ module.exports = function (app, db, dirname) {
     });
 
     app.get('/batiment', (req, res) => {
-        if (isNaN(req.query.id))
-            db.collection('sites_prelevements').find({"_id": req.query.id}).toArray((error, documents) => {
-                if (error) res.status(500).send(error);
-                res.render('popup', documents[0]);
-            })
-        else
-            db.collection('sites_vaccinations').find({"_id": parseInt(req.query.id)}).toArray((error, documents) => {
-                if (error) res.status(500).send(error);
-                res.render('popup', documents[0]);
-            })
-    });
-
-    app.get('/mini_popup', (req, res) => {
         db.collection('sites_prelevements').find({"_id": req.query.id}).toArray((error, documents) => {
             if (error) res.status(500).send(error);
-            res.render('mini-popup', documents[0]);
+            res.render('popupPrelev', documents[0]);
+        })
+    });
+
+    app.get('/vaccin', (req, res) => {
+        db.collection('sites_vaccinations').find({"_id": req.query.id}).toArray((error, documents) => {
+            if (error) res.status(500).send(error);
+            res.render('popupVaccin', documents[0]);
         })
     });
 
