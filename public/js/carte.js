@@ -160,7 +160,6 @@ $.get("/regions").done(dataR => {
 
         //Affichage stat
         afficherStatPrelev(e.sourceTarget.feature.properties.code);
-        afficherStatVaccin(e.sourceTarget.feature.properties.code);
     }
 
     //ajout des events
@@ -180,7 +179,6 @@ $.get("/regions").done(dataR => {
     addRegion()
     //Afficher stat de toute la france
     afficherStatPrelev(statFrance);
-    afficherStatVaccin(statFrance);
 
     map.on('zoomend', function (e) {
         if (map.getZoom() < 7) {
@@ -191,7 +189,6 @@ $.get("/regions").done(dataR => {
             addRegion();
 
             afficherStatPrelev(statFrance);
-            afficherStatVaccin(statFrance);
             info.addTo(map);
             legend.addTo(map);
             $("#buttonGraph").parent().show();
@@ -419,7 +416,6 @@ function geoFindMe() {
                 map.addLayer(marker);
                 //Statistique
                 afficherStatPrelev(data[0].codeRegion);
-                afficherStatVaccin(data[0].codeRegion);
                 info.remove(map);
                 legend.remove(map);
             })
