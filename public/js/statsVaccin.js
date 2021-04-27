@@ -443,12 +443,18 @@ function afficherStatVaccin(id_region) {
                     //meilleure site par département pour une région donnée
                     for (const [key, value] of Object.entries(departement)) {
                         
+                        // console.log(nbContainer);
                         var id_Div = "chartContainerVaccin" + nbContainer
                         var div = '<div class="chartPlus"  id="' + id_Div + '"></div>'
                         nbContainer += 1
                         
-                        $("#"+depBestSite[key].name).append(div);
-                        //$(".chartPlus").hide();
+                        // console.log(id_Div);
+                        // console.log(div);
+
+                        $("#"+key).append(div);
+
+                        // console.log(document.getElementById(key));
+
                         var chart = new CanvasJS.Chart(id_Div, {
                             animationEnabled: true,
                             exportEnabled: true,

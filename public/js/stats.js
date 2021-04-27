@@ -468,10 +468,10 @@ function afficherStatPrelev(id_region) {
                         var div = '<div class="chartPlus"  id="' + id_Div + '"></div>'
                         nbContainer += 1
 
-                        var title = "<h3>"+depBestSite[key].name+"</h3><div id="+depBestSite[key].name+"></div>"
+                        var title = "<h3>"+depBestSite[key].name+"</h3><div id="+key+"></div>"
                         $(title).appendTo("#accordion");
 
-                        $("#"+depBestSite[key].name).append(div);
+                        $("#"+key).append(div);
 
 
                         var chart = new CanvasJS.Chart(id_Div, {
