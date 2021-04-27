@@ -12,9 +12,9 @@ function attenteMoyenneVaccin(id_region){
 
 
     // set the dimensions and margins of the graph
-    var margin = {top: 100, right: 100, bottom: 100, left: 100},
-    width = 450 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+    var margin = {top: 100, right: 100, bottom: 100, left: 150},
+    width = 800 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
     
 
     // append the svg object to the body of the page
@@ -111,7 +111,7 @@ function attenteMoyenneVaccin(id_region){
 
                 // Show the X scale
                 var x = d3.scaleLinear()
-                .domain([0,25])
+                .domain([0,60])
                 .range([0, width])
                 svg.append("g")
                 .attr("transform", "translate(0," + height + ")")
@@ -378,9 +378,6 @@ function afficherStatVaccin(id_region) {
                 }
 
 
-                //Chargement
-                $('body').addClass('loaded');
-
 
                 //affichage chart pie
                 if (!id_region && !id_departement) {
@@ -453,7 +450,7 @@ function afficherStatVaccin(id_region) {
 
                         $("#"+key).append(div);
 
-                        // console.log(document.getElementById(key));
+                        console.log(document.getElementById(key));
 
                         var chart = new CanvasJS.Chart(id_Div, {
                             animationEnabled: true,

@@ -7,9 +7,9 @@ let id_departement = urlParams.get('id_departement');
 function attenteMoyennePrelev(id_region){
 
     // set the dimensions and margins of the graph
-    var margin = {top: 100, right: 100, bottom: 100, left: 100},
-    width = 450 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+    var margin = {top: 100, right: 100, bottom: 100, left: 150},
+    width = 800 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
     
 
     // append the svg object to the body of the page
@@ -106,7 +106,7 @@ function attenteMoyennePrelev(id_region){
 
                 // Show the X scale
                 var x = d3.scaleLinear()
-                .domain([0,25])
+                .domain([0,60])
                 .range([0, width])
                 svg.append("g")
                 .attr("transform", "translate(0," + height + ")")
@@ -252,6 +252,9 @@ function afficherStatPrelev(id_region) {
     var unDepartement = {};
     var nbContainer = 3;
     $("#contentchartSupp").empty();
+
+    
+
     //Données
     $.get("/regions").done(dataR => {
 
@@ -372,9 +375,14 @@ function afficherStatPrelev(id_region) {
                     nbSiteDep.push(value)
                 }
 
+                $("#contentchartSupp").append("<div id='accordion'></div>");
 
-                //Chargement
-                $('body').addClass('loaded');
+                $( function() {
+                    $( "#accordion" ).accordion({
+                    //   heightStyle: "content",
+                      collapsible: true
+                    });
+                  } );
 
 
                 //affichage chart pie
@@ -404,14 +412,7 @@ function afficherStatPrelev(id_region) {
 
                     chart.render();
                     
-                    $("#contentchartSupp").append("<div id='accordion'></div>");
-
-                    $( function() {
-                        $( "#accordion" ).accordion({
-                          heightStyle: "content",
-                          collapsible: true
-                        });
-                      } );
+               
 
                     //Graphique temps attente
                     var divAttenteMoyenne = '<h3>Dans toute la France</h3><div><div id="my_dataviz"></div><div id="my_datavizVaccin"></div></div>'                      
@@ -447,14 +448,7 @@ function afficherStatPrelev(id_region) {
 
 
                     
-                    $("#contentchartSupp").append("<div id='accordion'></div>");
-
-                    $( function() {
-                        $( "#accordion" ).accordion({
-                          heightStyle: "content",
-                          collapsible: true
-                        });
-                      } );
+                   
 
                     //Appel graphique temps d'attente
                     var divAttenteMoyenne = '<h3>Dans toute la région</h3><div><div id="my_dataviz"></div><div id="my_datavizVaccin"></div></div>'

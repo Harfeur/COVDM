@@ -330,6 +330,6 @@ iframe {
   height: 300px;
   width: 45%;
   display: inline-block;
-  /* margin: 5%; */
-  padding: 5%;
+  margin: 5%;
+  /* padding: 5%; */
 }
