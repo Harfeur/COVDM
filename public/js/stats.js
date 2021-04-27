@@ -1,6 +1,5 @@
 const urlParams = new URLSearchParams(window.location.search);
 let id_region = urlParams.get('id_region');
-let id_departement = urlParams.get('id_departement');
 
 //-------------------------------------------------------- Région ----------------------------------------------------------------------------------------
 
@@ -249,7 +248,6 @@ function afficherStatPrelev(id_region) {
     var totalSite = 0;
     var meilleureSite = [];
     var depBestSite = {};
-    var unDepartement = {};
     var nbContainer = 3;
     $("#contentchartSupp").empty();
 
@@ -273,8 +271,7 @@ function afficherStatPrelev(id_region) {
 
         //-------------------------------------------------------- Site Prélevement-----------------------------------------------------------
         $.get("/departements", {
-            id_region: id_region,
-            id_departement: id_departement
+            id_region: id_region
         }).done(dataD => {
             dataD.forEach(oel => {
                 //departement : regroupe le nombre de sites pour chaque departement
@@ -289,14 +286,6 @@ function afficherStatPrelev(id_region) {
                 depBestSite[oel.properties.code] = {
                     "name": oel.properties.nom,
                     "bestSite": []
-                }
-                if (id_departement && id_departement == oel.properties.code) {
-                    unDepartement[id_departement] = {
-                        "name": oel.properties.nom,
-                        "bestSite": [],
-                        "nbSite": 0,
-                        "exploded": true
-                    }
                 }
             })
 
@@ -337,29 +326,6 @@ function afficherStatPrelev(id_region) {
                         }
                     }
 
-                    if (id_departement) {
-                        if (unDepartement[obj.adresse.codeDepartement] != null) {
-                            unDepartement[obj.adresse.codeDepartement].nbSite += 1
-                            //meilleure site
-                            if (obj.avis.length != 0) {
-                                var nbA = 0
-                                obj.avis.forEach(a => {
-                                    nbA += a.note
-                                })
-                                var totalA = nbA / obj.avis.length
-                                var siteAvis = {
-                                    "y": totalA, //moyenne
-                                    "label": obj.rs,
-                                    "ville": obj.adresse.ville
-                                }
-
-                                unDepartement[obj.adresse.codeDepartement].bestSite.push(siteAvis)
-                            }
-                        }
-                    }
-
-
-
                 });
 
 
@@ -386,7 +352,7 @@ function afficherStatPrelev(id_region) {
 
 
                 //affichage chart pie
-                if (!id_region && !id_departement) {
+                if (!id_region) {
                     //nb site par region 
                     $('#chartContainer1').show();
                     $('#chartContainer2').hide();
@@ -418,9 +384,7 @@ function afficherStatPrelev(id_region) {
                     var divAttenteMoyenne = '<h3>Dans toute la France</h3><div><div id="my_dataviz"></div><div id="my_datavizVaccin"></div></div>'                      
                     $(divAttenteMoyenne).appendTo("#accordion");
                     attenteMoyennePrelev();
-
-                } else if (id_departement) {
-                    console.log(unDepartement);
+                
                 } else {
                     //nb site par département pour une région donnée
                     $("#chartContainer2").show();
