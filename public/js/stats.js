@@ -645,7 +645,8 @@ function afficherStatPrelev(id_region) {
                     $( function() {
                         $( "#accordion" ).accordion({
                         heightStyle: "content",
-                        collapsible: true
+                        collapsible: true,
+                        active: false
                         });
                     } );
 
@@ -769,7 +770,9 @@ function afficherStatPrelev(id_region) {
 
                         //meilleure site par département pour une région donnée
                         for (const [key, value] of Object.entries(departementPrelevement)) {
-                            console.log("affiche paaaaaaaaaaaaas");
+
+                            console.log("Calcul des graphiques en cours");
+
                             var id_DivP = "chartContainer" + nbContainer
                             var divP = '<div class="chartPlus"  id="' + id_DivP + '"></div>'
 
@@ -842,6 +845,7 @@ function afficherStatPrelev(id_region) {
     
                             chart.render();
                         }
+                        console.log("Calcul des graphiques fini");
                     }
 
                 });
