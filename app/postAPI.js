@@ -136,4 +136,34 @@ module.exports = function (app, db, dirname, data) {
         }
 
     });
+
+    app.post('/majURL', (req, res) => {
+        if (req.body.id) {
+            console.log(`Mise à jour dans la base pour le lieu ${req.body.id} : nouvel url : ${req.body.url}`);
+            if (isNaN(req.body.id)) {
+                const filter = {"_id": req.body.id};
+                let update = {$set: {"web_rdv": req.body.url}};
+                db.collection('sites_prelevements').updateOne(filter, update).then(() => {
+                    res.send("Ok");
+                    data.resetSites();
+                }).catch(err => {
+                    res.status(500);
+                    console.error(err);
+                })
+            } else {
+                const filter = {"_id": req.body.id};
+                let update = {$set: {"web_rdv": req.body.url}};
+                db.collection('sites_vaccinations').updateOne(filter, update).then(() => {
+                    res.send("Ok");
+                    data.resetSites();
+                }).catch(err => {
+                    res.status(500);
+                    console.error(err);
+                })
+            }
+            
+        } else {
+            res.status(500);
+        }
+    });
 }

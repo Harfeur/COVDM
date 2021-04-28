@@ -142,7 +142,19 @@ window.addEventListener("DOMContentLoaded", (event) => {
             changementURL(){
                 var base=this.urlBat;
                 this.urlBat=this.urlC;
-                if(!this.validURL()){
+                if(this.validURL()){
+                    fetch('/majURL', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            id:this.id,
+                            url:this.urlBat
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                }
+                else{
                     this.urlBat=base
                 }
                 this.changeUrl=false;
