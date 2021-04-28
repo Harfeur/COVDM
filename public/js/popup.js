@@ -134,7 +134,19 @@ window.addEventListener("DOMContentLoaded", (event) => {
             changementTEL(){
                 var base=this.numero;
                 this.numero=this.numeroC;
-                if(!this.validTEL()){
+                if(this.validTEL()){
+                    fetch('/majTEL', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            id:this.id,
+                            tel:this.numero
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                }
+                else{
                     this.numero=base
                 }
                 this.changeTel=false;

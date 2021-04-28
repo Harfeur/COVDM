@@ -152,7 +152,37 @@ module.exports = function (app, db, dirname, data) {
                 })
             } else {
                 const filter = {"_id": req.body.id};
-                let update = {$set: {"web_rdv": req.body.url}};
+                let update = {$set: {"c_rdv_site_web": req.body.url}};
+                db.collection('sites_vaccinations').updateOne(filter, update).then(() => {
+                    res.send("Ok");
+                    data.resetSites();
+                }).catch(err => {
+                    res.status(500);
+                    console.error(err);
+                })
+            }
+            
+        } else {
+            res.status(500);
+        }
+    });
+
+    app.post('/majTEL', (req, res) => {
+        if (req.body.id) {
+            console.log(`Mise à jour dans la base pour le lieu ${req.body.id} : nouveau tel : ${req.body.tel}`);
+            if (isNaN(req.body.id)) {
+                const filter = {"_id": req.body.id};
+                let update = {$set: {"tel_rdv": req.body.tel}};
+                db.collection('sites_prelevements').updateOne(filter, update).then(() => {
+                    res.send("Ok");
+                    data.resetSites();
+                }).catch(err => {
+                    res.status(500);
+                    console.error(err);
+                })
+            } else {
+                const filter = {"_id": req.body.id};
+                let update = {$set: {"c_rdv_tel": req.body.tel}};
                 db.collection('sites_vaccinations').updateOne(filter, update).then(() => {
                     res.send("Ok");
                     data.resetSites();

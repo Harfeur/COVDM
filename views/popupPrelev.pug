@@ -204,33 +204,31 @@ head
                 if check_rdv != ""
                   | #{check_rdv}
                 v-divider
-                if tel_rdv && tel_rdv != ""
-                  v-row.mt-1.ml-1
-                    div(v-show='!changeTel')
-                      | {{validTEL() ? "Numéro de téléphone : " : "Numéro de téléphone : "}}
-                      v-tooltip(bottom='')
-                        template(v-slot:activator='{ on, attrs }')
-                          span(v-bind="attrs" v-on="on" @click='changeTel=true;')
-                            | {{validTEL() ? numero : "inconnu"}}
-                        span Cliquez pour modifier
-                    div(v-show='changeTel')
-                      v-row.mt-1.ml-1
-                        v-text-field(v-model='numeroC' :counter='10' label='Numéro de téléphone')
-                        v-btn.mt-4.ml-6(@click="changementTEL" small='') Mettre à jour
+                v-row.mt-1.ml-1
+                  div(v-show='!changeTel')
+                    | {{validTEL() ? "Numéro de téléphone : " : "Numéro de téléphone : "}}
+                    v-tooltip(bottom='')
+                      template(v-slot:activator='{ on, attrs }')
+                        span(v-bind="attrs" v-on="on" @click='changeTel=true;')
+                          | {{validTEL() ? numero : "inconnu"}}
+                      span Cliquez pour modifier
+                  div(v-show='changeTel')
+                    v-row.mt-1.ml-1
+                      v-text-field(v-model='numeroC' :counter='10' label='Numéro de téléphone')
+                      v-btn.mt-4.ml-6(@click="changementTEL" small='') Mettre à jour
                 br
-                if web_rdv && web_rdv != ""
-                  v-row.mt-1.ml-1
-                    div(v-show='!changeUrl')
-                      | {{validURL() ? "Site web : " : "Site web : "}}
-                      v-tooltip(bottom='')
-                        template(v-slot:activator='{ on, attrs }')
-                          span(v-bind="attrs" v-on="on" @click='changeUrl=true;')
-                            | {{validURL() ? urlBat : "inconnu"}}
-                        span Cliquez pour modifier
-                    div(v-show='changeUrl')
-                      v-row.mt-1.ml-1
-                        v-text-field(v-model='urlC'  label='Lien URL')
-                        v-btn.mt-4.ml-6(@click="changementURL" small='') Mettre à jour
+                v-row.mt-1.ml-1
+                  div(v-show='!changeUrl')
+                    | {{validURL() ? "Site web : " : "Site web : "}}
+                    v-tooltip(bottom='')
+                      template(v-slot:activator='{ on, attrs }')
+                        span(v-bind="attrs" v-on="on" @click='changeUrl=true;')
+                          | {{validURL() ? urlBat : "inconnu"}}
+                      span Cliquez pour modifier
+                  div(v-show='changeUrl')
+                    v-row.mt-1.ml-1
+                      v-text-field(v-model='urlC'  label='Lien URL')
+                      v-btn.mt-4.ml-6(@click="changementURL" small='') Mettre à jour
 
 
       v-card-actions.mt-2
