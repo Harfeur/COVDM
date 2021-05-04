@@ -31,6 +31,12 @@ var iconVacc = L.icon({
     popupAnchor: [0, -5],
 });
 
+var iconDouble = L.icon({
+    iconUrl: '/images/localisation2.png',
+    iconSize: [38, 40],
+    popupAnchor: [0, -5],
+});
+
 var pcr = "";
 var ag = "";
 var ho = "";
@@ -242,6 +248,8 @@ $.get("/regions").done(dataR => {
                     break;
             }
 
+            let doubles = [];
+
             dataP.forEach(obj => {
 
                 if (obj.do_prel) {
@@ -259,40 +267,57 @@ $.get("/regions").done(dataR => {
                     cHo = true;
                 }
 
-                // Solution : base
-                var popup = ""
-                //si c'est fermé ou ouvert
-                if (cHo) {
-                    if (obj.rs.indexOf('-') != -1) var tab = obj.rs.split('-');
-                    else var tab = obj.rs.split(obj.adresse.ville);
-                    popup = '<table > ' +
-                        '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>' +
-                        '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
-                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id,true)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
-                        '<tr> <td  colspan="2"> <p class="horaire-o" > Actuellement' + ho + '</p> </td> </tr> </table>';
-
-                } else {
-                    if (obj.rs.indexOf('-') != -1) var tab = obj.rs.split('-');
-                    else var tab = obj.rs.split(obj.adresse.ville);
-                    popup = '<table > ' +
-                        '<thead> <tr> <th colspan="2"> <p class="adresse_popup">' + obj.adresse.adresse + ', ' + obj.adresse.ville + '</p> </th> </tr> </thead>' +
-                        '<tbody> <tr> <td> <p class="rs_popup">' + tab[0] + '</p> </td>' +
-                        '<td> <button  class="custom-btn btn-12" id="' + obj._id + '" onclick=maFonction(this.id,true)><span>Clique !</span><span>En savoir + </span></button></td></tr>' +
-                        '<tr> <td  colspan="2"> <p class="horaire-f" > Actuellement' + ho + '</p> </td> </tr> </table>';
+                let double = null;
+                for (let i = 0; i < dataV.length; i++) {
+                    let obj2 = dataV[i];
+                    if (obj2.latitude - 0.0001 <= obj.latitude && obj.latitude <= obj2.latitude + 0.0001
+                        && obj2.longitude - 0.0001 <= obj.longitude && obj.longitude <= obj2.longitude + 0.0001) {
+                        double = obj2;
+                        doubles.push(obj2._id);
+                        break;
+                    }
                 }
 
-                //Création du marker et de son groupe
-                var mSP = L.marker([obj.latitude, obj.longitude], {
-                    icon: iconPrev
-                });
-                mSP.bindPopup(popup);
+                if (double) {
+                    // Popup
+                    if (obj.rs.indexOf('-') != -1) var tab = obj.rs.split('-');
+                    else var tab = obj.rs.split(obj.adresse.ville);
+                    let popup = `<table>
+                    <thead> <tr> <th colspan="2"> <p class="adresse_popup">${obj.adresse.adresse}, ${obj.adresse.ville}</p> </th> </tr> </thead>
+                    <tbody> <tr> <td> <p class="rs_popup">${tab[0]}</p> </td>
+                    <td> <button  class="custom-btn btn-12" id="${obj._id}" onclick=maFonction(this.id,true)><span>Clique !</span><span>Site prélevement</span></button>
+                    <button  class="custom-btn btn-12" id="${double._id}" onclick=maFonction(this.id,false)><span>Clique !</span><span>Site vaccination</span></button></td></tr>
+                    <tr> <td  colspan="2"> <p class="${cHo ? "horaire-o" : "horaire-f"}" > Actuellement${ho}</p> </td> </tr> </table>`;
 
+                    //Création du marker et de son groupe
+                    let mS2 = L.marker([obj.latitude, obj.longitude], {
+                        icon: iconDouble
+                    });
+                    mS2.bindPopup(popup);
+                    (cluster[obj.adresse.codeRegion].markerCG).addLayer(mS2);
+                } else {
+                    // Popup
+                    if (obj.rs.indexOf('-') != -1) var tab = obj.rs.split('-');
+                    else var tab = obj.rs.split(obj.adresse.ville);
+                    let popup = `<table>
+                    <thead> <tr> <th colspan="2"> <p class="adresse_popup">${obj.adresse.adresse}, ${obj.adresse.ville}</p> </th> </tr> </thead>
+                    <tbody> <tr> <td> <p class="rs_popup">${tab[0]}</p> </td>
+                    <td> <button  class="custom-btn btn-12" id="${obj._id}" onclick=maFonction(this.id,true)><span>Clique !</span><span>En savoir + </span></button></td></tr>
+                    <tr> <td  colspan="2"> <p class="${cHo ? "horaire-o" : "horaire-f"}" > Actuellement${ho}</p> </td> </tr> </table>`;
 
-                (cluster[obj.adresse.codeRegion].markerCG).addLayer(mSP)
+                    //Création du marker et de son groupe
+                    var mSP = L.marker([obj.latitude, obj.longitude], {
+                        icon: iconPrev
+                    });
+                    mSP.bindPopup(popup);
+                    (cluster[obj.adresse.codeRegion].markerCG).addLayer(mSP)
+                }
+
 
             });
 
             dataV.forEach(obj => {
+                if (doubles.includes(obj._id)) return;
 
                 if (obj.horaires[jour].length == 0 || obj.horaires[jour][0] == null || date.getHours() < obj.horaires[jour][0] || date.getHours() > obj.horaires[jour][1]) {
                     ho = " fermé";
@@ -344,7 +369,7 @@ $.get("/regions").done(dataR => {
 
 let popupOpen = false;
 
-function maFonction(e,b) {
+function maFonction(e, b) {
     if (b) {
         //prelevement
         var i = "<iframe width='550' height='550' src='./batiment?id=" + e + "'></iframe>";
