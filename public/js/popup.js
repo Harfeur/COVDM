@@ -39,6 +39,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
         num=""
     }
 
+    
+    var deta = new Date()
+
     new Vue({
         el: '#app',
         vuetify: new Vuetify(),
@@ -89,7 +92,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             alerte: false,
             alerte2: false,
             alerte3: false,
-            placement: 0,
+            placement: deta.getDay()-1,
             heureO: 1,
             heureF: 1,
             der: null,
