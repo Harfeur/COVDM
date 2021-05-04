@@ -187,7 +187,7 @@ $.get("/regions").done(dataR => {
     afficherStatPrelev(statFrance);
 
     map.on('zoomend', function (e) {
-        if (map.getZoom() <= 7 && map.getZoom() > 6) {
+        if (map.getZoom() < 7 && map.getZoom() > 5) {
             for (const [key, value] of Object.entries(cluster)) {
                 value.markerCG.remove();
             }
@@ -195,7 +195,7 @@ $.get("/regions").done(dataR => {
             addRegion();
 
             afficherStatPrelev(statFrance);
-            console.log("zoooommmmm");
+            //console.log("zoooommmmm");
             info.addTo(map);
             legend.addTo(map);
             $("#buttonGraph").parent().show();
