@@ -17,7 +17,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     var tabCom = [];
     avis.forEach(function (e) {
-        if (e.message != "") {
+        if (e.message != null && e.message !="") {
             tabCom.push({
                 "nom": e.nom,
                 "email": e.email,
@@ -281,7 +281,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         'Content-Type': 'application/json'
                     }
                 })
-                if (this.com != "") {
+                if (this.com != null && this.com != "") {
                     this.items.push({
                         "nom": this.prenom + ' ' + this.nom,
                         "email": this.email,
@@ -358,13 +358,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         this.pb1 = true;
                         this.sheet = true;
                     }
-
+                    this.dialog1=false;
                 }
             },
             modifHoraireFermeture() {
                 if (horaire[(this.jour[this.placement].title).toLowerCase()].length != 0) {
                     var heureFermeture = this.getStringToHoraire(this.changeF);
-                    console.log(heureFermeture > horaire[(this.jour[this.placement].title).toLowerCase()][0])
                     if (heureFermeture > horaire[(this.jour[this.placement].title).toLowerCase()][0]) {
                         fetch('/majHoraire', {
                             method: 'POST',
@@ -384,6 +383,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                         this.pb1 = false;
                         this.sheet = true;
                     }
+                    this.dialog2=false;
 
                 }
             },

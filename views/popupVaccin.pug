@@ -235,7 +235,7 @@ head
                             | mdi-pencil
                       span Cliquez pour modifier
                     | {{ validURL() ? "Site web :" : "Site web : inconnu" }} 
-                    a(:href='urlBat') {{ validURL() ? bat : "" }}
+                    a(:href='urlBat' target="_blank") {{ validURL() ? bat : "" }}
                   div(v-show='changeUrl')
                     v-row.mt-1.ml-1
                       v-text-field(v-model='urlBat'  label='Lien URL')
