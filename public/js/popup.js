@@ -72,6 +72,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             dialog1: false,
             dialog2: false,
             sheet: false,
+            sheet1: false,
             clock: true,
             com: null,
             prenom: "",
@@ -97,9 +98,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
             tabGif: [["https://giphy.com/embed/6tHy8UAbv3zgs", "https://giphy.com/gifs/thank-you-spongebob-squarepants-6tHy8UAbv3zgs"], ["https://giphy.com/embed/14tCeoSGpXCWrQvixk", "https://giphy.com/gifs/true-and-the-rainbow-kingdom-funny-netflix-14tCeoSGpXCWrQvixk"], ['https://giphy.com/embed/xIJLgO6rizUJi', 'https://giphy.com/gifs/alice-in-wonderland-thank-you-xIJLgO6rizUJi'], ["https://giphy.com/embed/xUA7aN1MTCZx97V1Ic", "https://giphy.com/gifs/iliza-iliza-shlesinger-xUA7aN1MTCZx97V1Ic"], ["https://giphy.com/embed/3oz8xIsloV7zOmt81G", "https://giphy.com/gifs/arg-thank-you-cat-3oz8xIsloV7zOmt81G"]],
             gif: 0,
             numero: num,
-            numeroC:"",
+            base:"",
             urlBat: web,
-            urlC:"",
+            bat :"",
+            baseU:"",
             changeTel:false,
             changeUrl:false,
         }),
@@ -113,27 +115,30 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     '(\\?[;&a-z\\d%_.~+=-]*)?' + 
                     '(\\#[-a-z\\d_]*)?$', 'i'); 
                 this.urlBat=str
+                if(this.urlBat.length>50){
+                    this.bat=this.urlBat.substr(0,50)+"..."
+                }
+                else{
+                    this.bat=this.urlBat
+                }
                 return !!pattern.test(str);
             },
             validTEL() {
-                var regex = new RegExp(/^(0|\+33)[0-9]{9}/gi);
+                var regex = new RegExp(/^0[0-9]{9}/);
                 if (regex.test(this.numero)) {
                     return (true);
                 }
-                var regex = new RegExp(/^[0-9]{9}/gi);
-                if (regex.test(this.numero)) {
-                    this.numero = "0" + this.numero;
-                    return (true);
-                }
-                var regex = new RegExp(/^\+33[0-9]{9}/gi);
+                var regex = new RegExp(/^\+33[0-9]{9}/);
                 if (regex.test(this.numero)) {
                     return (true);
                 }
                 return (false);
             },
+            changeTelephone(){
+                this.base=this.numero;
+                this.changeTel=true;
+            },
             changementTEL(){
-                var base=this.numero;
-                this.numero=this.numeroC;
                 if(this.validTEL()){
                     fetch('/majTEL', {
                         method: 'POST',
@@ -147,13 +152,15 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     })
                 }
                 else{
-                    this.numero=base
+                    this.numero=this.base
                 }
                 this.changeTel=false;
             },
+            changeLienUrl(){
+                this.baseU=this.urlBat
+                this.changeUrl=true;
+            },
             changementURL(){
-                var base=this.urlBat;
-                this.urlBat=this.urlC;
                 if(this.validURL()){
                     fetch('/majURL', {
                         method: 'POST',
@@ -165,9 +172,16 @@ window.addEventListener("DOMContentLoaded", (event) => {
                             'Content-Type': 'application/json'
                         }
                     })
+                    if(this.urlBat.length>50){
+                        this.bat=this.urlBat.substr(0,50)+"..."
+                    }
+                    else{
+                        this.bat=this.urlBat
+                    }
+                    
                 }
                 else{
-                    this.urlBat=base
+                    this.urlBat=this.baseU
                 }
                 this.changeUrl=false;
             },
@@ -182,7 +196,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 return true;
             },
             ouvreCom() {
-
                 var expansion = document.getElementById('exp');
                 var nbVote = ((deroulement.oui) + (deroulement.non));
                 this.oui = Math.round((deroulement.oui * 100) / nbVote);
@@ -373,22 +386,28 @@ window.addEventListener("DOMContentLoaded", (event) => {
             modifHoraire() {
                 var heureOuverture = this.getStringToHoraire(this.changeO);
                 var heureFermeture = this.getStringToHoraire(this.changeF);
-                fetch('/majHoraire', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        id: this.id,
-                        jour: (this.jour[this.placement].title).toLowerCase(),
-                        heureO: heureOuverture,
-                        heureF: heureFermeture
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                this.time[(this.jour[this.placement].title).toLowerCase()][1] = heureFermeture;
-                this.time[(this.jour[this.placement].title).toLowerCase()][0] = heureOuverture;
-                this.majHoraire();
-                this.nouvelHeure = false;
+
+                if(heureOuverture < heureFermeture){
+                    fetch('/majHoraire', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            id: this.id,
+                            jour: (this.jour[this.placement].title).toLowerCase(),
+                            heureO: heureOuverture,
+                            heureF: heureFermeture
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    this.time[(this.jour[this.placement].title).toLowerCase()][1] = heureFermeture;
+                    this.time[(this.jour[this.placement].title).toLowerCase()][0] = heureOuverture;
+                    this.majHoraire();
+                    this.nouvelHeure = false;
+                }
+                else {
+                    this.sheet1=true;
+                }
             }
         },
 

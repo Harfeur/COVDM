@@ -166,6 +166,15 @@ head
                               v-spacer
                               v-btn(color='primary' text='' @click='modifHoraire')
                                 | Modifier
+          template
+            .text-center
+              v-bottom-sheet(v-model='sheet1' inset='')
+                v-sheet.text-center(height='200px')
+                  v-btn.mt-6(text='' color='error' @click='sheet1 = !sheet1; nouvelHeure=false')
+                    | Fermer
+                  .my-3
+                    | Il est impossible que l'heure d'ouverture soit plus tard que l'heure de fermeture. Réessayez.
+
         v-row
           if c_reserve_professionels_sante
             v-spacer
@@ -202,30 +211,34 @@ head
                 if c_centre_type && c_centre_type != []
                   | #{c_centre_type}
                 v-divider
-                v-row.mt-1.ml-1
+                v-row.mt-2
                   div(v-show='!changeTel')
-                    | {{validTEL() ? "Numéro de téléphone : " : "Numéro de téléphone : "}}
                     v-tooltip(bottom='')
                       template(v-slot:activator='{ on, attrs }')
-                        span(v-bind="attrs" v-on="on" @click='changeTel=true;')
-                          | {{validTEL() ? numero : "inconnu"}}
+                        v-btn.mr-1(color="#A849F6" elevation="1" @click="changeTelephone" icon small)
+                          v-icon(dark='' v-bind="attrs" v-on="on")
+                            | mdi-pencil
                       span Cliquez pour modifier
+                    | Numéro de téléphone :
+                    | {{validTEL() ? numero : "inconnu"}}
                   div(v-show='changeTel')
                     v-row.mt-1.ml-1
-                      v-text-field(v-model='numeroC' :counter='10' label='Numéro de téléphone')
+                      v-text-field(v-model='numero' label='Numéro de téléphone')
                       v-btn.mt-4.ml-6(@click="changementTEL" small='') Mettre à jour
                 br
-                v-row.mt-1.ml-1
+                v-row
                   div(v-show='!changeUrl')
-                    | {{validURL() ? "Site web : " : "Site web : "}}
                     v-tooltip(bottom='')
                       template(v-slot:activator='{ on, attrs }')
-                        span(v-bind="attrs" v-on="on" @click='changeUrl=true;')
-                          | {{validURL() ? urlBat : "inconnu"}}
+                        v-btn.mr-1(color="#F65949" elevation="1" @click="changeLienUrl" icon small)
+                          v-icon(dark='' v-bind="attrs" v-on="on")
+                            | mdi-pencil
                       span Cliquez pour modifier
+                    | {{ validURL() ? "Site web :" : "Site web : inconnu" }} 
+                    a(:href='urlBat') {{ validURL() ? bat : "" }}
                   div(v-show='changeUrl')
                     v-row.mt-1.ml-1
-                      v-text-field(v-model='urlC'  label='Lien URL')
+                      v-text-field(v-model='urlBat'  label='Lien URL')
                       v-btn.mt-4.ml-6(@click="changementURL" small='') Mettre à jour
 
       v-card-actions.mt-2
