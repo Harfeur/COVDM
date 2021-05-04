@@ -347,12 +347,12 @@ let popupOpen = false;
 function maFonction(e,b) {
     if (b) {
         //prelevement
-        var i = "<iframe width='550' height='550' src='./batiment?id=" + e + "'></iframe>" + "<a href=\"#\" onclick=\"hide(this.id)\">Ok!</a>";
+        var i = "<iframe width='550' height='550' src='./batiment?id=" + e + "'></iframe>";
         //$( "#popup" ).dialog({with:800,maxHeight:1000});
         $("#popup").html(i).css('display', 'block');
     } else {
         //vaccin
-        var i = "<iframe width='550' height='550' src='./vaccin?id=" + e + "'></iframe>" + "<a href=\"#\" onclick=\"hide(this.id)\">Ok!</a>";
+        var i = "<iframe width='550' height='550' src='./vaccin?id=" + e + "'></iframe>";
         //$( "#popup" ).dialog({with:800,maxHeight:1000});
         $("#popup").html(i).css('display', 'block');
     }
