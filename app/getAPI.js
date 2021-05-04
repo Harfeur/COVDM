@@ -2,6 +2,7 @@ const {Application} = require('express');
 const {Db} = require('mongodb');
 const fs = require('fs');
 const request = require('request');
+const fetch = require('node-fetch');
 
 // Télécharge une image depuis internet
 function download(uri, filename, callback) {
@@ -99,18 +100,42 @@ module.exports = function (app, db, dirname, data) {
                     db.collection('sites_prelevements').find({"_id": req.query.id}).toArray((error, documents) => {
                         if (error) res.status(500).send(error);
                         console.log(`Téléchargement d'une image depuis Google Street pour le lieu ${req.query.id}`)
-                        download(`https://maps.googleapis.com/maps/api/streetview?size=390x200&location=${documents[0].latitude},${documents[0].longitude}&key=${process.env.STREET_VIEW}`,
-                            urlLocale, () => {
-                                res.sendFile(urlLocale);
+                        fetch(`https://maps.googleapis.com/maps/api/streetview/metadata?location=${documents[0].latitude},${documents[0].longitude}&key=${process.env.STREET_VIEW}`)
+                            .then(data => data.json())
+                            .then(r => {
+                                if (r.status == "ZERO_RESULTS") {
+                                    res.sendFile(dirname + '/public/images/default.png');
+                                } else {
+                                    download(`https://maps.googleapis.com/maps/api/streetview?size=390x200&pano=${r.pano_id}&key=${process.env.STREET_VIEW}`,
+                                        urlLocale, () => {
+                                            res.sendFile(urlLocale);
+                                        });
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                res.status(500);
                             });
                     });
                 } else {
                     db.collection('sites_vaccinations').find({"_id": parseInt(req.query.id)}).toArray((error, documents) => {
                         if (error) res.status(500).send(error);
                         console.log(`Téléchargement d'une image depuis Google Street pour le lieu ${req.query.id}`)
-                        download(`https://maps.googleapis.com/maps/api/streetview?size=390x200&location=${documents[0].latitude},${documents[0].longitude}&key=${process.env.STREET_VIEW}`,
-                            urlLocale, () => {
-                                res.sendFile(urlLocale);
+                        fetch(`https://maps.googleapis.com/maps/api/streetview/metadata?location=${documents[0].latitude},${documents[0].longitude}&key=${process.env.STREET_VIEW}`)
+                            .then(data => data.json())
+                            .then(r => {
+                                if (r.status == "ZERO_RESULTS") {
+                                    res.sendFile(dirname + '/public/images/default.png');
+                                } else {
+                                    download(`https://maps.googleapis.com/maps/api/streetview?size=390x200&pano=${r.pano_id}&key=${process.env.STREET_VIEW}`,
+                                        urlLocale, () => {
+                                            res.sendFile(urlLocale);
+                                        });
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                res.status(500);
                             });
                     });
                 }
