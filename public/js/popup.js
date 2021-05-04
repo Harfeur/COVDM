@@ -31,6 +31,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
     else var tab = nomBat.split(addrVille);
     var titreBat = tab[0];
 
+    if(web==null){
+        web=""
+    }
+
+    if(num==null){
+        num=""
+    }
+
     new Vue({
         el: '#app',
         vuetify: new Vuetify(),
@@ -124,15 +132,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 return !!pattern.test(str);
             },
             validTEL() {
-                var regex = new RegExp(/^0[0-9]{9}/);
-                if (regex.test(this.numero)) {
-                    return (true);
-                }
-                var regex = new RegExp(/^\+33[0-9]{9}/);
-                if (regex.test(this.numero)) {
-                    return (true);
-                }
-                return (false);
+                var regex = new RegExp(/^(\+33|0)[0-9]{9}/);
+                return regex.test(this.numero)
             },
             changeTelephone(){
                 this.base=this.numero;
