@@ -72,7 +72,7 @@ $.get("/regions").done(dataR => {
     const options = {year: 'numeric', month: 'long', day: 'numeric'};
     // method that we will use to update the control based on feature properties passed
     info.update = function (props) {
-        this._div.innerHTML = `<h4> Nombre de test réalisé jusqu'au ${lastUpdate.toLocaleDateString('fr-FR', options)}</h4>`;
+        this._div.innerHTML = `<h4> Nombre de test réalisé le ${lastUpdate.toLocaleDateString('fr-FR', options)}</h4>`;
     };
 
     info.addTo(map);
@@ -80,7 +80,7 @@ $.get("/regions").done(dataR => {
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-            grades = [0, 1000, 10000, 20000, 30000, 40000, 50000, 100000],
+            grades = [0, 100, 1000, 2000, 3000, 4000, 5000, 10000],
             labels = [];
 
         // loop through our density intervals and generate a label with a colored square for each interval
@@ -97,13 +97,13 @@ $.get("/regions").done(dataR => {
 
     //Couleur
     function getColor(d) {
-        return d > 100000 ? '#800026' :
-            d > 50000 ? '#BD0026' :
-                d > 40000 ? '#E31A1C' :
-                    d > 30000 ? '#FC4E2A' :
-                        d > 20000 ? '#FD8D3C' :
-                            d > 10000 ? '#FEB24C' :
-                                d > 1000 ? '#FED976' :
+        return d > 10000 ? '#800026' :
+            d > 5000 ? '#BD0026' :
+                d > 4000 ? '#E31A1C' :
+                    d > 3000 ? '#FC4E2A' :
+                        d > 2000 ? '#FD8D3C' :
+                            d > 1000 ? '#FEB24C' :
+                                d > 100 ? '#FED976' :
                                     '#FFEDA0';
     }
 
@@ -280,6 +280,16 @@ $.get("/regions").done(dataR => {
                 }
 
                 if (double) {
+                    //horaire vaccination
+                    var hoV ;
+                    var cHoV
+                    if (double.horaires[jour].length == 0 || double.horaires[jour][0] == null || date.getHours() < double.horaires[jour][0] || date.getHours() > double.horaires[jour][1]) {
+                        hoV = " fermé";
+                        cHoV = false;
+                    } else {
+                        hoV = " ouvert";
+                        cHoV = true;
+                    }
                     // Popup
                     if (obj.rs.indexOf('-') != -1) var tab = obj.rs.split('-');
                     else var tab = obj.rs.split(obj.adresse.ville);
@@ -288,7 +298,8 @@ $.get("/regions").done(dataR => {
                     <tbody> <tr> <td> <p class="rs_popup">${tab[0]}</p> </td>
                     <td> <button  class="custom-btn btn-12" id="${obj._id}" onclick=maFonction(this.id,true)><span>Clique !</span><span>Site prélevement</span></button>
                     <button  class="custom-btn btn-12" id="${double._id}" onclick=maFonction(this.id,false)><span>Clique !</span><span>Site vaccination</span></button></td></tr>
-                    <tr> <td  colspan="2"> <p class="${cHo ? "horaire-o" : "horaire-f"}" > Actuellement${ho}</p> </td> </tr> </table>`;
+                    <tr> <td  colspan="2"> <p class="${cHo ? "horaire-o" : "horaire-f"}" > Actuellement${ho} (site de prélèvement)</p> </td> </tr> </table>
+                    <tr> <td  colspan="2"> <p class="${cHoV ? "horaire-o" : "horaire-f"}" > Actuellement${hoV} (site de vaccination)</p> </td> </tr> </table>`;
 
                     //Création du marker et de son groupe
                     let mS2 = L.marker([obj.latitude, obj.longitude], {
