@@ -1,12 +1,12 @@
 # COVDM
  
-> Application réalisé en L3 Informatique dans l'UE Technologies du Web
+> Application réalisée en L3 Informatique dans l'UE Technologies du Web
 
 [Consulter le projet en exécution](https://covdm.herokuapp.com/)
 
 Vidéo :
 
-> TO-DO
+[![Vidéo de présentation](https://img.youtube.com/vi/8GVctWU7Imo/0.jpg)](https://www.youtube.com/watch?v=8GVctWU7Imo)
 
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/) [![dependencies Status](https://david-dm.org/Harfeur/COVDM/status.svg)](https://david-dm.org/Harfeur/COVDM)
 ## Usage
@@ -25,7 +25,10 @@ Vidéo :
 
 ## Fonctionalités
 
-To-Do
+- Cartographie des centres de dépistage et de vaccination
+- Affichage de statistiques
+- Ajout de commentaires
+- Modification de la base de données
 
 ## Équipe
 
@@ -41,7 +44,9 @@ Merci à David Panzoli pour son aide et pour ses cours.
 ## Sources
 
 - [Centres de dépistage COVID](https://www.data.gouv.fr/fr/datasets/sites-de-prelevements-pour-les-tests-covid/)
+- [SItes de vaccination COVID](https://www.data.gouv.fr/fr/datasets/lieux-de-vaccination-contre-la-covid-19/)
+- Bouton mini-popup : Copyright (c) 2021 by Yuhomyan (https://codepen.io/yuhomyan/pen/OJMejWJ)
 
 ## License
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Licence Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />Ce(tte) œuvre est mise à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Licence Creative Commons Attribution - Pas d&#39;Utilisation Commerciale - Pas de Modification 4.0 International</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licence Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Ce(tte) œuvre est mise à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licence Creative Commons Attribution - Pas d’Utilisation Commerciale - Partage dans les Mêmes Conditions 4.0 International</a>.
