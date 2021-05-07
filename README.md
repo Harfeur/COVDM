@@ -37,7 +37,7 @@ Vidéo :
 | <a href="https://www.github.com/Harfeur" target="_blank"><img src="https://www.github.com/Harfeur.png" width=200 height=200 ></a> | <a href="https://www.github.com/SDailhau" target="_blank"><img src="https://www.github.com/SDailhau.png" width=200 height=200 ></a> | <a href="https://www.github.com/Llaplace" target="_blank"><img src="https://www.github.com/Llaplace.png" width=200 height=200 ></a> |
 | <a href="https://www.github.com/Harfeur" target="_blank">`github.com/Harfeur`</a> | <a href="https://www.github.com/SDailhau" target="_blank">`github.com/SDailhau`</a> | <a href="http://github.com/Llaplace" target="_blank">`github.com/Llaplace`</a> |
 
-Merci à David Panzoli pour son aide et pour ses cours.
+Merci à David Panzoli et Jalil Arfaoui pour leur aide et leurs cours.
 
 ---
 
