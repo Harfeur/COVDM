@@ -5,6 +5,7 @@ head
   link(href='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css' rel='stylesheet')
   link(href='/css/popup.css' rel='stylesheet')
   meta(name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui')
+  title Site de prélèvement
   script const avis = !{JSON.stringify(avis)}
   script const id = !{JSON.stringify(_id)}
   script const horaire = !{JSON.stringify(horaires)}
@@ -19,6 +20,15 @@ head
   script(src='https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js')
   script(src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js')
   script(src='/js/popup.js')
+  // Global site tag (gtag.js) - Google Analytics
+  script(async='' src='https://www.googletagmanager.com/gtag/js?id=G-7BPNXD2WBF')
+  script.
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-7BPNXD2WBF');
 #app
   v-app#inspire
     // Création popup
